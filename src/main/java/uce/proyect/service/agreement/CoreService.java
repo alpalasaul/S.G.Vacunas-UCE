@@ -8,14 +8,14 @@ import java.util.Collection;
 public interface CoreService<T> {
 
     @Transactional
-    T agregarOActualizar(T pojo, boolean flag) throws RuntimeException; // La bandera es solo si se necesita hacer alguna validacion al A o I
+    T agregarOActualizar(T pojo);
 
     @Transactional(readOnly = true)
     Collection<T> listar() throws RuntimeException; // Igual la excepcion, no es necesario
 
     @Transactional(readOnly = true)
-    T buscarPorId(String identificador) throws Exception;
+    T buscarPorId(String identificador) throws RuntimeException;
 
     @Transactional
-    String eliminar(String identificador) throws Exception;
+    String eliminar(String identificador);
 }

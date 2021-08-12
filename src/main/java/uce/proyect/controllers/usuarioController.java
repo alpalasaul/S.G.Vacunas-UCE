@@ -9,8 +9,7 @@ import uce.proyect.service.agreement.UserService;
 
 import java.util.Collection;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/usuario")
@@ -26,9 +25,31 @@ public class usuarioController {
         return new ResponseEntity<Collection<User>>(listar, OK);
     }
 
+    @GetMapping("/{nombreUsuario}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_HC')")
+    public ResponseEntity<?> getUserbyUserName(@PathVariable("nombreUsuario") String user) {
+        var listar = this.userService.buscarPorId(user);
+        return new ResponseEntity<User>(listar, OK);
+    }
+
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody User user) {
-        var nUser = this.userService.agregarOActualizar(user, true);
+        var nUser = this.userService.agregarOActualizar(user);
         return new ResponseEntity<User>(nUser, CREATED);
+    }
+
+    @PutMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_HC')")
+    public ResponseEntity<?> update(@RequestBody User user) {
+        var nUser = this.userService.agregarOActualizar(user);
+        return new ResponseEntity<User>(nUser, ACCEPTED);
+    }
+
+    @DeleteMapping("/{nombreUsuario}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> delete(@PathVariable("nombreUsuario") String user) {
+        var nUser = this.userService.eliminar(user);
+        return new ResponseEntity<String>(nUser, ACCEPTED);
     }
 }

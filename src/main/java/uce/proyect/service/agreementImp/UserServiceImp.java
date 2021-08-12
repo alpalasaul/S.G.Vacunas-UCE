@@ -3,6 +3,7 @@ package uce.proyect.service.agreementImp;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.User;
 import uce.proyect.repositories.UserRepository;
 import uce.proyect.service.agreement.UserService;
@@ -19,12 +20,9 @@ public class UserServiceImp implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User agregarOActualizar(User pojo, boolean flag) throws RuntimeException {
-        if (flag) {
-            pojo.setContrasena(this.passwordEncoder.encode(pojo.getContrasena()));
-            return this.userRepository.insert(pojo);
-        }
-        return this.userRepository.save(pojo);
+    public User agregarOActualizar(User pojo) {
+        pojo.setContrasena(this.passwordEncoder.encode(pojo.getContrasena()));
+        return this.userRepository.insert(pojo);
     }
 
     @Override
@@ -37,21 +35,18 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User buscarPorId(String identificador) throws Exception {
+    public User buscarPorId(String identificador) throws RuntimeException {
         var user = this.userRepository.findByNombreUsuario(identificador);
         if (user.isPresent()) {
             return user.get();
         }
-        return null; // Manejar la excepcion
+        throw new NoEncontradorException("No existen registros para : ".concat(identificador));
     }
 
     @Override
-    public String eliminar(String identificador) throws Exception {
-        var user = this.userRepository.findByNombreUsuario(identificador);
-        if (user.isPresent()) {
-            this.userRepository.delete(user.get());
-            return "Eliminacion completada";
-        }
-        return null; // Manejar la excepcion
+    public String eliminar(String identificador) {
+        var user = this.buscarPorId(identificador);
+        this.userRepository.delete(user);
+        return "Eliminacion completada";
     }
 }
