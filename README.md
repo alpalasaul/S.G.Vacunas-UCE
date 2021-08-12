@@ -20,8 +20,8 @@ __5. Integración y Despliegue Continuo__
 - [x]  saul
 - [x]  erick
 
-### Postman - _Documentación de Endpoints_
-- [x] [En Construcción](https://documenter.getpostman.com/view/15353202/Tzz7McT9)
+### Postman
+- [x] [Documentación de Endpoints](https://documenter.getpostman.com/view/15353202/Tzz7McT9)
 
 ### Heroku
 - [x] [Sistema de Gestión de Vacunación](https://sgvacunas.herokuapp.com)
