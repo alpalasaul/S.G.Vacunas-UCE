@@ -1,0 +1,17 @@
+language: java
+jdk:
+  - oraclejdk11
+branches:
+  only:
+    - master
+  except:
+    - erick
+    - saul
+notifications:
+  email:
+    recipients:
+      - erickdp@hotmail.com
+install:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+  - mvn test -B

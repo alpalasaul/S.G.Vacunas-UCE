@@ -1,13 +1,21 @@
 package uce.proyect;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SgVacunasSiApplication {
+@Slf4j
+public class SgVacunasSiApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(SgVacunasSiApplication.class, args);
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        var numero = "Inicio del proyecto!";
+        log.info(numero);
+    }
 }
