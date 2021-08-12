@@ -13,7 +13,7 @@ __3. BD__
 __4. IDE__
 - IntelliJ IDEA 2021.1.1
 
-__5. Despliege Continuo__
+__5. Integración y Despliegue Continuo__
 - [Travis CI]()
 
 ### Ramas
