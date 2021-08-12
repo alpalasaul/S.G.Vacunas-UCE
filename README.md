@@ -1,5 +1,5 @@
-##Repositorio del proyecto de DSI - SGVacunas
-###Tecnologías
+## Repositorio del proyecto de DSI - SGVacunas
+### Tecnologías
 __1. BACKEND__
 - Java JDK 11
 - Spring Boot 2.5.3
@@ -16,14 +16,14 @@ __4. IDE__
 __5. Despliege Continuo__
 - [Travis CI]()
 
-###Ramas
+### Ramas
 - [x]  saul
 - [x]  erick
 
-###Postman - _Documentación de Endpoints_
+### Postman - _Documentación de Endpoints_
 - [x] [En Construcción]()
 
-###Heroku
+### Heroku
 - [x] [En Construcción]()
 
 ***No olvidar actualizar a los ultimos cambios:***
