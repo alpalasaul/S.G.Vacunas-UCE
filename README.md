@@ -1,12 +1,34 @@
-Repositorio del proyecto de DSI - SGVacunas
+##Repositorio del proyecto de DSI - SGVacunas
+###Tecnologías
+__1. BACKEND__
+- Java JDK 11
+- Spring Boot 2.5.3
 
-- Ramas
- * saul
- * erick
+__2. FRONTEND__
+- Vue.js
 
-- Endpoint en Postman
- *  -- En Despliegue --
+__3. BD__
+- MongoDB en [mlab](https://mlab.com/).
 
-- Dominio: HEROKU
- *  -- En Despliegue --
+__4. IDE__
+- IntelliJ IDEA 2021.1.1
+
+__5. Despliege Continuo__
+- [Travis CI]()
+
+###Ramas
+- [x]  saul
+- [x]  erick
+
+###Postman - _Documentación de Endpoints_
+- [x] [En Construcción]()
+
+###Heroku
+- [x] [En Construcción]()
+
+***No olvidar actualizar a los ultimos cambios:***
+
+`$git fetch origin master` o `$git pull origin master`
+
+
 
