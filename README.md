@@ -14,14 +14,14 @@ __4. IDE__
 - IntelliJ IDEA 2021.1.1
 
 __5. Integración y Despliegue Continuo__
-- [Travis CI]()
+- [Travis CI](https://www.travis-ci.com/)
 
 ### Ramas
 - [x]  saul
 - [x]  erick
 
 ### Postman - _Documentación de Endpoints_
-- [x] [En Construcción]()
+- [x] [En Construcción](https://documenter.getpostman.com/view/15353202/Tzz7McT9)
 
 ### Heroku
 - [x] [Sistema de Gestión de Vacunación](https://sgvacunas.herokuapp.com)
