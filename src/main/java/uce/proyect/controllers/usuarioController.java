@@ -8,9 +8,11 @@ import uce.proyect.models.User;
 import uce.proyect.service.agreement.UserService;
 
 import java.util.Collection;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
+// Completado
 @RestController
 @RequestMapping("/usuario")
 @AllArgsConstructor
@@ -22,7 +24,7 @@ public class usuarioController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_HC')")
     public ResponseEntity<?> getUsers() {
         var listar = this.userService.listar();
-        return new ResponseEntity<Collection<User>>(listar, OK);
+        return new ResponseEntity<Collection>(listar, OK);
     }
 
     @GetMapping("/{nombreUsuario}")
@@ -48,8 +50,8 @@ public class usuarioController {
 
     @DeleteMapping("/{nombreUsuario}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> delete(@PathVariable("nombreUsuario") String user) {
-        var nUser = this.userService.eliminar(user);
-        return new ResponseEntity<String>(nUser, ACCEPTED);
+    public ResponseEntity<Map> delete(@PathVariable("nombreUsuario") String user) {
+        var mensaje = this.userService.eliminar(user);
+        return new ResponseEntity<Map>(mensaje.toMap(), ACCEPTED);
     }
 }

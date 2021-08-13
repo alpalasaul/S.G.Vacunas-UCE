@@ -1,5 +1,6 @@
 package uce.proyect.service.agreement;
 
+import org.json.JSONObject;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -17,5 +18,5 @@ public interface CoreService<T> {
     T buscarPorId(String identificador) throws RuntimeException;
 
     @Transactional
-    String eliminar(String identificador);
+    JSONObject eliminar(String identificador);
 }

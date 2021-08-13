@@ -40,7 +40,7 @@ public class EstudianteServiceImp implements EstudianteService {
     }
 
     @Override
-    public String eliminar(String identificador) {
+    public JSONObject eliminar(String identificador) {
         var persona = this.buscarPorId(identificador);
         this.estudianteRespository.delete(persona);
         var jsonObject = new JSONObject();
@@ -48,6 +48,6 @@ public class EstudianteServiceImp implements EstudianteService {
                 .concat(persona.getNombres())
                 .concat(" ")
                 .concat(persona.getApellidos()));
-        return jsonObject.toString();
+        return jsonObject;
     }
 }

@@ -1,6 +1,7 @@
 package uce.proyect.service.agreementImp;
 
 import lombok.AllArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uce.proyect.exceptions.NoEncontradorException;
@@ -22,7 +23,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User agregarOActualizar(User pojo) {
         pojo.setContrasena(this.passwordEncoder.encode(pojo.getContrasena()));
-        return this.userRepository.insert(pojo);
+        return this.userRepository.save(pojo);
     }
 
     @Override
@@ -44,9 +45,11 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public String eliminar(String identificador) {
+    public JSONObject eliminar(String identificador) {
         var user = this.buscarPorId(identificador);
         this.userRepository.delete(user);
-        return "Eliminacion completada";
+        var jsonObject = new JSONObject();
+        jsonObject.put("mensaje", "Eliminacion completada");
+        return jsonObject;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import uce.proyect.exceptions.NoEncontradorException;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -16,19 +17,19 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ControllerAdviceSG {
 
     @ExceptionHandler(NoEncontradorException.class)
-    public ResponseEntity<String> handleNoEncontradoEx(NoEncontradorException nee) {
+    public ResponseEntity<Map> handleNoEncontradoEx(NoEncontradorException nee) {
         var jsonObject = new JSONObject();
         jsonObject.put("mensaje", nee.getMessage());
         jsonObject.put("fecha", LocalDateTime.now().toString());
-        return new ResponseEntity<String>(jsonObject.toString(), NOT_FOUND);
+        return new ResponseEntity<Map>(jsonObject.toMap(), NOT_FOUND);
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<String> handleDataAccessEx(DataAccessException dae) {
+    public ResponseEntity<Map> handleDataAccessEx(DataAccessException dae) {
         var jsonObject = new JSONObject();
         jsonObject.put("mensaje", dae.getMessage());
         jsonObject.put("causa", dae.getMostSpecificCause().toString());
         jsonObject.put("fecha", LocalDateTime.now().toString());
-        return new ResponseEntity<String>(jsonObject.toString(), INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<Map>(jsonObject.toMap(), INTERNAL_SERVER_ERROR);
     }
 }

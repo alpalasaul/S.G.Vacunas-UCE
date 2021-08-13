@@ -40,7 +40,7 @@ public class AdministradorServiceImp implements AdministradorService {
     }
 
     @Override
-    public String eliminar(String identificador) {
+    public JSONObject eliminar(String identificador) {
         var administrador = this.buscarPorId(identificador);
         this.administradorRepository.delete(administrador);
         var jsonObject = new JSONObject();
@@ -48,6 +48,6 @@ public class AdministradorServiceImp implements AdministradorService {
                 .concat(administrador.getNombres())
                 .concat(" ")
                 .concat(administrador.getApellidos()));
-        return jsonObject.toString();
+        return jsonObject;
     }
 }

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 public class Persona {
     @Id
-    private String id;
+    private String _id;
     private String cedula;
     private String nombres;
     private String apellidos;
