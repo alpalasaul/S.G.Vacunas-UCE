@@ -2,19 +2,51 @@ package uce.proyect.service.agreementImp;
 
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Administrador;
 import uce.proyect.repositories.AdministradorRepository;
+import uce.proyect.repositories.UserRepository;
 import uce.proyect.service.agreement.AdministradorService;
 
 import java.util.Collection;
+
+import static uce.proyect.util.FabricaCredenciales.generarIdentificador;
+import static uce.proyect.util.FabricaCredenciales.generarUsuario;
 
 @Service
 @AllArgsConstructor
 public class AdministradorServiceImp implements AdministradorService {
 
     private AdministradorRepository administradorRepository;
+
+    private UserRepository userRepository; // Al crear admin o estudiante agregar tambien un usuario
+
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public JSONObject agregar(Administrador pojo, String role) {
+        var jsonObject = new JSONObject();
+
+        var usuario = generarUsuario(pojo.getNombres(), pojo.getApellidos(), role);
+        jsonObject.put("contrasenaSinEncriptar", usuario.getContrasena());
+        pojo.setUsuario(usuario.getNombreUsuario());
+
+        pojo.setIdentificadorAdmin(generarIdentificador());
+
+        usuario.setContrasena(this.passwordEncoder.encode(usuario.getContrasena()));
+
+        var user = userRepository.save(usuario);
+
+        jsonObject.put("usuario", user);
+
+        var administrador = this.administradorRepository.save(pojo);
+
+        jsonObject.put("administrador", administrador);
+
+        return jsonObject;
+    }
 
     @Override
     public Administrador agregarOActualizar(Administrador pojo) {
@@ -41,13 +73,16 @@ public class AdministradorServiceImp implements AdministradorService {
 
     @Override
     public JSONObject eliminar(String identificador) {
-        var administrador = this.buscarPorId(identificador);
-        this.administradorRepository.delete(administrador);
+        var administrador = this.administradorRepository.findByUsuario(identificador);
         var jsonObject = new JSONObject();
-        jsonObject.put("Eliminado", "Se ha eliminado a : "
-                .concat(administrador.getNombres())
-                .concat(" ")
-                .concat(administrador.getApellidos()));
+        jsonObject.put("Eliminado - A", "No es administrador");
+        if (administrador.isPresent()) {
+            this.administradorRepository.delete(administrador.get());
+            jsonObject.put("Eliminado - A", "Se ha eliminado a : "
+                    .concat(administrador.get().getNombres())
+                    .concat(" ")
+                    .concat(administrador.get().getApellidos()));
+        }
         return jsonObject;
     }
 }

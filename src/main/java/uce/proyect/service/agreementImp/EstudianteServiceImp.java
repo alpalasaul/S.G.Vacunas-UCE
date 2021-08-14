@@ -2,19 +2,49 @@ package uce.proyect.service.agreementImp;
 
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Estudiante;
 import uce.proyect.repositories.EstudianteRepository;
+import uce.proyect.repositories.UserRepository;
 import uce.proyect.service.agreement.EstudianteService;
 
 import java.util.Collection;
+
+import static uce.proyect.util.FabricaCredenciales.EST;
+import static uce.proyect.util.FabricaCredenciales.generarUsuario;
 
 @Service
 @AllArgsConstructor
 public class EstudianteServiceImp implements EstudianteService {
 
     private EstudianteRepository estudianteRespository;
+
+    private UserRepository userRepository;
+
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public JSONObject agregar(Estudiante pojo) {
+        var jsonObject = new JSONObject();
+
+        var usuario = generarUsuario(pojo.getNombres(), pojo.getApellidos(), EST);
+        jsonObject.put("contrasenaSinEncriptar", usuario.getContrasena());
+        pojo.setUsuario(usuario.getNombreUsuario());
+
+        usuario.setContrasena(this.passwordEncoder.encode(usuario.getContrasena()));
+
+        var user = userRepository.save(usuario);
+
+        jsonObject.put("usuario", user);
+
+        var estudiante = this.estudianteRespository.save(pojo);
+
+        jsonObject.put("estudiante", estudiante);
+
+        return jsonObject;
+    }
 
     @Override
     public Estudiante agregarOActualizar(Estudiante pojo) {
@@ -41,13 +71,16 @@ public class EstudianteServiceImp implements EstudianteService {
 
     @Override
     public JSONObject eliminar(String identificador) {
-        var persona = this.buscarPorId(identificador);
-        this.estudianteRespository.delete(persona);
+        var usuario = this.estudianteRespository.findByUsuario(identificador);
         var jsonObject = new JSONObject();
-        jsonObject.put("Eliminado", "Se ha eliminado a : "
-                .concat(persona.getNombres())
-                .concat(" ")
-                .concat(persona.getApellidos()));
+        jsonObject.put("Eliminado - E", "No es estudiante");
+        if (usuario.isPresent()) {
+            this.estudianteRespository.delete(usuario.get());
+            jsonObject.put("Eliminado - E", "Se ha eliminado a : "
+                    .concat(usuario.get().getNombres())
+                    .concat(" ")
+                    .concat(usuario.get().getApellidos()));
+        }
         return jsonObject;
     }
 }

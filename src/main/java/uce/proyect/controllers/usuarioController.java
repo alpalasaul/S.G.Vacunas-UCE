@@ -21,29 +21,22 @@ public class usuarioController {
     private UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_HC')")
+    @PreAuthorize("hasRole('ROLE_HC')") // Significa que tiene permisos el admin y el hc
     public ResponseEntity<?> getUsers() {
         var listar = this.userService.listar();
         return new ResponseEntity<Collection>(listar, OK);
     }
 
     @GetMapping("/{nombreUsuario}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_HC')")
+    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getUserbyUserName(@PathVariable("nombreUsuario") String user) {
         var listar = this.userService.buscarPorId(user);
         return new ResponseEntity<User>(listar, OK);
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_HC')")
-    public ResponseEntity<?> create(@RequestBody User user) {
-        var nUser = this.userService.agregarOActualizar(user);
-        return new ResponseEntity<User>(nUser, CREATED);
-    }
-
     @PutMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_HC')")
-    public ResponseEntity<?> update(@RequestBody User user) {
+    @PreAuthorize("hasRole('ROLE_USER')") // Tiene autorizacion el admin, hc y el usuario
+    public ResponseEntity<?> update(@RequestBody User user) { // Validar que solo actualize la contrasena, no hay necesidad de actualizar el username
         var nUser = this.userService.agregarOActualizar(user);
         return new ResponseEntity<User>(nUser, ACCEPTED);
     }

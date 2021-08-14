@@ -15,7 +15,7 @@ public interface CoreService<T> {
     Collection<T> listar() throws RuntimeException; // Igual la excepcion, no es necesario
 
     @Transactional(readOnly = true)
-    T buscarPorId(String identificador) throws RuntimeException;
+    T buscarPorId(String identificador);
 
     @Transactional
     JSONObject eliminar(String identificador);
