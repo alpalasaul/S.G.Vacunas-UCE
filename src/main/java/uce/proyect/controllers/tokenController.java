@@ -23,7 +23,6 @@ public class tokenController {
     @Autowired
     private JwtService jwtService;
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/login")
     public ResponseEntity<?> login(@AuthenticationPrincipal UserDetails userDetails) {
         List<String> roleList = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
