@@ -1,7 +1,9 @@
 package uce.proyect.controllers;
 
-import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,20 +16,21 @@ import uce.proyect.service.agreementImp.JwtService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RestController
-@RequestMapping("/token")
+@RequestMapping("/sgv")
 public class tokenController {
 
     @Autowired
     private JwtService jwtService;
 
-    @PreAuthorize("authenticated")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/login")
-    public String login(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> login(@AuthenticationPrincipal UserDetails userDetails) {
         List<String> roleList = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
-        return jwtService.createToken(userDetails.getUsername(), roleList);
+        var test = new JSONObject();
+        test.put("user", userDetails.getUsername());
+        test.put("token", jwtService.createToken(userDetails.getUsername(), roleList));
+        return new ResponseEntity<>(test.toMap(), HttpStatus.CREATED);
     }
-
 }
