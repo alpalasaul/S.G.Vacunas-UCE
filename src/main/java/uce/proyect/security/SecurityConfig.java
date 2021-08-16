@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        http.authorizeRequests().antMatchers("/usuario").permitAll()
-        http.authorizeRequests().anyRequest().authenticated() // Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
+        http.authorizeRequests().anyRequest().permitAll() // Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
                 .and().csrf().disable().httpBasic().authenticationEntryPoint(this.authenticationEntryPoint) // csf no permite actualizar recursos
                 // Spring Security al logearme guarda una sesion durante el tiempo que se ejecute la app
                 // si ingreso cualquier contrasena toma la contrasena con la que ingrese sesion anteriormente
