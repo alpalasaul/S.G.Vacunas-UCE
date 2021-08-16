@@ -66,8 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Spring Security al logearme guarda una sesion durante el tiempo que se ejecute la app
                 // si ingreso cualquier contrasena toma la contrasena con la que ingrese sesion anteriormente
                 // para deshabilitar esto hacer:
-                .and().formLogin() // En lugar de la pagina vacia va a tener el login por defecto, mediante JWT no va a ser necesario registrarse a cada peticion, se define un tiempo
-                .and().cors(); // defino el cors en el bean corsConfigurationSource
+                .and().formLogin(); // En lugar de la pagina vacia va a tener el login por defecto, mediante JWT no va a ser necesario registrarse a cada peticion, se define un tiempo
+//                .and().cors(); // defino el cors en el bean corsConfigurationSource
 //                .and().sessionManagement().sessionCreationPolicy(STATELESS);  // desde el navegador no es posible acceder mediante el form porque nunca guarda el httpsession, dehabilitar para desarrollo y usar postman
     }
 }
