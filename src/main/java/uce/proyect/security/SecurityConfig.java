@@ -21,7 +21,7 @@ import java.util.Arrays;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
-//Este controlador maneja lo correspondiente a seguridad en para la API
+//Este controlador maneja lo correspondiente a seguridad en para la APIz
 @Controller
 @EnableWebSecurity // Habilita seguridad para las API
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) // Permite usar las anotaciones @secure o @preAuthorized en los endPoint, el primero no es tan necesarios
