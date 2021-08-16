@@ -2,6 +2,7 @@ package uce.proyect.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -60,14 +62,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // En este metodo se puede generar la mayoria de accesos y restricciones para los usaurios, se puede definir o quitar el login por defecto, rutas y demas
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        var jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManagerBean()); // Los filtros son interceptores de las peticiones http y ejecutan una accion
+        jwtAuthenticationFilter.setFilterProcessesUrl("/sgv/login"); // No reemplaza al login por defecto, sino que cambia la url de donde aplica el filtro para generar el token
 //        http.authorizeRequests().antMatchers("/usuario").permitAll()
-        http.authorizeRequests().anyRequest().authenticated() // Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
-                .and().csrf().disable().httpBasic().authenticationEntryPoint(this.authenticationEntryPoint) // csf no permite actualizar recursos
+        http.authorizeRequests().antMatchers("/sgv/login", "/usuario/actualizarToken").permitAll() // para la autenticacion se debe de permitir cualquier peticion
+                .anyRequest().authenticated() // Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
+                .and().csrf().disable().httpBasic().authenticationEntryPoint(this.authenticationEntryPoint) // csf no permite actualizar recursos, httpbasics permite habilitar basic auth a los endpoint que tengan preAuthorize
                 // Spring Security al logearme guarda una sesion durante el tiempo que se ejecute la app
                 // si ingreso cualquier contrasena toma la contrasena con la que ingrese sesion anteriormente
                 // para deshabilitar esto hacer:
-                .and().formLogin() // En lugar de la pagina vacia va a tener el login por defecto, mediante JWT no va a ser necesario registrarse a cada peticion, se define un tiempo
-                .and().cors(); // defino el cors en el bean corsConfigurationSource
-//                .and().sessionManagement().sessionCreationPolicy(STATELESS);  // desde el navegador no es posible acceder mediante el form porque nunca guarda el httpsession, dehabilitar para desarrollo y usar postman
+                .and().formLogin() // En lugar de la pagina vacia va a tener el login por defecto, mediante JWT no va a ser necesario registrarse a cada peticion, se define un tiempo de vida, además como no tiene estado al APP no accede a peticiones sin token
+                .and().addFilter(jwtAuthenticationFilter)
+                .cors() // defino el cors en el bean corsConfigurationSource
+                .and().sessionManagement().sessionCreationPolicy(STATELESS) // Sin estado quiere decir que no guarda las credenciales en sessiones, esto para usar tokens
+                .and().addFilterBefore(new CustomerAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);  // desde el navegador no es posible acceder mediante el form porque nunca guarda el httpsession, dehabilitar para desarrollo y usar postman
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManager();
     }
 }
