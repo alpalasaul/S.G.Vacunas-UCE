@@ -75,10 +75,10 @@ public class AdministradorServiceImp implements AdministradorService {
     public JSONObject eliminar(String identificador) {
         var administrador = this.administradorRepository.findByUsuario(identificador);
         var jsonObject = new JSONObject();
-        jsonObject.put("Eliminado - A", "No es administrador");
+        jsonObject.put("Eliminado_A", "No es administrador");
         if (administrador.isPresent()) {
             this.administradorRepository.delete(administrador.get());
-            jsonObject.put("Eliminado - A", "Se ha eliminado a : "
+            jsonObject.put("Eliminado_A", "Se ha eliminado a : "
                     .concat(administrador.get().getNombres())
                     .concat(" ")
                     .concat(administrador.get().getApellidos()));

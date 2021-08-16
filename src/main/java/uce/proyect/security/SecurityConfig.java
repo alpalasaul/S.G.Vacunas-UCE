@@ -2,6 +2,7 @@ package uce.proyect.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -61,13 +62,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        http.authorizeRequests().antMatchers("/usuario").permitAll()
-        http.authorizeRequests().anyRequest().authenticated() // Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
+        http.authorizeRequests()
+                .anyRequest().authenticated() // Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
                 .and().csrf().disable().httpBasic().authenticationEntryPoint(this.authenticationEntryPoint) // csf no permite actualizar recursos
                 // Spring Security al logearme guarda una sesion durante el tiempo que se ejecute la app
                 // si ingreso cualquier contrasena toma la contrasena con la que ingrese sesion anteriormente
                 // para deshabilitar esto hacer:
                 .and().formLogin() // En lugar de la pagina vacia va a tener el login por defecto, mediante JWT no va a ser necesario registrarse a cada peticion, se define un tiempo
-                .and().cors(); // defino el cors en el bean corsConfigurationSource
+                .and().cors();
 //                .and().sessionManagement().sessionCreationPolicy(STATELESS);  // desde el navegador no es posible acceder mediante el form porque nunca guarda el httpsession, dehabilitar para desarrollo y usar postman
     }
 }

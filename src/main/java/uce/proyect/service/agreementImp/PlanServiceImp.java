@@ -45,7 +45,7 @@ public class PlanServiceImp implements PlanService {
         var jsonObject = new JSONObject();
         if (plan.isPresent()) {
             this.planRepository.delete(plan.get());
-            jsonObject.put("Eliminado - P", "Se ha eliminado el plan: "
+            jsonObject.put("Eliminado_P", "Se ha eliminado el plan: "
                     .concat(plan.get().get_id())
                     .concat(" con programación: ")
                     .concat("I: ".concat(plan.get().getFechaInicio().toString()))

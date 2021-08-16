@@ -73,10 +73,10 @@ public class EstudianteServiceImp implements EstudianteService {
     public JSONObject eliminar(String identificador) {
         var usuario = this.estudianteRespository.findByUsuario(identificador);
         var jsonObject = new JSONObject();
-        jsonObject.put("Eliminado - E", "No es estudiante");
+        jsonObject.put("Eliminado_E", "No es estudiante");
         if (usuario.isPresent()) {
             this.estudianteRespository.delete(usuario.get());
-            jsonObject.put("Eliminado - E", "Se ha eliminado a : "
+            jsonObject.put("Eliminado_E", "Se ha eliminado a : "
                     .concat(usuario.get().getNombres())
                     .concat(" ")
                     .concat(usuario.get().getApellidos()));
