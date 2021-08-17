@@ -20,7 +20,6 @@ public class estudianteController {
     private EstudianteService estudianteService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getEstudiantes() {
         var listar = this.estudianteService.listar();
         return new ResponseEntity<Collection>(listar, OK);
