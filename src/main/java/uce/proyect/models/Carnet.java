@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -20,8 +21,8 @@ public class Carnet {
     private String centroVacunacion;
     private String estudiante;
     private String nombreVacuna;
-    private Date fechaPrimeraDosis;
-    private Date fechaSegundasDosis;
+    private LocalDate fechaPrimeraDosis;
+    private LocalDate fechaSegundasDosis;
     private String vacunadorPrimeraDosis;
     private String vacunadorSegundaDosis;
     private boolean primeraDosis;

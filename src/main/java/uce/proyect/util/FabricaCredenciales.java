@@ -18,7 +18,6 @@ public class FabricaCredenciales {
     public static User generarUsuario(String nombres, String apellidos, String cargo) {
         var nombresArray = nombres.toLowerCase().split(" "); // Decirles que validen que no haya espacios en blanco a los lados de los nombres
         var apellidosArray = apellidos.toLowerCase().split(" ");
-        Arrays.stream(nombresArray).collect(Collectors.toList());
         var nombreUsuario = new StringBuilder();
         var contrasena = new StringBuilder();
 

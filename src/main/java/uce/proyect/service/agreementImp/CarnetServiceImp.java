@@ -3,6 +3,7 @@ package uce.proyect.service.agreementImp;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import uce.proyect.exceptions.CarnetException;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Carnet;
 import uce.proyect.repositories.CarnetRepository;
@@ -45,9 +46,29 @@ public class CarnetServiceImp implements CarnetService {
         var jsonObject = new JSONObject();
         if (carnet.isPresent()) {
             this.carnetRepository.delete(carnet.get());
-            jsonObject.put("Eliminado - C", "Se ha eliminado el carnet: "
+            jsonObject.put("Eliminado_C", "Se ha eliminado el carnet: "
                     .concat(carnet.get().get_id()));
         }
-        return  jsonObject;
+        return jsonObject;
+    }
+
+//    Servicio que valida que el cerdo ya tenga las 2 dosis
+    @Override
+    public Carnet buscarCarnetPorEstudiante(String estudiante) throws NoEncontradorException {
+        var carnetOptional = this.carnetRepository.findByEstudiante(estudiante);
+        if (carnetOptional.isPresent()) {
+            var carnet = carnetOptional.get();
+            if (!carnet.isSegundaDosis()) {
+                var fechaPrimeraDosis = carnet.getFechaPrimeraDosis();
+                var fechaEstimadaSegundaDosis = fechaPrimeraDosis.plusDays(28L);
+                throw new CarnetException(
+                        "No se ha suministrado la segunda dosis aún.",
+                        fechaPrimeraDosis,
+                        fechaEstimadaSegundaDosis,
+                        carnet.getNombreVacuna());
+            }
+            return carnet;
+        }
+        throw new NoEncontradorException("No se ha encontrado ningun carnet para :".concat(estudiante));
     }
 }

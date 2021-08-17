@@ -1,8 +1,10 @@
 package uce.proyect.controllers;
 
 import lombok.AllArgsConstructor;
+import org.h2.engine.Mode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Carnet;
 import uce.proyect.models.Facultad;
@@ -48,4 +50,11 @@ public class carnetController {
         return new ResponseEntity<>(cart, OK);
     }
 
+
+    @GetMapping("/{estudiante}")
+    public String generarCarnet(@PathVariable String estudiante, Model model) {
+//        var carnet = this.carnetService.buscarCarnetPorEstudiante(estudiante);
+        model.addAttribute("carnet", "ddd");
+        return "carnet/pdf";
+    }
 }

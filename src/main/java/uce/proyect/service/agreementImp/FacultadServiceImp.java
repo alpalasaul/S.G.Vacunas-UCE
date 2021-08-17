@@ -43,10 +43,10 @@ public class FacultadServiceImp implements FacultadService {
     public JSONObject eliminar(String identificador) {
         var facultad = this.facultadRepository.findById(identificador);
         var jsonObject = new JSONObject();
-        jsonObject.put("Eliminado - F", "No es estudiante");
+        jsonObject.put("Eliminado_F", "No es estudiante");
         if (facultad.isPresent()) {
             this.facultadRepository.delete(facultad.get());
-            jsonObject.put("Eliminado - F", "Se ha eliminado a la: "
+            jsonObject.put("Eliminado_F", "Se ha eliminado a la: "
                     .concat(facultad.get().getNombre())
                     .concat(" la carrera de: ")
                     .concat(facultad.get().getCarrera()));
