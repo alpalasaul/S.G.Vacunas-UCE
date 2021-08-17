@@ -74,7 +74,7 @@ public class usuarioController {
                 // Genero otro nuevo token
                 var nuevo_token = JWT.create()
                         .withSubject(user.getNombreUsuario())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // El + aumenta min
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) // El + aumenta min
                         .withIssuer(request.getRequestURI())
                         .withClaim("roles", user.getRoles())
                         .sign(algorithm);
