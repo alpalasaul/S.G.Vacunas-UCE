@@ -2,7 +2,6 @@ package uce.proyect.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,10 +22,11 @@ import java.util.Arrays;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
-//Este controlador maneja lo correspondiente a seguridad en para la API
+//Este controlador maneja lo correspondiente a seguridad en para la APIz
 @Controller
 @EnableWebSecurity // Habilita seguridad para las API
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) // Permite usar las anotaciones @secure o @preAuthorized en los endPoint, el primero no es tan necesarios
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+// Permite usar las anotaciones @secure o @preAuthorized en los endPoint, el primero no es tan necesarios
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -76,11 +76,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors() // defino el cors en el bean corsConfigurationSource
                 .and().sessionManagement().sessionCreationPolicy(STATELESS) // Sin estado quiere decir que no guarda las credenciales en sessiones, esto para usar tokens
                 .and().addFilterBefore(new CustomerAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);  // desde el navegador no es posible acceder mediante el form porque nunca guarda el httpsession, dehabilitar para desarrollo y usar postman
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManager();
     }
 }

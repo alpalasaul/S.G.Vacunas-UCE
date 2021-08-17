@@ -62,8 +62,8 @@ public class UserServiceImp implements UserService {
         this.userRepository.delete(user);
         var jsonObject = new JSONObject();
         jsonObject.put("mensaje", "Eliminacion completada");
-        jsonObject.put("Administrador", object1.get("Eliminado - A"));
-        jsonObject.put("Estudiante", object2.get("Eliminado - E"));
+        jsonObject.put("Administrador", object1.get("Eliminado_A"));
+        jsonObject.put("Estudiante", object2.get("Eliminado_E"));
         return jsonObject;
     }
 }
