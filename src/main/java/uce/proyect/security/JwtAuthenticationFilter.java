@@ -15,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import uce.proyect.util.ConservarRoles;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static uce.proyect.util.ConservarRoles.ROLE_MAXIMO;
 
 // Clase filtro que se usa para validar la autenticacion del usuario que ingresa por sgv/login y metodo POST
 @Slf4j
@@ -55,9 +57,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             }
 //
             var jsonObject = new JSONObject(builder.toString());
-            log.info(jsonObject.toString());
-            log.info(jsonObject.get("username").toString());
-            log.info(jsonObject.get("password").toString());
+//            log.info(jsonObject.toString());
+//            log.info(jsonObject.get("username").toString());
+//            log.info(jsonObject.get("password").toString());
 
             String username = jsonObject.get("username").toString();
             username = username != null ? username : "";
@@ -88,6 +90,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withIssuer(request.getRequestURI().toString())
                 .sign(algorithm);
         var tokens = new HashMap<String, String>();
+        tokens.put("maximo_role", ROLE_MAXIMO);
         tokens.put("token_acceso", access_token);
         tokens.put("token_actualizado", refresh_token);
         response.setContentType(APPLICATION_JSON_VALUE);

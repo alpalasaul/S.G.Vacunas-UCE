@@ -11,6 +11,8 @@ import uce.proyect.repositories.UserRepository;
 
 import java.util.stream.Collectors;
 
+import static uce.proyect.util.ConservarRoles.*;
+
 @Service
 public class UserDetailServiceImp implements UserDetailsService {
 
@@ -22,6 +24,7 @@ public class UserDetailServiceImp implements UserDetailsService {
     // Al inciar sesion se delega el control a este método y si encuentra al usuario hace el proceso de roles
     public UserDetails loadUserByUsername(String nombreUsuario) throws UsernameNotFoundException {
         var user = this.userRepository.findByNombreUsuario(nombreUsuario).orElseThrow();
+        ROLE_MAXIMO = user.getRoles().get(0);
         return new org.springframework.security.core.userdetails.User(
                 user.getNombreUsuario(),
                 user.getContrasena(),
