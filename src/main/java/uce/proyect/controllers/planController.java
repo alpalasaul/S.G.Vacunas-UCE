@@ -1,11 +1,18 @@
 package uce.proyect.controllers;
 
 import lombok.AllArgsConstructor;
+import org.aspectj.weaver.patterns.HasMemberTypePattern;
+import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Plan;
 import uce.proyect.service.agreement.PlanService;
+import uce.proyect.service.agreementImp.EmailService;
+
+import javax.mail.MessagingException;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
@@ -17,6 +24,8 @@ public class planController {
 
     private PlanService planService;
 
+    private EmailService emailService;
+
     @GetMapping
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getPlanes() {
@@ -24,11 +33,23 @@ public class planController {
         return new ResponseEntity<>(listar, OK);
     }
 
+    @GetMapping("/mail")
+    public ResponseEntity<Void> sendEmail() { // Metodo para verificar el funcionamiento del servicio email, no es el final
+        try {
+            this.emailService.enviarComprobante();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(OK);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Plan plan) {
+        var jsonObject = this.planService.generarNotificacionVacuncacion(plan); // Solo al agregar el nuevo plan se realiza la notificación a los mails
         var pl = this.planService.agregarOActualizar(plan);
-        return new ResponseEntity<>(pl, ACCEPTED);
+        jsonObject.put("nuevo_plan", pl);
+        return new ResponseEntity<Map>(jsonObject.toMap(), ACCEPTED);
     }
 
     @PutMapping("/{id}")
@@ -46,5 +67,4 @@ public class planController {
         var pl = this.planService.eliminar(id);
         return new ResponseEntity<>(pl, OK);
     }
-
 }

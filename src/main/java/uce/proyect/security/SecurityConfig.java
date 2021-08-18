@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
 
@@ -64,8 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         var jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManagerBean()); // Los filtros son interceptores de las peticiones http y ejecutan una accion
         jwtAuthenticationFilter.setFilterProcessesUrl("/sgv/login"); // No reemplaza al login por defecto, sino que cambia la url de donde aplica el filtro para generar el token
-        http.authorizeRequests().antMatchers("/sgv/login", "/usuario/actualizarToken").permitAll() // para la autenticacion se debe de permitir cualquier peticion
-                .anyRequest().authenticated() // Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
+        http.authorizeRequests().antMatchers("/sgv/login", "/usuario/actualizarToken", "/plan/mail").permitAll() // para la autenticacion se debe de permitir cualquier peticion, borrar el endpoint de plan luego
+                .anyRequest().authenticated()// Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
                 .and().csrf().disable().httpBasic().authenticationEntryPoint(this.authenticationEntryPoint) // csf no permite actualizar recursos, httpbasics permite habilitar basic auth a los endpoint que tengan preAuthorize
                 // Spring Security al logearme guarda una sesion durante el tiempo que se ejecute la app
                 // si ingreso cualquier contrasena toma la contrasena con la que ingrese sesion anteriormente
