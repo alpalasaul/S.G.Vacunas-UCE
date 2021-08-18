@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="test" printOrder="Horizontal" pageWidth="420" pageHeight="320" columnWidth="380" leftMargin="20" rightMargin="20" topMargin="14" bottomMargin="0" uuid="6f55504c-44ee-4a3c-a871-5e6c3e07a1db">
+
+    <field name="centroVacunacion" class="java.lang.String"/>
+    <field name="estudiante" class="java.lang.String"/>
+    <field name="fechaPrimeraDosis" class="java.time.LocalDate"/>
+    <field name="fechaSegundasDosis" class="java.time.LocalDate"/>
+    <field name="loteDosisDos" class="java.lang.String"/>
+    <field name="loteDosisUno" class="java.lang.String"/>
+    <field name="nombreVacuna" class="java.lang.String"/>
+    <field name="primeraDosis" class="java.lang.Boolean"/>
+    <field name="segundaDosis" class="java.lang.Boolean"/>
+    <field name="vacunadorPrimeraDosis" class="java.lang.String"/>
+    <field name="vacunadorSegundaDosis" class="java.lang.String"/>
+    <field name="cedula" class="java.lang.String"/>
+    <field name="fechaNacimiento" class="java.time.LocalDate"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="21" splitType="Stretch">
+            <staticText>
+                <reportElement x="40" y="0" width="290" height="20" uuid="52722683-584d-4074-bea3-9e7a5d26862f"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <text><![CDATA[CARNET DE VACUNACIÓN CONTRA LA COVID-19]]></text>
+            </staticText>
+        </band>
+    </title>
+    <detail>
+        <band height="215" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="10" width="80" height="11" uuid="55c8ec03-9a23-4884-9bdd-43f9628e5137">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Centro vacunación:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="130" y="10" width="72" height="11" uuid="f60fef38-31d5-44dc-8a7c-da689f71a416">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Edad:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="250" y="10" width="72" height="11" uuid="d4c98506-8dfc-4fe9-95fe-8694f63c0267">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[C.I.:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="40" width="72" height="11" uuid="c8a6cf19-a871-4212-8b89-e8cebcd0e5be">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Nombres:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="72" y="74" width="72" height="11" uuid="19349021-a64e-4cd3-b149-f2ab4d216bb8">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Vacuna:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="113" width="50" height="12" uuid="be4f3e87-6e27-42b6-8ebb-53f683357154">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[1era. Dosis]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="125" width="72" height="11" uuid="535a7d36-e2bf-41cc-8e90-2bfd01d2b001">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fecha:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="100" y="125" width="72" height="11" uuid="02eff8ae-cddb-45d6-b5af-eea2d185a193">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Vacunador:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="260" y="125" width="72" height="11" uuid="76754952-1eb0-45f4-b7e9-604d745219f2">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Lote:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="170" width="72" height="11" uuid="b8efc1f6-2cb5-4488-9c35-d2cbee672d18">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fecha:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="260" y="170" width="72" height="11" uuid="88f7df5a-3215-413d-a426-fd5cdd0b90ca">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Lote:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="100" y="170" width="72" height="11" uuid="92a9920a-d0ca-4429-bd5f-6afa4e27a7a6">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Vacunador:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="158" width="50" height="12" uuid="2a911b15-7a1c-44f5-977c-987155291111"/>
+                <textElement>
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[2da. Dosis]]></text>
+            </staticText>
+            <line>
+                <reportElement x="0" y="37" width="111" height="1" uuid="1c9ca3ea-0574-40db-b241-b086386ace60"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="130" y="37" width="90" height="1" uuid="1ab8fcf4-49e7-45c8-812a-7044c3ae3ced"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="250" y="38" width="110" height="1" uuid="a6c13161-1c9c-4def-bbe0-170793845c21"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="0" y="68" width="360" height="1" uuid="8ef2ae73-6728-4d0c-a644-f5d907dfe64f"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="0" y="150" width="72" height="1" uuid="ac083ac1-732f-4e4d-9cbc-7c8b455010e6"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="100" y="150" width="130" height="1" uuid="8ec0ed02-57d7-49ad-8cb5-1374e36950d1"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="260" y="150" width="100" height="1" uuid="0a12fb01-c909-4112-9ee2-8347aa9545a2"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="101" y="196" width="130" height="1" uuid="d0077592-6823-4cf0-b696-29d71113e4e2"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="260" y="196" width="101" height="1" uuid="2baebd1a-b3e1-408a-9bd6-2dfc5ef30d97"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="1" y="196" width="72" height="1" uuid="ad15a0b8-c56e-497e-a70f-cd1edb770317"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <line>
+                <reportElement x="73" y="100" width="191" height="1" uuid="83162aaa-60af-496f-8650-17b1dec783e8"/>
+                <graphicElement>
+                    <pen lineWidth="0.5"/>
+                </graphicElement>
+            </line>
+            <textField>
+                <reportElement x="0" y="21" width="111" height="15" uuid="5c2d2880-dd36-4ccb-98f7-bd0a1e39d3d0">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{centroVacunacion}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="1" y="54" width="359" height="15" uuid="d4dcc2e4-9c3c-498f-9015-301812b5ef19">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{estudiante}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="73" y="85" width="191" height="15" uuid="cc4a6f9d-437a-4c47-bbcc-51961756b1a8">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{nombreVacuna}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="136" width="73" height="15" uuid="2cfeb2cb-386d-498a-b884-d141ea675a0e">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{fechaPrimeraDosis}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="1" y="181" width="73" height="15" uuid="867d91b5-1084-4100-949f-eb05f5a507cf">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{fechaSegundasDosis}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="101" y="136" width="129" height="15" uuid="0c4c98f5-f677-4b52-92d7-ea52a7ca3efb">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{vacunadorPrimeraDosis}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="102" y="181" width="128" height="15" uuid="982a68fa-050c-46fb-a45d-53620023167b">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{vacunadorSegundaDosis}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="260" y="135" width="100" height="15" uuid="3f3e2ac0-9f6c-49bf-8998-b8898029489e">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{loteDosisUno}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="261" y="181" width="100" height="15" uuid="99d25904-cb63-4cb3-a749-6bd6fc058ff7">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{loteDosisDos}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="59" y="113" width="71" height="12" uuid="abbd00e5-956f-485c-8b49-b7f2df4fa174">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{primeraDosis}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="59" y="160" width="71" height="12" uuid="958be790-baf2-4f36-9399-df08672b94a0">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{segundaDosis}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="250" y="22" width="110" height="15" uuid="7791d58c-a3ff-47a1-81b0-f32210ab351a">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Bottom">
+                    <font size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="130" y="21" width="90" height="15" uuid="27d3bba3-0c7b-4c95-bb28-cc374505613b">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{fechaNacimiento}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="49" splitType="Stretch">
+            <frame>
+                <reportElement mode="Opaque" x="-20" y="2" width="420" height="47" forecolor="#38B3D9" backcolor="#38B3D9" uuid="3c297517-4e65-445d-b4e3-2ce1d84a1206">
+                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                </reportElement>
+                <staticText>
+                    <reportElement x="9" y="16" width="170" height="18" forecolor="#FFFFFF" uuid="906d2a4b-908e-428e-9e15-c05f1f537795"/>
+                    <textElement textAlignment="Left" verticalAlignment="Justified">
+                        <font size="11"/>
+                    </textElement>
+                    <text><![CDATA[Ministerio de Salud Pública]]></text>
+                </staticText>
+                <image hAlign="Left" vAlign="Bottom" onErrorType="Icon">
+                    <reportElement x="190" y="6" width="122" height="38" uuid="85689e39-2d67-4e1f-8215-d120097c9547"/>
+                    <imageExpression><![CDATA["src/main/resources/static/img/gobBlanco.png"]]></imageExpression>
+                </image>
+                <image onErrorType="Icon">
+                    <reportElement x="330" y="10" width="84" height="31" uuid="2cf61c2d-3b01-45dc-b662-7167d4c747ad"/>
+                    <imageExpression><![CDATA["src/main/resources/static/img/rep.png"]]></imageExpression>
+                </image>
+            </frame>
+        </band>
+    </pageFooter>
+</jasperReport>

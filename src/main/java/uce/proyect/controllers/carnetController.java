@@ -1,14 +1,24 @@
 package uce.proyect.controllers;
 
 import lombok.AllArgsConstructor;
-import org.h2.engine.Mode;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.json.JSONObject;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Carnet;
-import uce.proyect.models.Facultad;
+import uce.proyect.models.CarnetResponse;
 import uce.proyect.service.agreement.CarnetService;
+import uce.proyect.service.agreement.EstudianteService;
+
+import java.io.FileNotFoundException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
@@ -19,6 +29,8 @@ import static org.springframework.http.HttpStatus.OK;
 public class carnetController {
 
     private CarnetService carnetService;
+
+    private EstudianteService estudianteService;
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_HC')")
@@ -52,9 +64,43 @@ public class carnetController {
 
 
     @GetMapping("/{estudiante}")
-    public String generarCarnet(@PathVariable String estudiante, Model model) {
-//        var carnet = this.carnetService.buscarCarnetPorEstudiante(estudiante);
-        model.addAttribute("carnet", "ddd");
-        return "carnet/pdf";
+    public ResponseEntity<byte[]> generarCarnet(@PathVariable("estudiante") String estudiante) throws FileNotFoundException, JRException {
+        var data = this.carnetService.buscarCarnetPorEstudiante(estudiante);
+        var file = ResourceUtils.getFile("classpath:carnet.jrxml");
+
+
+        // TODO: lo voy a implementar cuando regrese de las votaciones xd
+        /*
+        * va a regresar un nuevo objeto ya modificado para que salgan los datos completos
+        * */
+
+
+//        CarnetResponse test = CarnetResponse.builder()
+//                .centroVacunacion()
+//                .estudiante()
+//                .cedula()
+//                .fechaNacimiento()
+//                .fechaPrimeraDosis()
+//                .fechaSegundasDosis()
+//                .loteDosisDos()
+//                .loteDosisUno()
+//                .nombreVacuna()
+//                .primeraDosis()
+//                .segundaDosis()
+//                .vacunadorPrimeraDosis()
+//                .vacunadorSegundaDosis()
+//                .build();
+
+
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath()); //
+        var dataSource = new JRBeanCollectionDataSource(Collections.singletonList(data)); //
+        Map<String, Object> map = new HashMap<>();
+        map.put("createdBy", "sgvacunas");
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
+        //JasperExportManager.exportReportToPdfFile(jasperPrint, "C:\\Users\\alpal\\Desktop\\carnet.pdf");
+        byte[] export = JasperExportManager.exportReportToPdf(jasperPrint);
+        var headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=carnet.pdf");
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(export);
     }
 }
