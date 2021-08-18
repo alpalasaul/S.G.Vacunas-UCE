@@ -63,18 +63,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // En este metodo se puede generar la mayoria de accesos y restricciones para los usaurios, se puede definir o quitar el login por defecto, rutas y demas
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        var jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManagerBean()); // Los filtros son interceptores de las peticiones http y ejecutan una accion
-//        jwtAuthenticationFilter.setFilterProcessesUrl("/sgv/login"); // No reemplaza al login por defecto, sino que cambia la url de donde aplica el filtro para generar el token
-//        http.authorizeRequests().antMatchers("/sgv/login", "/usuario/actualizarToken", "/plan/mail").permitAll() // para la autenticacion se debe de permitir cualquier peticion, borrar el endpoint de plan luego
-//                .anyRequest().authenticated()// Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
-//                .and().csrf().disable().httpBasic().authenticationEntryPoint(this.authenticationEntryPoint) // csf no permite actualizar recursos, httpbasics permite habilitar basic auth a los endpoint que tengan preAuthorize
-//                // Spring Security al logearme guarda una sesion durante el tiempo que se ejecute la app
-//                // si ingreso cualquier contrasena toma la contrasena con la que ingrese sesion anteriormente
-//                // para deshabilitar esto hacer:
-////                .and().formLogin() // En lugar de la pagina vacia va a tener el login por defecto, mediante JWT no va a ser necesario registrarse a cada peticion, se define un tiempo de vida, además como no tiene estado al APP no accede a peticiones sin token
-//                .and().addFilter(jwtAuthenticationFilter)
-//                .cors() // defino el cors en el bean corsConfigurationSource
-//                .and().sessionManagement().sessionCreationPolicy(STATELESS) // Sin estado quiere decir que no guarda las credenciales en sessiones, esto para usar tokens
-//                .and().addFilterBefore(new CustomerAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);  // desde el navegador no es posible acceder mediante el form porque nunca guarda el httpsession, dehabilitar para desarrollo y usar postman
+        var jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManagerBean()); // Los filtros son interceptores de las peticiones http y ejecutan una accion
+        jwtAuthenticationFilter.setFilterProcessesUrl("/sgv/login"); // No reemplaza al login por defecto, sino que cambia la url de donde aplica el filtro para generar el token
+        http.authorizeRequests().antMatchers("/sgv/login", "/usuario/actualizarToken", "/plan/mail").permitAll() // para la autenticacion se debe de permitir cualquier peticion, borrar el endpoint de plan luego
+                .anyRequest().authenticated()// Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
+                .and().csrf().disable().httpBasic().authenticationEntryPoint(this.authenticationEntryPoint) // csf no permite actualizar recursos, httpbasics permite habilitar basic auth a los endpoint que tengan preAuthorize
+                // Spring Security al logearme guarda una sesion durante el tiempo que se ejecute la app
+                // si ingreso cualquier contrasena toma la contrasena con la que ingrese sesion anteriormente
+                // para deshabilitar esto hacer:
+//                .and().formLogin() // En lugar de la pagina vacia va a tener el login por defecto, mediante JWT no va a ser necesario registrarse a cada peticion, se define un tiempo de vida, además como no tiene estado al APP no accede a peticiones sin token
+                .and().addFilter(jwtAuthenticationFilter)
+                .cors() // defino el cors en el bean corsConfigurationSource
+                .and().sessionManagement().sessionCreationPolicy(STATELESS) // Sin estado quiere decir que no guarda las credenciales en sessiones, esto para usar tokens
+                .and().addFilterBefore(new CustomerAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);  // desde el navegador no es posible acceder mediante el form porque nunca guarda el httpsession, dehabilitar para desarrollo y usar postman
     }
 }
