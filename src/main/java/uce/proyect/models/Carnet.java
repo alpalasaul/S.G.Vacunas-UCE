@@ -19,8 +19,6 @@ public class Carnet {
 
     private String centroVacunacion;
     private String estudiante;
-    private String cedula;
-    private LocalDate fechaNacimiento;
     private String nombreVacuna;
     private LocalDate fechaPrimeraDosis;
     private LocalDate fechaSegundasDosis;

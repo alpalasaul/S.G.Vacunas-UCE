@@ -7,4 +7,6 @@ import uce.proyect.models.Estudiante;
 public interface EstudianteService extends CoreService<Estudiante> {
     @Transactional
     JSONObject agregar(Estudiante pojo);
+
+    String nombres(String identificador);
 }

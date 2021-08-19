@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Estudiante;
 import uce.proyect.repositories.EstudianteRepository;
@@ -83,4 +85,15 @@ public class EstudianteServiceImp implements EstudianteService {
         }
         return jsonObject;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String nombres(String identificador) {
+        var estudiante = this.estudianteRespository.findByUsuario(identificador);
+        if (estudiante.isPresent()) {
+            return estudiante.get().getNombres().concat(" ").concat(estudiante.get().getApellidos());
+        }
+        throw new NoEncontradorException("No existen registros para : ".concat(identificador));
+    }
+
 }

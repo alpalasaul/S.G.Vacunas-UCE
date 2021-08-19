@@ -9,12 +9,12 @@
     <field name="loteDosisDos" class="java.lang.String"/>
     <field name="loteDosisUno" class="java.lang.String"/>
     <field name="nombreVacuna" class="java.lang.String"/>
-    <field name="primeraDosis" class="java.lang.Boolean"/>
-    <field name="segundaDosis" class="java.lang.Boolean"/>
+    <field name="primeraDosis" class="java.lang.String"/>
+    <field name="segundaDosis" class="java.lang.String"/>
     <field name="vacunadorPrimeraDosis" class="java.lang.String"/>
     <field name="vacunadorSegundaDosis" class="java.lang.String"/>
     <field name="cedula" class="java.lang.String"/>
-    <field name="fechaNacimiento" class="java.time.LocalDate"/>
+    <field name="fechaNacimiento" class="java.lang.Integer"/>
     <background>
         <band splitType="Stretch"/>
     </background>
