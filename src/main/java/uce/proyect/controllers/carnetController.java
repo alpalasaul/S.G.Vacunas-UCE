@@ -1,24 +1,19 @@
 package uce.proyect.controllers;
 
 import lombok.AllArgsConstructor;
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.json.JSONObject;
+import lombok.SneakyThrows;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Carnet;
-import uce.proyect.models.CarnetResponse;
 import uce.proyect.service.agreement.CarnetService;
 import uce.proyect.service.agreement.EstudianteService;
+import uce.proyect.service.agreementImp.EmailService;
 
 import java.io.FileNotFoundException;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
@@ -32,6 +27,8 @@ public class carnetController {
     private CarnetService carnetService;
 
     private EstudianteService estudianteService;
+
+    private EmailService emailService;
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_HC')")
@@ -64,21 +61,24 @@ public class carnetController {
     }
 
     /*
-    * El formato del PDF está hecho en JASPERReport y está en la carpeta resources
-    * El nombre de user del estudiante se manda por la URI:
-    * EJ: http://localhost:8080/carnet/ddlopezs52
-    * */
+     * El formato del PDF está hecho en JASPERReport y está en la carpeta resources
+     * El nombre de user del estudiante se manda por la URI:
+     * EJ: http://localhost:8080/carnet/ddlopezs52
+     * */
     @GetMapping("/{estudiante}")
     public ResponseEntity<byte[]> generarCarnet(@PathVariable("estudiante") String estudiante) throws JRException, FileNotFoundException {
-        byte[] export = this.carnetService.generarPdfEnBytes(estudiante); // Genero mi pdf y lo guardo en una cadena de bytes
+        var jsonObject = this.carnetService.generarPdfEnBytes(estudiante);
+        var export = (byte[]) jsonObject.get("recurso");// Genero mi pdf y lo guardo en una cadena de bytes
         var headers = new HttpHeaders(); // Mando la respuesta de manera intuitiva, lo mando por la cabecera
         headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=carnetVacunacion-".concat(estudiante).concat(".pdf")); // habilito la actividad de examen en línea (inline) para que el navegador me permita descargarlo y le pongo un nombre al pdf
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(export); // Devuelvo la respuesta
     }
 
-    @GetMapping("/almacenar/{estudiante}")
-    public ResponseEntity<Void> generarCarnetAlmacenado(@PathVariable("estudiante") String estudiante) throws JRException, FileNotFoundException {
-        this.carnetService.generarPdfEnArchivo(estudiante); // Genero mi pdf y lo guardo en una cadena de bytes
-        return ResponseEntity.ok().build(); // Devuelvo la respuesta
+    @SneakyThrows
+    @GetMapping("/enviar/{estudiante}")
+    public ResponseEntity<?> generarCarnetAlmacenado(@PathVariable("estudiante") String estudiante) throws JRException, FileNotFoundException {
+        var recursos = this.carnetService.generarPdfEnBytes(estudiante);// Genero mi pdf y lo guardo en una cadena de bytes
+        var respuesta = this.emailService.enviarComprobante(recursos);
+        return new ResponseEntity<Map>(respuesta.toMap(), OK);
     }
 }

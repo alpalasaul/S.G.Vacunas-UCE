@@ -1,6 +1,8 @@
 package uce.proyect.service.agreementImp;
 
 import lombok.AllArgsConstructor;
+import org.json.JSONObject;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -57,18 +60,30 @@ public class EmailService {
     }
 
     // Metodo que permite enviar archivo adjuntos en los email
-    public void enviarComprobante() throws MessagingException, IOException {
+    public JSONObject enviarComprobante(JSONObject recursos) throws MessagingException, IOException {
+
+        var carnet = (byte[]) recursos.get("recurso"); // tomo el pdf en bytes que genero el estudiante para enviarlo
+        var mailDestinatario = recursos.get("mailDestinatario").toString(); // el destinatario igual
+
         var mimeMessage = this.javaMailSender.createMimeMessage();
         var mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
         mimeMessageHelper.setFrom("sgvuce@gmail.com"); // cambiar destinatario a emisor, solo es para desarrollo
-        mimeMessageHelper.setTo("sgvuce@gmail.com");
+        mimeMessageHelper.setTo(mailDestinatario);
         mimeMessageHelper.setSubject("Calendario Vacunación");
         mimeMessageHelper.setText("<h4>MENSAJE ADJUNTO</h4>", true); // Se puede enviar html
 
-        mimeMessageHelper.addAttachment("img.png", this.resourceLoader.getResource("classpath:static/img/logo_uce.png")); // Se envia la ruta definina dentro de resources statics img
+        mimeMessageHelper.addAttachment("carnetVacunacion.pdf", new ByteArrayResource(carnet)); // Se envia la ruta definina dentro de resources statics img
 
         this.javaMailSender.send(mimeMessage);
+
+        var respuesta = new JSONObject();
+        respuesta.put("destinatario", mailDestinatario);
+        respuesta.put("estado", "enviado");
+
+        respuesta.put("fecha_emision", LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")));
+
+        return respuesta;
     }
 
 

@@ -34,18 +34,6 @@ public class planController {
         return new ResponseEntity<>(listar, OK);
     }
 
-    @GetMapping("/mail")
-    public ResponseEntity<?> sendEmail() { // Metodo para verificar el funcionamiento del servicio email, no es el final
-        try {
-            this.emailService.enviarComprobante();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<Void>(OK);
-    }
-
     @PostMapping
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Plan plan) {

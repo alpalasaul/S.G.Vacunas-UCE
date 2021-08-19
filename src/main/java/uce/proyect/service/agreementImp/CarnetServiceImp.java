@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.CarnetException;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Carnet;
@@ -92,11 +91,11 @@ public class CarnetServiceImp implements CarnetService {
 
     @SneakyThrows
     @Override
-    public byte[] generarPdfEnBytes(String estudiante) throws FileNotFoundException, JRException, NoSuchElementException {
+    public JSONObject generarPdfEnBytes(String estudiante) throws FileNotFoundException, JRException, NoSuchElementException {
 
         var data = this.carnetRepository.findByEstudiante(estudiante); // Cargo los datos del carnet y estudiante(vacunado)
         var estu = this.estudianteRepository.findByUsuario(estudiante);
-        var resource = new ClassPathResource("carnet.jrxml").getInputStream(); // Indico en que dirección está alojado el formato XML (está en resources)
+        var resource = new ClassPathResource("carnet.jrxml").getInputStream(); // Habia un error al hacer referencia a la ruta absoluta del pdf al usar heroku - RESUELTO
 
         if (estu.isEmpty() || data.isEmpty()) {
             throw new NoEncontradorException("No existen registros para : ".concat(estudiante));
@@ -104,7 +103,7 @@ public class CarnetServiceImp implements CarnetService {
         var cal = Calendar.getInstance();
         var year = cal.get(Calendar.YEAR);
 
-        var test = CarnetResponse.builder() // Cargo los nuevos datos al objeto que voy a regresar (CarnetResponse)
+        var test = CarnetResponse.builder() // Cargo los nuevos datos al objeto que voy a regresar (CarnetResponse) - ERICK: XQ no se puede hacer con el objeto de carnet que ya hay?
                 .centroVacunacion(data.orElse(null).getCentroVacunacion())
                 .estudiante(this.estudianteService.nombres(estudiante)) // Servicio que devuelve los nombres y apellidos en una sola cadena
                 .fechaNacimiento(year - estu.orElseThrow().getFechaNacimiento().getYear())
@@ -126,44 +125,12 @@ public class CarnetServiceImp implements CarnetService {
         map.put("createdBy", "sgvacunas"); //
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource); // Lleno el reporte que compilé con los datos que cague en la colección
         //JasperExportManager.exportReportToPdfFile(jasperPrint, "C:\\Users\\alpal\\Desktop\\carnet.pdf"); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
-        return JasperExportManager.exportReportToPdf(jasperPrint); // Exporto mi pdf en una cadena de bytes
-    }
+        var bytes = JasperExportManager.exportReportToPdf(jasperPrint);// Exporto mi pdf en una cadena de bytes - ERICK: Uso este mismo metodo para no guardar datos en otro lugar que no sea la DB
 
-    @Override
-    @Transactional(readOnly = true)
-    public void generarPdfEnArchivo(String estudiante) throws FileNotFoundException, JRException, NoSuchElementException {
-
-        var data = this.carnetRepository.findByEstudiante(estudiante); // Cargo los datos del carnet y estudiante(vacunado)
-        var estu = this.estudianteRepository.findByUsuario(estudiante);
-
-        if (estu.isEmpty() || data.isEmpty()) {
-            throw new NoEncontradorException("No existen registros para : ".concat(estudiante));
-        }
-        var cal = Calendar.getInstance();
-        var year = cal.get(Calendar.YEAR);
-
-        var test = CarnetResponse.builder() // Cargo los nuevos datos al objeto que voy a regresar (CarnetResponse)
-                .centroVacunacion(data.orElse(null).getCentroVacunacion())
-                .estudiante(this.estudianteService.nombres(estudiante)) // Servicio que devuelve los nombres y apellidos en una sola cadena
-                .fechaNacimiento(year - estu.orElseThrow().getFechaNacimiento().getYear())
-                .fechaPrimeraDosis(data.get().getFechaPrimeraDosis())
-                .fechaSegundasDosis(data.get().getFechaSegundasDosis())
-                .loteDosisDos(data.get().getLoteDosisDos())
-                .loteDosisUno(data.get().getLoteDosisUno())
-                .cedula(estu.get().getCedula())
-                .nombreVacuna(data.get().getNombreVacuna())
-                .primeraDosis((data.get().isPrimeraDosis()) ? "Sí" : "No") // Operador ternario
-                .segundaDosis((data.get().isSegundaDosis()) ? "Sí" : "No") // Operador ternario
-                .vacunadorPrimeraDosis(this.estudianteService.nombres(data.get().getVacunadorPrimeraDosis()))
-                .vacunadorSegundaDosis(this.estudianteService.nombres(data.get().getVacunadorSegundaDosis()))
-                .build();
-
-        JasperReport jasperReport = JasperCompileManager.compileReport("classpath:carnet.jrxml"); // Mando a compilar el reporte que está en la ruta resources
-        var dataSource = new JRBeanCollectionDataSource(Collections.singletonList(test)); // Cargo los datos que voy a llenar en el reporte en forma de colección
-        Map<String, Object> map = new HashMap<>();
-        map.put("createdBy", "sgvacunas"); //
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource); // Lleno el reporte que compilé con los datos que cague en la colección
-        JasperExportManager.exportReportToPdfFile(jasperPrint, "classpath:"); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
-//        return JasperExportManager.exportReportToPdf(jasperPrint); // Exporto mi pdf en una cadena de bytes=
+        // ERICK: Para no acoplar el servicio de mail aqui envio los recursos necesarios para tratarlo desde el controller
+        var jsonObject = new JSONObject();
+        jsonObject.put("recurso", bytes);
+        jsonObject.put("mailDestinatario", estu.get().getCorreo());
+        return jsonObject;
     }
 }
