@@ -163,7 +163,7 @@ public class CarnetServiceImp implements CarnetService {
         Map<String, Object> map = new HashMap<>();
         map.put("createdBy", "sgvacunas"); //
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource); // Lleno el reporte que compilé con los datos que cague en la colección
-        JasperExportManager.exportReportToPdfFile(jasperPrint, "rutaPdf"); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
+        JasperExportManager.exportReportToPdfFile(jasperPrint, rutaPdf); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
 //        return JasperExportManager.exportReportToPdf(jasperPrint); // Exporto mi pdf en una cadena de bytes=
     }
 }

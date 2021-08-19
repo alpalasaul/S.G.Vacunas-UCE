@@ -23,7 +23,7 @@ public class EmailService {
 
     public static Integer NOTIFICACIONES_ENVIADAS = 0;
 
-    @Autowired
+//    @Autowired
     private JavaMailSender javaMailSender;
 
 //    @Value("${ruta.imagen}")
