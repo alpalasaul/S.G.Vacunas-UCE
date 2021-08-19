@@ -12,6 +12,7 @@ import uce.proyect.models.User;
 import uce.proyect.repositories.EstudianteRepository;
 import uce.proyect.repositories.UserRepository;
 import uce.proyect.service.agreement.AdministradorService;
+import uce.proyect.service.agreement.CarnetService;
 import uce.proyect.service.agreement.EstudianteService;
 import uce.proyect.service.agreement.UserService;
 
@@ -31,7 +32,8 @@ public class SgVacunasSiApplication implements CommandLineRunner {
 //    private UserService userServicel;
 //    private UserRepository userRepository;
 //    private EstudianteService estudianteRepository;
-    private AdministradorService administradorService;
+//    private AdministradorService administradorService;
+    private CarnetService carnetService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -65,5 +67,7 @@ public class SgVacunasSiApplication implements CommandLineRunner {
 //        administrador.setCorreo("salpala@mail");
 //        administrador.setIdentificadorAdmin("KDJF22-2");
 //        this.administradorService.agregarOActualizar(administrador);
+
+//        this.carnetService.generarPdfEnArchivo("ddlopezs52");
     }
 }

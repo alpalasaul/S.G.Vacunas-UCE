@@ -11,6 +11,7 @@ import uce.proyect.service.agreement.PlanService;
 import uce.proyect.service.agreementImp.EmailService;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -38,6 +39,8 @@ public class planController {
         try {
             this.emailService.enviarComprobante();
         } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return new ResponseEntity<>(OK);

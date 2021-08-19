@@ -10,5 +10,7 @@ public interface CarnetService extends CoreService<Carnet> {
 
     Carnet buscarCarnetPorEstudiante(String estudiante) throws NoEncontradorException;
 
-    byte[] generarPdf(String estudiante) throws FileNotFoundException, JRException;
+    byte[] generarPdfEnBytes(String estudiante) throws FileNotFoundException, JRException;
+
+    void generarPdfEnArchivo(String estudiante) throws FileNotFoundException, JRException;
 }

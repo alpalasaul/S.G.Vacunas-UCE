@@ -70,9 +70,15 @@ public class carnetController {
     * */
     @GetMapping("/{estudiante}")
     public ResponseEntity<byte[]> generarCarnet(@PathVariable("estudiante") String estudiante) throws JRException, FileNotFoundException {
-        byte[] export = this.carnetService.generarPdf(estudiante); // Genero mi pdf y lo guardo en una cadena de bytes
+        byte[] export = this.carnetService.generarPdfEnBytes(estudiante); // Genero mi pdf y lo guardo en una cadena de bytes
         var headers = new HttpHeaders(); // Mando la respuesta de manera intuitiva, lo mando por la cabecera
         headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=carnetVacunacion-".concat(estudiante).concat(".pdf")); // habilito la actividad de examen en línea (inline) para que el navegador me permita descargarlo y le pongo un nombre al pdf
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(export); // Devuelvo la respuesta
+    }
+
+    @GetMapping("/almacenar/{estudiante}")
+    public ResponseEntity<Void> generarCarnetAlmacenado(@PathVariable("estudiante") String estudiante) throws JRException, FileNotFoundException {
+        this.carnetService.generarPdfEnArchivo(estudiante); // Genero mi pdf y lo guardo en una cadena de bytes
+        return ResponseEntity.ok().build(); // Devuelvo la respuesta
     }
 }

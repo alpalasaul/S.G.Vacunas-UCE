@@ -1,19 +1,24 @@
 package uce.proyect.service.agreementImp;
 
+import lombok.AllArgsConstructor;
+import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import javax.mail.MessagingException;
-import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Service
+@AllArgsConstructor
 public class EmailService {
 
     public static Integer NOTIFICACIONES_ENVIADAS = 0;
@@ -21,8 +26,11 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Value("${imagen.ruta}")
-    private String imagen;
+//    @Value("${ruta.imagen}")
+//    private String imagen;
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     public String enviarEmail() {
         var mailMessage = new SimpleMailMessage();
@@ -59,7 +67,7 @@ public class EmailService {
     }
 
     // Metodo que permite enviar archivo adjuntos en los email
-    public void enviarComprobante() throws MessagingException {
+    public void enviarComprobante() throws MessagingException, IOException {
         var mimeMessage = this.javaMailSender.createMimeMessage();
         var mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
@@ -67,9 +75,8 @@ public class EmailService {
         mimeMessageHelper.setTo("sgvuce@gmail.com");
         mimeMessageHelper.setSubject("Calendario Vacunación");
         mimeMessageHelper.setText("<h4>MENSAJE ADJUNTO</h4>", true); // Se puede enviar html
-        var file = new FileSystemResource(new File(imagen)); // Se envia la ruta definina dentro de resources statics img
 
-        mimeMessageHelper.addAttachment("img.png", file);
+        mimeMessageHelper.addAttachment("img.png", resourceLoader.getResource("classpath:static/img/logo_uce.png")); // Se envia la ruta definina dentro de resources statics img
 
         this.javaMailSender.send(mimeMessage);
     }
