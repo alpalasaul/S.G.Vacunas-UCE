@@ -93,11 +93,14 @@ public class CarnetServiceImp implements CarnetService {
         var estu = this.estudianteRepository.findByUsuario(estudiante);
         var file = ResourceUtils.getFile("classpath:carnet.jrxml"); // Indico en que dirección está alojado el formato XML (está en resources)
 
+        if (estu.isEmpty() || data.isEmpty()){
+            throw new NoEncontradorException("No existen registros para : ".concat(estudiante));
+        }
         var cal = Calendar.getInstance();
         var year = cal.get(Calendar.YEAR);
 
         var test = CarnetResponse.builder() // Cargo los nuevos datos al objeto que voy a regresar (CarnetResponse)
-                .centroVacunacion(data.orElseThrow().getCentroVacunacion())
+                .centroVacunacion(data.orElse(null).getCentroVacunacion())
                 .estudiante(this.estudianteService.nombres(estudiante)) // Servicio que devuelve los nombres y apellidos en una sola cadena
                 .fechaNacimiento(year - estu.orElseThrow().getFechaNacimiento().getYear())
                 .fechaPrimeraDosis(data.get().getFechaPrimeraDosis())
