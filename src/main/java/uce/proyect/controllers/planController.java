@@ -36,7 +36,14 @@ public class planController {
 
     @GetMapping("/mail")
     public ResponseEntity<?> sendEmail() { // Metodo para verificar el funcionamiento del servicio email, no es el final
-        return new ResponseEntity<String>(this.emailService.enviarEmail(), OK);
+        try {
+            this.emailService.enviarComprobante();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<Void>(OK);
     }
 
     @PostMapping
