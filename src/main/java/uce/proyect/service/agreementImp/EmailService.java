@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@Service
+//@Service
 @AllArgsConstructor
 public class EmailService {
 
@@ -29,7 +29,7 @@ public class EmailService {
 //    @Value("${ruta.imagen}")
 //    private String imagen;
 
-    @Autowired
+//    @Autowired
     ResourceLoader resourceLoader;
 
     public String enviarEmail() {

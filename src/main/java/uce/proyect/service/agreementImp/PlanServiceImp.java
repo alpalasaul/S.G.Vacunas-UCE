@@ -28,7 +28,7 @@ public class PlanServiceImp implements PlanService {
 
     private EstudianteRepository estudianteRepository;
 
-    private EmailService emailService;
+//    private EmailService emailService;
 
     @Override
     public Plan agregarOActualizar(Plan pojo) {
@@ -92,11 +92,11 @@ public class PlanServiceImp implements PlanService {
                             .concat(" de ")
                             .concat(nuevoPlan.getFacultad()));
                 } else {
-                    estudiantes.forEach(estudiante -> this.emailService.enviarEmail( // Se envia las notificaciones a los mails de cada estudiante, para ver como se forma el JSON entra a la documentación de los ENDPOINT
-                            estudiante.getCorreo(),
-                            nuevoPlan.getFechaInicio(),
-                            nuevoPlan.getFechaFin(),
-                            nuevoPlan.getFacultad()));
+//                    estudiantes.forEach(estudiante -> this.emailService.enviarEmail( // Se envia las notificaciones a los mails de cada estudiante, para ver como se forma el JSON entra a la documentación de los ENDPOINT
+//                            estudiante.getCorreo(),
+//                            nuevoPlan.getFechaInicio(),
+//                            nuevoPlan.getFechaFin(),
+//                            nuevoPlan.getFacultad()));
                     jsonObject.put("notificados", NOTIFICACIONES_ENVIADAS);
                     jsonObject.put("fecha_emision", LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")));
                 }
