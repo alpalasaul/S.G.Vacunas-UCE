@@ -17,25 +17,23 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-//@Service
+@Service
 @AllArgsConstructor
 public class EmailService {
 
     public static Integer NOTIFICACIONES_ENVIADAS = 0;
 
-//    @Autowired
     private JavaMailSender javaMailSender;
 
 //    @Value("${ruta.imagen}")
 //    private String imagen;
 
-//    @Autowired
     ResourceLoader resourceLoader;
 
     public String enviarEmail() {
         var mailMessage = new SimpleMailMessage();
 
-        mailMessage.setFrom("erickdp@hotmail.com");
+        mailMessage.setFrom("sgvuce@gmail.com");
         mailMessage.setTo("sgvuce@gmail.com");
         mailMessage.setSubject("Vacunación");
         mailMessage.setText("Mensaje con tilde en Díaz");

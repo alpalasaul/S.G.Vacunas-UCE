@@ -25,7 +25,7 @@ public class planController {
 
     private PlanService planService;
 
-//    private EmailService emailService;
+    private EmailService emailService;
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_HC')")
@@ -35,15 +35,8 @@ public class planController {
     }
 
     @GetMapping("/mail")
-    public ResponseEntity<Void> sendEmail() { // Metodo para verificar el funcionamiento del servicio email, no es el final
-//        try {
-//            this.emailService.enviarComprobante();
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        return new ResponseEntity<>(OK);
+    public ResponseEntity<?> sendEmail() { // Metodo para verificar el funcionamiento del servicio email, no es el final
+        return new ResponseEntity<String>(this.emailService.enviarEmail(), OK);
     }
 
     @PostMapping
