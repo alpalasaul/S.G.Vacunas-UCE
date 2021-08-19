@@ -1,16 +1,11 @@
 package uce.proyect.service.agreementImp;
 
 import lombok.AllArgsConstructor;
-import org.apache.catalina.core.ApplicationContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -25,10 +20,7 @@ public class EmailService {
 
     private JavaMailSender javaMailSender;
 
-//    @Value("${ruta.imagen}")
-//    private String imagen;
-
-    ResourceLoader resourceLoader;
+    private ResourceLoader resourceLoader;
 
     public String enviarEmail() {
         var mailMessage = new SimpleMailMessage();
@@ -74,7 +66,7 @@ public class EmailService {
         mimeMessageHelper.setSubject("Calendario Vacunación");
         mimeMessageHelper.setText("<h4>MENSAJE ADJUNTO</h4>", true); // Se puede enviar html
 
-        mimeMessageHelper.addAttachment("img.png", resourceLoader.getResource("classpath:static/img/logo_uce.png")); // Se envia la ruta definina dentro de resources statics img
+        mimeMessageHelper.addAttachment("img.png", this.resourceLoader.getResource("classpath:static/img/logo_uce.png")); // Se envia la ruta definina dentro de resources statics img
 
         this.javaMailSender.send(mimeMessage);
     }

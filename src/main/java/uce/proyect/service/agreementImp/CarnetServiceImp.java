@@ -1,13 +1,15 @@
 package uce.proyect.service.agreementImp;
 
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ResourceUtils;
 import uce.proyect.exceptions.CarnetException;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Carnet;
@@ -21,19 +23,17 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
+@Slf4j
 public class CarnetServiceImp implements CarnetService {
 
-    @Autowired
     private CarnetRepository carnetRepository;
 
-    @Autowired
     private EstudianteRepository estudianteRepository;
 
-    @Autowired
     private EstudianteService estudianteService;
 
-    @Value("${ruta.pdf}")
-    private String rutaPdf;
+    private ResourceLoader resourceLoader;
 
     @Override
     public Carnet agregarOActualizar(Carnet pojo) {
@@ -90,12 +90,13 @@ public class CarnetServiceImp implements CarnetService {
         throw new NoEncontradorException("No se ha encontrado ningun carnet para :".concat(estudiante));
     }
 
+    @SneakyThrows
     @Override
     public byte[] generarPdfEnBytes(String estudiante) throws FileNotFoundException, JRException, NoSuchElementException {
 
         var data = this.carnetRepository.findByEstudiante(estudiante); // Cargo los datos del carnet y estudiante(vacunado)
         var estu = this.estudianteRepository.findByUsuario(estudiante);
-        var file = ResourceUtils.getFile("classpath:carnet.jrxml"); // Indico en que dirección está alojado el formato XML (está en resources)
+        var resource = new ClassPathResource("carnet.jrxml").getInputStream(); // Indico en que dirección está alojado el formato XML (está en resources)
 
         if (estu.isEmpty() || data.isEmpty()) {
             throw new NoEncontradorException("No existen registros para : ".concat(estudiante));
@@ -119,7 +120,7 @@ public class CarnetServiceImp implements CarnetService {
                 .vacunadorSegundaDosis(this.estudianteService.nombres(data.get().getVacunadorSegundaDosis()))
                 .build();
 
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath()); // Mando a compilar el reporte que está en la ruta resources
+        JasperReport jasperReport = JasperCompileManager.compileReport(resource); // Mando a compilar el reporte que está en la ruta resources
         var dataSource = new JRBeanCollectionDataSource(Collections.singletonList(test)); // Cargo los datos que voy a llenar en el reporte en forma de colección
         Map<String, Object> map = new HashMap<>();
         map.put("createdBy", "sgvacunas"); //
@@ -134,7 +135,6 @@ public class CarnetServiceImp implements CarnetService {
 
         var data = this.carnetRepository.findByEstudiante(estudiante); // Cargo los datos del carnet y estudiante(vacunado)
         var estu = this.estudianteRepository.findByUsuario(estudiante);
-        var file = ResourceUtils.getFile("classpath:carnet.jrxml"); // Indico en que dirección está alojado el formato XML (está en resources)
 
         if (estu.isEmpty() || data.isEmpty()) {
             throw new NoEncontradorException("No existen registros para : ".concat(estudiante));
@@ -158,12 +158,12 @@ public class CarnetServiceImp implements CarnetService {
                 .vacunadorSegundaDosis(this.estudianteService.nombres(data.get().getVacunadorSegundaDosis()))
                 .build();
 
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath()); // Mando a compilar el reporte que está en la ruta resources
+        JasperReport jasperReport = JasperCompileManager.compileReport("classpath:carnet.jrxml"); // Mando a compilar el reporte que está en la ruta resources
         var dataSource = new JRBeanCollectionDataSource(Collections.singletonList(test)); // Cargo los datos que voy a llenar en el reporte en forma de colección
         Map<String, Object> map = new HashMap<>();
         map.put("createdBy", "sgvacunas"); //
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource); // Lleno el reporte que compilé con los datos que cague en la colección
-        JasperExportManager.exportReportToPdfFile(jasperPrint, rutaPdf); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
+        JasperExportManager.exportReportToPdfFile(jasperPrint, "classpath:"); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
 //        return JasperExportManager.exportReportToPdf(jasperPrint); // Exporto mi pdf en una cadena de bytes=
     }
 }
