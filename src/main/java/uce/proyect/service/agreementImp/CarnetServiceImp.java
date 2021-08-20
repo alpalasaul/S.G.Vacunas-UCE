@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.data.JsonDataSource;
 import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import uce.proyect.exceptions.CarnetException;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Carnet;
-import uce.proyect.models.CarnetResponse;
 import uce.proyect.repositories.CarnetRepository;
 import uce.proyect.repositories.EstudianteRepository;
 import uce.proyect.service.agreement.CarnetService;
 import uce.proyect.service.agreement.EstudianteService;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
@@ -103,27 +103,31 @@ public class CarnetServiceImp implements CarnetService {
         var cal = Calendar.getInstance();
         var year = cal.get(Calendar.YEAR);
 
-        var test = CarnetResponse.builder() // Cargo los nuevos datos al objeto que voy a regresar (CarnetResponse) - ERICK: XQ no se puede hacer con el objeto de carnet que ya hay?
-                .centroVacunacion(data.orElse(null).getCentroVacunacion())
-                .estudiante(this.estudianteService.nombres(estudiante)) // Servicio que devuelve los nombres y apellidos en una sola cadena
-                .fechaNacimiento(year - estu.orElseThrow().getFechaNacimiento().getYear())
-                .fechaPrimeraDosis(data.get().getFechaPrimeraDosis())
-                .fechaSegundasDosis(data.get().getFechaSegundasDosis())
-                .loteDosisDos(data.get().getLoteDosisDos())
-                .loteDosisUno(data.get().getLoteDosisUno())
-                .cedula(estu.get().getCedula())
-                .nombreVacuna(data.get().getNombreVacuna())
-                .primeraDosis((data.get().isPrimeraDosis()) ? "Sí" : "No") // Operador ternario
-                .segundaDosis((data.get().isSegundaDosis()) ? "Sí" : "No") // Operador ternario
-                .vacunadorPrimeraDosis(this.estudianteService.nombres(data.get().getVacunadorPrimeraDosis()))
-                .vacunadorSegundaDosis(this.estudianteService.nombres(data.get().getVacunadorSegundaDosis()))
-                .build();
+        var dataJson = new JSONObject();
+
+        dataJson.put("centroVacunacion", data.orElse(null).getCentroVacunacion());
+        dataJson.put("estudiante", this.estudianteService.nombres(estudiante));
+        dataJson.put("cedula", estu.get().getCedula());
+        dataJson.put("fechaNacimiento", year - estu.orElseThrow().getFechaNacimiento().getYear());
+        dataJson.put("nombreVacuna", data.get().getNombreVacuna());
+        dataJson.put("fechaPrimeraDosis", data.get().getFechaPrimeraDosis().toString());
+        dataJson.put("fechaSegundasDosis", data.get().getFechaSegundasDosis().toString());
+        dataJson.put("vacunadorPrimeraDosis", this.estudianteService.nombres(data.get().getVacunadorPrimeraDosis()));
+        dataJson.put("vacunadorSegundaDosis", this.estudianteService.nombres(data.get().getVacunadorSegundaDosis()));
+        dataJson.put("primeraDosis", (data.get().isPrimeraDosis()) ? "Sí" : "No");
+        dataJson.put("segundaDosis", (data.get().isSegundaDosis()) ? "Sí" : "No");
+        dataJson.put("loteDosisUno", data.get().getLoteDosisUno());
+        dataJson.put("loteDosisDos", data.get().getLoteDosisDos());
+
+        ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(dataJson.toString().getBytes());
+
+        JsonDataSource ds = new JsonDataSource(jsonDataStream);
 
         JasperReport jasperReport = JasperCompileManager.compileReport(resource); // Mando a compilar el reporte que está en la ruta resources
-        var dataSource = new JRBeanCollectionDataSource(Collections.singletonList(test)); // Cargo los datos que voy a llenar en el reporte en forma de colección
+//        var dataSource = new JRBeanCollectionDataSource(Collections.singletonList(test)); // Cargo los datos que voy a llenar en el reporte en forma de colección
         Map<String, Object> map = new HashMap<>();
         map.put("createdBy", "sgvacunas"); //
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource); // Lleno el reporte que compilé con los datos que cague en la colección
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, ds); // Lleno el reporte que compilé con los datos que cague en la colección
         //JasperExportManager.exportReportToPdfFile(jasperPrint, "C:\\Users\\alpal\\Desktop\\carnet.pdf"); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
         var bytes = JasperExportManager.exportReportToPdf(jasperPrint);// Exporto mi pdf en una cadena de bytes - ERICK: Uso este mismo metodo para no guardar datos en otro lugar que no sea la DB
 

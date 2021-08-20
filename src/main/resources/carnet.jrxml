@@ -4,8 +4,8 @@
 
     <field name="centroVacunacion" class="java.lang.String"/>
     <field name="estudiante" class="java.lang.String"/>
-    <field name="fechaPrimeraDosis" class="java.time.LocalDate"/>
-    <field name="fechaSegundasDosis" class="java.time.LocalDate"/>
+    <field name="fechaPrimeraDosis" class="java.lang.String"/>
+    <field name="fechaSegundasDosis" class="java.lang.String"/>
     <field name="loteDosisDos" class="java.lang.String"/>
     <field name="loteDosisUno" class="java.lang.String"/>
     <field name="nombreVacuna" class="java.lang.String"/>
