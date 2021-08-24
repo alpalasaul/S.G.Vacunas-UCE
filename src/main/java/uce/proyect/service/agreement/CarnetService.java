@@ -5,11 +5,11 @@ import org.json.JSONObject;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Carnet;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public interface CarnetService extends CoreService<Carnet> {
 
     Carnet buscarCarnetPorEstudiante(String estudiante) throws NoEncontradorException;
 
-    JSONObject generarPdfEnBytes(String estudiante) throws FileNotFoundException, JRException;
+    JSONObject generarPdfEnBytes(String estudiante) throws IOException, JRException;
 }

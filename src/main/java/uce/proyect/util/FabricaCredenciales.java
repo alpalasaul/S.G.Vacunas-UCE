@@ -1,7 +1,9 @@
 package uce.proyect.util;
 
+import uce.proyect.models.Carnet;
 import uce.proyect.models.User;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,6 +66,22 @@ public class FabricaCredenciales {
             codigo.append((char) (r.nextInt(26) + 'A'));
         }
         return codigo.toString();
+    }
+
+    public static Carnet generarCarnet(String nombreUsuario) {
+        var carnet_default = new Carnet();
+        carnet_default.setEstudiante(nombreUsuario);
+        carnet_default.setCentroVacunacion("N/A");
+        carnet_default.setFechaPrimeraDosis(null);
+        carnet_default.setFechaSegundasDosis(null);
+        carnet_default.setLoteDosisDos("N/A");
+        carnet_default.setLoteDosisUno("N/A");
+        carnet_default.setNombreVacuna("N/A");
+        carnet_default.setPrimeraDosis(false);
+        carnet_default.setSegundaDosis(false);
+        carnet_default.setVacunadorPrimeraDosis("N/A");
+        carnet_default.setVacunadorSegundaDosis("N/A");
+        return carnet_default;
     }
 
 }

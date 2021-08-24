@@ -8,7 +8,6 @@ import uce.proyect.models.Estudiante;
 import uce.proyect.service.agreement.EstudianteService;
 
 import java.util.Collection;
-import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -20,6 +19,7 @@ public class estudianteController {
     private EstudianteService estudianteService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getEstudiantes() {
         var listar = this.estudianteService.listar();
         return new ResponseEntity<Collection>(listar, OK);
@@ -36,7 +36,7 @@ public class estudianteController {
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Estudiante user) {
         var nUser = this.estudianteService.agregar(user);
-        return new ResponseEntity<Map>(nUser.toMap(), CREATED);
+        return new ResponseEntity<>(nUser.toMap(), CREATED);
     }
 
     /*

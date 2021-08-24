@@ -1,7 +1,6 @@
 package uce.proyect.controllers;
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import net.sf.jasperreports.engine.JRException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,11 +9,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Carnet;
 import uce.proyect.service.agreement.CarnetService;
-import uce.proyect.service.agreement.EstudianteService;
 import uce.proyect.service.agreementImp.EmailService;
 
-import java.io.FileNotFoundException;
-import java.util.Map;
+import javax.mail.MessagingException;
+import java.io.IOException;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
@@ -25,8 +23,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class carnetController {
 
     private CarnetService carnetService;
-
-    private EstudianteService estudianteService;
 
     private EmailService emailService;
 
@@ -44,11 +40,9 @@ public class carnetController {
         return new ResponseEntity<>(cart, ACCEPTED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @PreAuthorize("hasRole('ROLE_HC')")
-    public ResponseEntity<?> update(@RequestBody Carnet carnet, @PathVariable("id") String id) {
-        this.carnetService.buscarPorId(id); // importante para no crear registros al intentar actualizar
-        carnet.set_id(id);
+    public ResponseEntity<?> update(@RequestBody Carnet carnet) {
         var cart = this.carnetService.agregarOActualizar(carnet);
         return new ResponseEntity<>(cart, ACCEPTED);
     }
@@ -65,8 +59,9 @@ public class carnetController {
      * El nombre de user del estudiante se manda por la URI:
      * EJ: http://localhost:8080/carnet/ddlopezs52
      * */
-    @GetMapping("/{estudiante}")
-    public ResponseEntity<byte[]> generarCarnet(@PathVariable("estudiante") String estudiante) throws JRException, FileNotFoundException {
+    @GetMapping("/descargarCarnert/{estudiante}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<byte[]> generarCarnet(@PathVariable("estudiante") String estudiante) throws JRException, IOException {
         var jsonObject = this.carnetService.generarPdfEnBytes(estudiante);
         var export = (byte[]) jsonObject.get("recurso");// Genero mi pdf y lo guardo en una cadena de bytes
         var headers = new HttpHeaders(); // Mando la respuesta de manera intuitiva, lo mando por la cabecera
@@ -74,11 +69,18 @@ public class carnetController {
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(export); // Devuelvo la respuesta
     }
 
-    @SneakyThrows
-    @GetMapping("/enviar/{estudiante}")
-    public ResponseEntity<?> generarCarnetAlmacenado(@PathVariable("estudiante") String estudiante) throws JRException, FileNotFoundException {
+    @GetMapping("/enviarCarnet/{estudiante}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> generarCarnetAlmacenado(@PathVariable("estudiante") String estudiante) throws JRException, IOException, MessagingException {
         var recursos = this.carnetService.generarPdfEnBytes(estudiante);// Genero mi pdf y lo guardo en una cadena de bytes
         var respuesta = this.emailService.enviarComprobante(recursos);
-        return new ResponseEntity<Map>(respuesta.toMap(), OK);
+        return new ResponseEntity<>(respuesta.toMap(), OK);
+    }
+
+    @GetMapping("/{estudiante}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> getDatosCarnet(@PathVariable("estudiante") String estudiante) {
+        var datosCarnet = this.carnetService.buscarPorId(estudiante);
+        return new ResponseEntity<>(datosCarnet, OK);
     }
 }

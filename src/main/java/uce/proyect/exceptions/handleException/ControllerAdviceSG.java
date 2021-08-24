@@ -9,10 +9,8 @@ import uce.proyect.exceptions.CarnetException;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.exceptions.PlanException;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -20,7 +18,7 @@ import static org.springframework.http.HttpStatus.*;
 public class ControllerAdviceSG {
 
     @ExceptionHandler(NoEncontradorException.class)
-    public ResponseEntity<Map> handleNoEncontradoEx(NoEncontradorException nee) {
+    public ResponseEntity<?> handleNoEncontradoEx(NoEncontradorException nee) {
         var jsonObject = new JSONObject();
         jsonObject.put("mensaje", nee.getMessage());
         jsonObject.put("fecha", LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")));
@@ -28,7 +26,7 @@ public class ControllerAdviceSG {
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Map> handleDataAccessEx(DataAccessException dae) {
+    public ResponseEntity<?> handleDataAccessEx(DataAccessException dae) {
         var jsonObject = new JSONObject();
         jsonObject.put("mensaje", dae.getMessage());
         jsonObject.put("causa", dae.getMostSpecificCause().toString());
@@ -37,17 +35,19 @@ public class ControllerAdviceSG {
     }
 
     @ExceptionHandler(CarnetException.class)
-    public ResponseEntity<Map> handleCarnetEx(CarnetException dae) {
+    public ResponseEntity<?> handleCarnetEx(CarnetException dae) {
         var jsonObject = new JSONObject();
         jsonObject.put("mensaje", dae.getMessage());
-        jsonObject.put("fecha_primera_dosis", dae.getFechaPrimeraDosis().toString());
-        jsonObject.put("fecha_estimacion_segunda_dosis", dae.getEstimacionfechaSegundaDosis());
-        jsonObject.put("tipoVacuna", dae.getTipoVacuna());
+        if (dae.getFechaPrimeraDosis() != null) { // Cuando se genera el usario estos valores estan en null
+            jsonObject.put("fecha_primera_dosis", dae.getFechaPrimeraDosis().toString());
+            jsonObject.put("fecha_estimacion_segunda_dosis", dae.getEstimacionfechaSegundaDosis());
+            jsonObject.put("tipoVacuna", dae.getTipoVacuna());
+        }
         return new ResponseEntity<>(jsonObject.toMap(), BAD_REQUEST);
     }
 
     @ExceptionHandler(PlanException.class)
-    public ResponseEntity<Map> handlePlanEx(PlanException dae) {
+    public ResponseEntity<?> handlePlanEx(PlanException dae) {
         var jsonObject = new JSONObject();
         jsonObject.put("mensaje", dae.getMessage());
         jsonObject.put("fecha_inicio", dae.getFechaInicio().toString());

@@ -1,24 +1,26 @@
 package uce.proyect.service.agreementImp;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ResourceUtils;
 import uce.proyect.exceptions.NoEncontradorException;
+import uce.proyect.models.Carnet;
 import uce.proyect.models.Estudiante;
+import uce.proyect.repositories.CarnetRepository;
 import uce.proyect.repositories.EstudianteRepository;
 import uce.proyect.repositories.UserRepository;
 import uce.proyect.service.agreement.EstudianteService;
 
 import java.util.Collection;
 
-import static uce.proyect.util.FabricaCredenciales.EST;
-import static uce.proyect.util.FabricaCredenciales.generarUsuario;
+import static uce.proyect.util.FabricaCredenciales.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class EstudianteServiceImp implements EstudianteService {
 
     private EstudianteRepository estudianteRespository;
@@ -26,6 +28,8 @@ public class EstudianteServiceImp implements EstudianteService {
     private UserRepository userRepository;
 
     private PasswordEncoder passwordEncoder;
+
+    private CarnetRepository carnetRepository;
 
     @Override
     public JSONObject agregar(Estudiante pojo) {
@@ -42,8 +46,15 @@ public class EstudianteServiceImp implements EstudianteService {
         jsonObject.put("usuario", user);
 
         var estudiante = this.estudianteRespository.save(pojo);
+        log.info("Agregado estudiante");
+//        Cuando se guarde el estudiante se genera un carnet relacionado a dicho usuario
+        var carnet = generarCarnet(usuario.getNombreUsuario());
+
+        this.carnetRepository.save(carnet);
 
         jsonObject.put("estudiante", estudiante);
+
+        jsonObject.put("carnet", "Nuevo Carnet Generado");
 
         return jsonObject;
     }

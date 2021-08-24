@@ -20,5 +20,5 @@ public class Persona {
     private String correo;
     private String usuario; // Como en el usuario ya no se repite este campo no es necesario volverlo a indexar
     private String genero;
-    private boolean esControlado;
+    private boolean esControlador;
 }

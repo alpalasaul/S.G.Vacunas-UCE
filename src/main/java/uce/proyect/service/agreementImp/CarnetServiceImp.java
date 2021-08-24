@@ -1,7 +1,6 @@
 package uce.proyect.service.agreementImp;
 
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JsonDataSource;
@@ -9,6 +8,7 @@ import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.CarnetException;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Carnet;
@@ -18,7 +18,8 @@ import uce.proyect.service.agreement.CarnetService;
 import uce.proyect.service.agreement.EstudianteService;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -50,11 +51,8 @@ public class CarnetServiceImp implements CarnetService {
 
     @Override
     public Carnet buscarPorId(String identificador) {
-        var carnet = this.carnetRepository.findById(identificador);
-        if (carnet.isPresent()) {
-            return carnet.get();
-        }
-        throw new NoEncontradorException("No existen registros para : ".concat(identificador));
+        var carnet = this.carnetRepository.findByEstudiante(identificador);
+        return carnet.orElseThrow();
     }
 
     @Override
@@ -71,53 +69,54 @@ public class CarnetServiceImp implements CarnetService {
 
     //    Servicio que valida que el cerdo ya tenga las 2 dosis
     @Override
+    @Transactional(readOnly = true)
     public Carnet buscarCarnetPorEstudiante(String estudiante) throws NoEncontradorException {
         var carnetOptional = this.carnetRepository.findByEstudiante(estudiante);
         if (carnetOptional.isPresent()) {
             var carnet = carnetOptional.get();
             if (!carnet.isSegundaDosis()) {
                 var fechaPrimeraDosis = carnet.getFechaPrimeraDosis();
-                var fechaEstimadaSegundaDosis = fechaPrimeraDosis.plusDays(28L);
-                throw new CarnetException(
-                        "No se ha suministrado la segunda dosis aún.",
-                        fechaPrimeraDosis,
-                        fechaEstimadaSegundaDosis,
-                        carnet.getNombreVacuna());
+                if (fechaPrimeraDosis != null) {
+                    var fechaEstimadaSegundaDosis = fechaPrimeraDosis.plusDays(28L);
+                    throw new CarnetException(
+                            "No se ha suministrado la segunda dosis aún.",
+                            fechaPrimeraDosis,
+                            fechaEstimadaSegundaDosis,
+                            carnet.getNombreVacuna());
+                } else {
+                    throw new CarnetException("No se ha asigando aún un calendario de Vacunación.");
+                }
             }
             return carnet;
         }
         throw new NoEncontradorException("No se ha encontrado ningun carnet para :".concat(estudiante));
     }
 
-    @SneakyThrows
     @Override
-    public JSONObject generarPdfEnBytes(String estudiante) throws FileNotFoundException, JRException, NoSuchElementException {
+    public JSONObject generarPdfEnBytes(String estudiante) throws IOException, JRException, NoSuchElementException {
 
-        var data = this.carnetRepository.findByEstudiante(estudiante); // Cargo los datos del carnet y estudiante(vacunado)
-        var estu = this.estudianteRepository.findByUsuario(estudiante);
+        var data = this.buscarCarnetPorEstudiante(estudiante); // Cargo los datos del carnet y estudiante (vacunado), verifico que tenga las 2 dosis y que exista
+        var estu = this.estudianteRepository.findByUsuario(estudiante).orElseThrow(); // Con la validacion anterior ya se define la existencia o no del usuario
+
         var resource = new ClassPathResource("carnet.jrxml").getInputStream(); // Habia un error al hacer referencia a la ruta absoluta del pdf al usar heroku - RESUELTO
 
-        if (estu.isEmpty() || data.isEmpty()) {
-            throw new NoEncontradorException("No existen registros para : ".concat(estudiante));
-        }
         var cal = Calendar.getInstance();
-        var year = cal.get(Calendar.YEAR);
 
         var dataJson = new JSONObject();
 
-        dataJson.put("centroVacunacion", data.orElse(null).getCentroVacunacion());
+        dataJson.put("centroVacunacion", data.getCentroVacunacion());
         dataJson.put("estudiante", this.estudianteService.nombres(estudiante));
-        dataJson.put("cedula", estu.get().getCedula());
-        dataJson.put("fechaNacimiento", year - estu.orElseThrow().getFechaNacimiento().getYear());
-        dataJson.put("nombreVacuna", data.get().getNombreVacuna());
-        dataJson.put("fechaPrimeraDosis", data.get().getFechaPrimeraDosis().toString());
-        dataJson.put("fechaSegundasDosis", data.get().getFechaSegundasDosis().toString());
-        dataJson.put("vacunadorPrimeraDosis", this.estudianteService.nombres(data.get().getVacunadorPrimeraDosis()));
-        dataJson.put("vacunadorSegundaDosis", this.estudianteService.nombres(data.get().getVacunadorSegundaDosis()));
-        dataJson.put("primeraDosis", (data.get().isPrimeraDosis()) ? "Sí" : "No");
-        dataJson.put("segundaDosis", (data.get().isSegundaDosis()) ? "Sí" : "No");
-        dataJson.put("loteDosisUno", data.get().getLoteDosisUno());
-        dataJson.put("loteDosisDos", data.get().getLoteDosisDos());
+        dataJson.put("cedula", estu.getCedula());
+        dataJson.put("fechaNacimiento", LocalDate.now().getYear() - estu.getFechaNacimiento().getYear()); // Solo es hilar mas fino
+        dataJson.put("nombreVacuna", data.getNombreVacuna());
+        dataJson.put("fechaPrimeraDosis", data.getFechaPrimeraDosis().toString());
+        dataJson.put("fechaSegundasDosis", data.getFechaSegundasDosis().toString());
+        dataJson.put("vacunadorPrimeraDosis", this.estudianteService.nombres(data.getVacunadorPrimeraDosis()));
+        dataJson.put("vacunadorSegundaDosis", this.estudianteService.nombres(data.getVacunadorSegundaDosis()));
+        dataJson.put("primeraDosis", (data.isPrimeraDosis()) ? "Sí" : "No");
+        dataJson.put("segundaDosis", (data.isSegundaDosis()) ? "Sí" : "No");
+        dataJson.put("loteDosisUno", data.getLoteDosisUno());
+        dataJson.put("loteDosisDos", data.getLoteDosisDos());
 
         ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(dataJson.toString().getBytes());
 
@@ -128,13 +127,13 @@ public class CarnetServiceImp implements CarnetService {
         Map<String, Object> map = new HashMap<>();
         map.put("createdBy", "sgvacunas"); //
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, ds); // Lleno el reporte que compilé con los datos que cague en la colección
-        //JasperExportManager.exportReportToPdfFile(jasperPrint, "C:\\Users\\alpal\\Desktop\\carnet.pdf"); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
+//        JasperExportManager.exportReportToPdfFile(jasperPrint, "C:\\Users\\alpal\\Desktop\\carnet.pdf"); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
         var bytes = JasperExportManager.exportReportToPdf(jasperPrint);// Exporto mi pdf en una cadena de bytes - ERICK: Uso este mismo metodo para no guardar datos en otro lugar que no sea la DB
 
-        // ERICK: Para no acoplar el servicio de mail aqui envio los recursos necesarios para tratarlo desde el controller
+//         ERICK: Para no acoplar el servicio de mail aqui envio los recursos necesarios para tratarlo desde el controller
         var jsonObject = new JSONObject();
         jsonObject.put("recurso", bytes);
-        jsonObject.put("mailDestinatario", estu.get().getCorreo());
+        jsonObject.put("mailDestinatario", estu.getCorreo());
         return jsonObject;
     }
 }
