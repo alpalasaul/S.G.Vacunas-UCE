@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Carnet;
 import uce.proyect.service.agreement.CarnetService;
-import uce.proyect.service.agreementImp.EmailService;
+import uce.proyect.service.agreement.EmailService;
 
 import javax.mail.MessagingException;
 import java.io.IOException;

@@ -1,18 +1,13 @@
 package uce.proyect.controllers;
 
 import lombok.AllArgsConstructor;
-import org.aspectj.weaver.patterns.HasMemberTypePattern;
-import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Plan;
+import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.PlanService;
-import uce.proyect.service.agreementImp.EmailService;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;

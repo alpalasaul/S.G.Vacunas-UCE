@@ -10,13 +10,12 @@ import uce.proyect.models.Plan;
 import uce.proyect.repositories.EstudianteRepository;
 import uce.proyect.repositories.FacultadRepository;
 import uce.proyect.repositories.PlanRepository;
+import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.PlanService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-
-import static uce.proyect.service.agreementImp.EmailService.NOTIFICACIONES_ENVIADAS;
 
 @Service
 @AllArgsConstructor
@@ -28,7 +27,7 @@ public class PlanServiceImp implements PlanService {
 
     private EstudianteRepository estudianteRepository;
 
-//    private EmailService emailService;
+    private EmailService emailService;
 
     @Override
     public Plan agregarOActualizar(Plan pojo) {
@@ -92,13 +91,13 @@ public class PlanServiceImp implements PlanService {
                             .concat(" de ")
                             .concat(nuevoPlan.getFacultad()));
                 } else {
-//                    estudiantes.forEach(estudiante -> this.emailService.enviarEmail( // Se envia las notificaciones a los mails de cada estudiante, para ver como se forma el JSON entra a la documentación de los ENDPOINT
-//                            estudiante.getCorreo(),
-//                            nuevoPlan.getFechaInicio(),
-//                            nuevoPlan.getFechaFin(),
-//                            nuevoPlan.getFacultad()));
-                    jsonObject.put("notificados", NOTIFICACIONES_ENVIADAS);
-                    jsonObject.put("fecha_emision", LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")));
+                    estudiantes.forEach(estudiante -> this.emailService.enviarEmail( // Se envia las notificaciones a los mails de cada estudiante, para ver como se forma el JSON entra a la documentación de los ENDPOINT
+                            estudiante.getCorreo(),
+                            nuevoPlan.getFechaInicio(),
+                            nuevoPlan.getFechaFin(),
+                            nuevoPlan.getFacultad()));
+                    jsonObject.put("notificados", estudiantes.size());
+                    jsonObject.put("fecha_emision", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
                 }
             } else { // Si no existe la carrera o la facultad se lanza una exepcion
                 throw new NoEncontradorException("No existen registros para: "

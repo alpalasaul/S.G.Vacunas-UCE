@@ -5,9 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Estudiante;
+import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.EstudianteService;
-
-import java.util.Collection;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -18,11 +17,32 @@ public class estudianteController {
 
     private EstudianteService estudianteService;
 
+    private EmailService emailService;
+
     @GetMapping
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getEstudiantes() {
         var listar = this.estudianteService.listar();
-        return new ResponseEntity<Collection>(listar, OK);
+        return new ResponseEntity<>(listar, OK);
+    }
+
+    @GetMapping("filtrarfc/{facultadId}")
+    @PreAuthorize("hasRole('ROLE_HC')")
+    public ResponseEntity<?> getEstudiantes(@PathVariable("facultadId") String facultadCarrera) {
+        var listar = this.estudianteService.buscarEstudiantesPorFacultadYCarrera(facultadCarrera);
+        return new ResponseEntity<>(listar, OK);
+    }
+
+    @GetMapping("filtrarfc/{facultadId}/{semestre}")
+    @PreAuthorize("hasRole('ROLE_HC')")
+    public ResponseEntity<?> getEstudiantes
+            (@PathVariable("facultadId") String facultadCarrera,
+             @PathVariable("semestre") int semestre) {
+        var listar = this.estudianteService.buscarEstudiantesPorFacultadYCarreraYSemestre(
+                facultadCarrera,
+                semestre
+        );
+        return new ResponseEntity<>(listar, OK);
     }
 
     @GetMapping("/{nombreUsuario}")
@@ -36,6 +56,11 @@ public class estudianteController {
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Estudiante user) {
         var nUser = this.estudianteService.agregar(user);
+        this.emailService.enviarEmailCredenciales(
+                user.getCorreo(),
+                nUser.get("nombreUsuario").toString(),
+                nUser.get("contrasenaSinEncriptar").toString()
+        );
         return new ResponseEntity<>(nUser.toMap(), CREATED);
     }
 

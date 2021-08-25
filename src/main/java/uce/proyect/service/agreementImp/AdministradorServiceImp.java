@@ -41,6 +41,8 @@ public class AdministradorServiceImp implements AdministradorService {
 
         jsonObject.put("usuario", user);
 
+        jsonObject.put("nombreUsuario", user.getNombreUsuario());
+
         var administrador = this.administradorRepository.save(pojo);
 
         jsonObject.put("administrador", administrador);

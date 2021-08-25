@@ -7,7 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.NoEncontradorException;
-import uce.proyect.models.Carnet;
 import uce.proyect.models.Estudiante;
 import uce.proyect.repositories.CarnetRepository;
 import uce.proyect.repositories.EstudianteRepository;
@@ -15,6 +14,8 @@ import uce.proyect.repositories.UserRepository;
 import uce.proyect.service.agreement.EstudianteService;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static uce.proyect.util.FabricaCredenciales.*;
 
@@ -44,6 +45,7 @@ public class EstudianteServiceImp implements EstudianteService {
         var user = userRepository.save(usuario);
 
         jsonObject.put("usuario", user);
+        jsonObject.put("nombreUsuario", user.getNombreUsuario());
 
         var estudiante = this.estudianteRespository.save(pojo);
         log.info("Agregado estudiante");
@@ -107,4 +109,27 @@ public class EstudianteServiceImp implements EstudianteService {
         throw new NoEncontradorException("No existen registros para : ".concat(identificador));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Estudiante> buscarEstudiantesPorFacultadYCarrera(String facultadId) throws NoEncontradorException {
+        var list = this.estudianteRespository.findByFacultad(facultadId);
+        if (list.isEmpty()) {
+            throw new NoEncontradorException("No existen estudiantes para esta facultad y carrera");
+        }
+        return list;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Estudiante> buscarEstudiantesPorFacultadYCarreraYSemestre(String facultadId, int semestre) throws NoEncontradorException {
+        var list = this.estudianteRespository.findByFacultad(facultadId);
+        if (list.isEmpty()) {
+            throw new NoEncontradorException("No existen estudiantes para esta facultad y carrera");
+        }
+        var estudiantes = list.stream().filter(estudiante -> estudiante.getSemestre() == semestre).collect(Collectors.toList());
+        if (estudiantes.isEmpty()) {
+            throw new NoEncontradorException("No existen estudiantes para el semestre especificado");
+        }
+        return estudiantes;
+    }
 }
