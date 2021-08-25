@@ -1,6 +1,7 @@
 package uce.proyect.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/estudiante")
 @AllArgsConstructor
+@Slf4j
 public class estudianteController {
 
     private EstudianteService estudianteService;
@@ -55,6 +57,10 @@ public class estudianteController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Estudiante user) {
+        log.info(user.getNombres());
+        log.info(user.getApellidos());
+        log.info(user.getApellidos());
+        log.info(user.getCarrera());
         var nUser = this.estudianteService.agregar(user);
         this.emailService.enviarEmailCredenciales(
                 user.getCorreo(),
