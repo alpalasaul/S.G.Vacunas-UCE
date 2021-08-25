@@ -6,5 +6,5 @@ import uce.proyect.models.Facultad;
 import java.util.Optional;
 
 public interface FacultadRepository extends MongoRepository<Facultad, String> {
-    Optional<Facultad> findByNombreAndCarrera(String nombre, String carrera);
+    Optional<Facultad> findByNombre(String nombre);
 }

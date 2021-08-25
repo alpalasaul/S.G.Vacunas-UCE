@@ -6,7 +6,6 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JsonDataSource;
 import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.CarnetException;
@@ -20,7 +19,10 @@ import uce.proyect.service.agreement.EstudianteService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
@@ -32,8 +34,6 @@ public class CarnetServiceImp implements CarnetService {
     private EstudianteRepository estudianteRepository;
 
     private EstudianteService estudianteService;
-
-    private ResourceLoader resourceLoader;
 
     @Override
     public Carnet agregarOActualizar(Carnet pojo) {
@@ -99,8 +99,6 @@ public class CarnetServiceImp implements CarnetService {
         var estu = this.estudianteRepository.findByUsuario(estudiante).orElseThrow(); // Con la validacion anterior ya se define la existencia o no del usuario
 
         var resource = new ClassPathResource("carnet.jrxml").getInputStream(); // Habia un error al hacer referencia a la ruta absoluta del pdf al usar heroku - RESUELTO
-
-        var cal = Calendar.getInstance();
 
         var dataJson = new JSONObject();
 

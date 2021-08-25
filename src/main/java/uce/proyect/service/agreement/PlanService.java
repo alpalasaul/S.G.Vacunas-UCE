@@ -5,5 +5,6 @@ import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Plan;
 
 public interface PlanService extends CoreService<Plan> {
-    JSONObject generarNotificacionVacuncacion(Plan plan) throws NoEncontradorException;
+    JSONObject generarNotificacionVacuncacionPorCarrera(Plan plan) throws NoEncontradorException;
+    JSONObject generarNotificacionVacuncacionPorFacultad(Plan plan) throws NoEncontradorException;
 }

@@ -1,21 +1,18 @@
 package uce.proyect.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Data
 @Document
-@AllArgsConstructor
-@NoArgsConstructor
 public class Facultad {
-
     @Id
     private String _id;
-
+    @Indexed(unique = true)
     private String nombre;
-    private String carrera;
-
+    private List<String> carreras; // Toca aplicar la vieja confiable :'v
 }

@@ -14,10 +14,10 @@ public interface EstudianteService extends CoreService<Estudiante> {
     String nombres(String identificador);
 
     Collection<Estudiante> buscarEstudiantesPorFacultadYCarrera(
-            String facultadId
+            String carrera
     ) throws NoEncontradorException;
 
     Collection<Estudiante> buscarEstudiantesPorFacultadYCarreraYSemestre(
-            String facultadId,
+            String carrera,
             int semestre) throws NoEncontradorException;
 }

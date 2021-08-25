@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.exceptions.PlanException;
+import uce.proyect.models.Estudiante;
 import uce.proyect.models.Plan;
 import uce.proyect.repositories.EstudianteRepository;
 import uce.proyect.repositories.FacultadRepository;
@@ -15,6 +16,7 @@ import uce.proyect.service.agreement.PlanService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
@@ -69,7 +71,7 @@ public class PlanServiceImp implements PlanService {
 
     @Override
     @Transactional(readOnly = true)
-    public JSONObject generarNotificacionVacuncacion(Plan nuevoPlan) throws PlanException { // Logica de negocio para agregar un plan de vacunación
+    public JSONObject generarNotificacionVacuncacionPorCarrera(Plan nuevoPlan) throws PlanException { // Logica de negocio para agregar un plan de vacunación
         var planAntiguo = this.planRepository.findByFacultadAndCarrera(nuevoPlan.getFacultad(), nuevoPlan.getCarrera()); // Se determina si esque existe el plan
         var jsonObject = new JSONObject();
         if (planAntiguo.isPresent()) { // Si se encuentra el plan, se lanza una excepcion
@@ -82,9 +84,9 @@ public class PlanServiceImp implements PlanService {
                     nuevoPlan.getPersonasVacunadas(),
                     nuevoPlan.getFase());
         } else {
-            var facultad = this.facultadRepository.findByNombreAndCarrera(nuevoPlan.getFacultad(), nuevoPlan.getCarrera()); // Se busca si existe la facultad y la carrera
+            var facultad = this.facultadRepository.findByNombre(nuevoPlan.getFacultad()); // Se busca si existe la facultad
             if (facultad.isPresent()) {
-                var estudiantes = this.estudianteRepository.findByFacultad(facultad.get().get_id()); // Buscamos a todos los estudiantes de la facultad y carrera para notificarlos sobre el plan de vacunacion
+                var estudiantes = this.estudianteRepository.findByCarrera(nuevoPlan.getCarrera()); // Buscamos a todos los estudiantes de la facultad y carrera para notificarlos sobre el plan de vacunacion
                 if (estudiantes.isEmpty()) { // Si no hay registros de estudiantes en esa carrera y facultad se lanza una excepcion
                     throw new NoEncontradorException("No existen registros de estudiantes para: "
                             .concat(nuevoPlan.getCarrera())
@@ -100,6 +102,48 @@ public class PlanServiceImp implements PlanService {
                     jsonObject.put("fecha_emision", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
                 }
             } else { // Si no existe la carrera o la facultad se lanza una exepcion
+                throw new NoEncontradorException("No existen registros para: "
+                        .concat(nuevoPlan.getCarrera())
+                        .concat(" de ")
+                        .concat(nuevoPlan.getFacultad()));
+            }
+        }
+        return jsonObject;
+    }
+
+    @Override
+    public JSONObject generarNotificacionVacuncacionPorFacultad(Plan nuevoPlan) throws NoEncontradorException {
+        var planAntiguo = this.planRepository.findByFacultad(nuevoPlan.getFacultad()); // Se determina si esque existe el plan
+        var jsonObject = new JSONObject();
+        if (planAntiguo.isPresent()) { // Si se encuentra el plan, se lanza una excepcion
+            throw new PlanException("Ya existe un plan de vacunacion para: "
+                    .concat(nuevoPlan.getFacultad()),
+                    nuevoPlan.getFechaInicio(),
+                    nuevoPlan.getFechaFin(),
+                    nuevoPlan.getPersonasVacunadas(),
+                    nuevoPlan.getFase());
+        } else {
+            var facultad = this.facultadRepository.findByNombre(nuevoPlan.getFacultad()); // Se busca si existe la facultad
+            if (facultad.isPresent()) {
+                // Llamar a todos los estudiantes de todas las carreras
+                var estudiantes = new ArrayList<Estudiante>();
+                facultad.get().getCarreras().forEach(carrera -> {
+                    estudiantes.addAll(this.estudianteRepository.findByCarrera(carrera)); // Obtengo a cada estudiante de las carreras de la facultad
+                });
+
+                if (estudiantes.isEmpty()) { // Si no hay registros de estudiantes en esa facultad se lanza una excepcion
+                    throw new NoEncontradorException("No existen registros de estudiantes para: "
+                            .concat(nuevoPlan.getFacultad()));
+                } else {
+                    estudiantes.forEach(estudiante -> this.emailService.enviarEmail( // Se envia las notificaciones a los mails de cada estudiante, para ver como se forma el JSON entra a la documentación de los ENDPOINT
+                            estudiante.getCorreo(),
+                            nuevoPlan.getFechaInicio(),
+                            nuevoPlan.getFechaFin(),
+                            nuevoPlan.getFacultad()));
+                    jsonObject.put("notificados", estudiantes.size());
+                    jsonObject.put("fecha_emision", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                }
+            } else { // Si no existe la facultad se lanza una exepcion
                 throw new NoEncontradorException("No existen registros para: "
                         .concat(nuevoPlan.getCarrera())
                         .concat(" de ")

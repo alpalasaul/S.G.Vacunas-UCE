@@ -14,7 +14,6 @@ import uce.proyect.repositories.UserRepository;
 import uce.proyect.service.agreement.EstudianteService;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static uce.proyect.util.FabricaCredenciales.*;
@@ -111,8 +110,8 @@ public class EstudianteServiceImp implements EstudianteService {
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<Estudiante> buscarEstudiantesPorFacultadYCarrera(String facultadId) throws NoEncontradorException {
-        var list = this.estudianteRespository.findByFacultad(facultadId);
+    public Collection<Estudiante> buscarEstudiantesPorFacultadYCarrera(String carrera) throws NoEncontradorException {
+        var list = this.estudianteRespository.findByCarrera(carrera); // Se busca por carrera pues ya pertenece a una facultad
         if (list.isEmpty()) {
             throw new NoEncontradorException("No existen estudiantes para esta facultad y carrera");
         }
@@ -122,7 +121,7 @@ public class EstudianteServiceImp implements EstudianteService {
     @Override
     @Transactional(readOnly = true)
     public Collection<Estudiante> buscarEstudiantesPorFacultadYCarreraYSemestre(String facultadId, int semestre) throws NoEncontradorException {
-        var list = this.estudianteRespository.findByFacultad(facultadId);
+        var list = this.estudianteRespository.findByCarrera(facultadId);
         if (list.isEmpty()) {
             throw new NoEncontradorException("No existen estudiantes para esta facultad y carrera");
         }

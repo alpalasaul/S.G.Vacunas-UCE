@@ -10,5 +10,5 @@ public class Estudiante extends Persona {
     @JsonIgnore
     private int semestre;
     @JsonIgnore
-    private String facultad; // Identificador del objeto facultad para obtener la carrera
+    private String carrera; // Identificador del objeto facultad para obtener la carrera
 }

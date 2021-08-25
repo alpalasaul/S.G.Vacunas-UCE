@@ -39,8 +39,8 @@ public class EmailServiceImp implements EmailService {
 
         var mailMessage = new SimpleMailMessage();
 
-        mailMessage.setFrom(destinatario); // cambiar destinatario a emisor, solo es para desarrollo
-        mailMessage.setTo("sgvuce@gmail.com");
+        mailMessage.setFrom("sgvuce@gmail.com");
+        mailMessage.setTo(destinatario);
         mailMessage.setSubject("Calendario Vacunación");
         mailMessage.setText(
                 "Tenga un cordial saludo, le informamos el día de su vacunación"

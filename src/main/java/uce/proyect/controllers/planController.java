@@ -29,18 +29,31 @@ public class planController {
         return new ResponseEntity<>(listar, OK);
     }
 
-    @PostMapping
+//         Este endpoint es para un plan por facultad y carrera
+//        En el JSON se va a enviar la facultad y carrera, y notifica a todos los estudiantes de la facultad y carrera
+    @PostMapping("/carrera")
     @PreAuthorize("hasRole('ROLE_HC')")
-    public ResponseEntity<?> create(@RequestBody Plan plan) {
-        var jsonObject = this.planService.generarNotificacionVacuncacion(plan); // Solo al agregar el nuevo plan se realiza la notificación a los mails
+    public ResponseEntity<?> createC(@RequestBody Plan plan) {
+        var jsonObject = this.planService.generarNotificacionVacuncacionPorCarrera(plan); // Solo al agregar el nuevo plan se realiza la notificación a los mails
+        var pl = this.planService.agregarOActualizar(plan); // Si pasa el envio de mails se lo guarda
+        jsonObject.put("nuevo_plan", pl);
+        return new ResponseEntity<>(jsonObject.toMap(), ACCEPTED);
+    }
+
+//         Este endpoint es para un plan por facultad
+//        En el JSON solo se va a enviar la facultad y no la carrera, y notifica a todos los estudiantes de la facultad
+    @PostMapping("/facultad")
+    @PreAuthorize("hasRole('ROLE_HC')")
+    public ResponseEntity<?> createF(@RequestBody Plan plan) {
+        var jsonObject = this.planService.generarNotificacionVacuncacionPorFacultad(plan);
         var pl = this.planService.agregarOActualizar(plan);
         jsonObject.put("nuevo_plan", pl);
-        return new ResponseEntity<Map>(jsonObject.toMap(), ACCEPTED);
+        return new ResponseEntity<>(jsonObject.toMap(), ACCEPTED);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_HC')")
-    public ResponseEntity<?> update(@RequestBody Plan plan, @PathVariable("id") String id) {
+    public ResponseEntity<?> update(@RequestBody Plan plan, @PathVariable("id") String id) { // Si se actualizan las fechas es importante notificar o no actualizar
         this.planService.buscarPorId(id); // importante para no crear registros al intentar actualizar
         plan.set_id(id);
         var pl = this.planService.agregarOActualizar(plan);

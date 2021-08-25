@@ -26,20 +26,20 @@ public class estudianteController {
         return new ResponseEntity<>(listar, OK);
     }
 
-    @GetMapping("filtrarfc/{facultadId}")
+    @GetMapping("filtrarfc/{nombreCarrera}")
     @PreAuthorize("hasRole('ROLE_HC')")
-    public ResponseEntity<?> getEstudiantes(@PathVariable("facultadId") String facultadCarrera) {
-        var listar = this.estudianteService.buscarEstudiantesPorFacultadYCarrera(facultadCarrera);
+    public ResponseEntity<?> getEstudiantes(@PathVariable("nombreCarrera") String carrera) {
+        var listar = this.estudianteService.buscarEstudiantesPorFacultadYCarrera(carrera); // Obtiene a los usuarios por carrera
         return new ResponseEntity<>(listar, OK);
     }
 
-    @GetMapping("filtrarfc/{facultadId}/{semestre}")
+    @GetMapping("filtrarfc/{nombreCarrera}/{semestre}")
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getEstudiantes
-            (@PathVariable("facultadId") String facultadCarrera,
+            (@PathVariable("nombreCarrera") String carrera,
              @PathVariable("semestre") int semestre) {
         var listar = this.estudianteService.buscarEstudiantesPorFacultadYCarreraYSemestre(
-                facultadCarrera,
+                carrera,
                 semestre
         );
         return new ResponseEntity<>(listar, OK);
