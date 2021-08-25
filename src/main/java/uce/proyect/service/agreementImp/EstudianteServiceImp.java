@@ -13,6 +13,7 @@ import uce.proyect.repositories.EstudianteRepository;
 import uce.proyect.repositories.UserRepository;
 import uce.proyect.service.agreement.EstudianteService;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,7 @@ public class EstudianteServiceImp implements EstudianteService {
         jsonObject.put("nombreUsuario", user.getNombreUsuario());
 
         var estudiante = this.estudianteRespository.save(pojo);
+//        estudiante.setFechaNacimiento(LocalDate.parse(estudiante.getFechaNacimiento().toString()));
         log.info("Agregado estudiante");
 //        Cuando se guarde el estudiante se genera un carnet relacionado a dicho usuario
         var carnet = generarCarnet(usuario.getNombreUsuario());
