@@ -26,11 +26,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomerAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info(request.getHeader(AUTHORIZATION));
         if (request.getServletPath().equals("/sgv/login") || request.getServletPath().equals("/usuario/actualizarToken")) {
             filterChain.doFilter(request, response);
         } else {
             var authorizationHeader = request.getHeader(AUTHORIZATION);
-            log.info(authorizationHeader);
             if (authorizationHeader != null && authorizationHeader.startsWith("SGVUCE ")) { // Defino como debe de ser el inicio del token
                 try {
                     var token = authorizationHeader.substring("SGVUCE ".length()); // obtengo solo la parte del token
