@@ -26,7 +26,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomerAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info(request.getHeader(AUTHORIZATION));
         if (request.getServletPath().equals("/sgv/login") || request.getServletPath().equals("/usuario/actualizarToken")) {
             filterChain.doFilter(request, response);
         } else {
@@ -40,7 +39,6 @@ public class CustomerAuthorizationFilter extends OncePerRequestFilter {
                     var username = decodeJWT.getSubject(); // obtengo el usaurio
                     var roles = decodeJWT.getClaim("roles").asList(String.class); // obtengo los roles
                     var authorities = new ArrayList<SimpleGrantedAuthority>();
-                    roles.forEach(log::info);
                     roles.forEach(role -> {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });

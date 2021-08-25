@@ -14,7 +14,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/facultad")
 @AllArgsConstructor
-@Slf4j
 public class facultadController {
 
     private FacultadService facultadService;
@@ -28,7 +27,7 @@ public class facultadController {
 
     // Solo enviar la nueva facultad, luego si se quieren agregar carreras usar el endpoint /{nombreFacultad}/{nombreCarrera}
     @PostMapping
-//    @PreAuthorize("hasRole('ROLE_HC')")
+    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Facultad facultad) {
         log.info(facultad.getNombre());
         var fac = this.facultadService.agregarOActualizar(facultad);
