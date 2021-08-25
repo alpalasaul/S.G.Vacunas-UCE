@@ -60,8 +60,10 @@ public class estudianteController {
         log.info(user.getNombres());
         log.info(user.getApellidos());
         log.info(user.getCorreo());
-//        log.info(user.getCarrera());
-//        log.info(user.getTelefono());
+        log.info(user.getCarrera());
+        log.info(user.getTelefono());
+        log.info(user.getCedula());
+        log.info(user.getGenero());
 //        log.info(user.getFechaNacimiento().toString());
         log.info(String.valueOf(user.getSemestre()));
         var nUser = this.estudianteService.agregar(user);
