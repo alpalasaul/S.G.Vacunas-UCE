@@ -8,6 +8,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import uce.proyect.service.agreement.EmailService;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 @AllArgsConstructor
-public class EmailService {
+public class EmailServiceImp implements EmailService {
 
     public static Integer NOTIFICACIONES_ENVIADAS = 0;
 
@@ -25,6 +26,7 @@ public class EmailService {
 
     private ResourceLoader resourceLoader;
 
+    @Override
     public String enviarEmail() {
         var mailMessage = new SimpleMailMessage();
 
@@ -38,6 +40,7 @@ public class EmailService {
         return "Todo nice";
     }
 
+    @Override
     public void enviarEmail(String destinatario, LocalDate fechaInicio, LocalDate fechaFinal, String facultad) {
 
         var mailMessage = new SimpleMailMessage();
@@ -60,6 +63,7 @@ public class EmailService {
     }
 
     // Metodo que permite enviar archivo adjuntos en los email
+    @Override
     public JSONObject enviarComprobante(JSONObject recursos) throws MessagingException, IOException {
 
         var carnet = (byte[]) recursos.get("recurso"); // tomo el pdf en bytes que genero el estudiante para enviarlo

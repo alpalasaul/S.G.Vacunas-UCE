@@ -7,9 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Administrador;
 import uce.proyect.service.agreement.AdministradorService;
-
-import java.util.Collection;
-import java.util.Map;
+import uce.proyect.service.agreement.EmailService;
 
 import static org.springframework.http.HttpStatus.*;
 import static uce.proyect.util.FabricaCredenciales.ADMIN;
@@ -20,34 +18,46 @@ import static uce.proyect.util.FabricaCredenciales.HC;
 @AllArgsConstructor
 public class administradorController {
 
+    private EmailService emailService;
+
     private AdministradorService administradorService;
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAdministradores() {
         var listar = this.administradorService.listar();
-        return new ResponseEntity<Collection>(listar, OK);
+        return new ResponseEntity<>(listar, OK);
     }
 
     @GetMapping("/{nombreUsuario}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAdministradorbyUserName(@PathVariable("nombreUsuario") String user) {
         var listar = this.administradorService.buscarPorId(user);
-        return new ResponseEntity<Administrador>(listar, OK);
+        return new ResponseEntity<>(listar, OK);
     }
 
     @PostMapping("/crearAdmin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createA(@RequestBody Administrador user) {
         var nUser = this.administradorService.agregar(user, ADMIN);
-        return new ResponseEntity<Map>(nUser.toMap(), CREATED);
+        this.emailService.enviarEmailCredenciales(
+                user.getCorreo(),
+                nUser.get("nombreUsuario").toString(),
+                nUser.get("contrasenaSinEncriptar").toString()
+        );
+        return new ResponseEntity<>(nUser.toMap(), CREATED);
     }
 
     @PostMapping("/crearControlador")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createH(@RequestBody Administrador user) {
         var nUser = this.administradorService.agregar(user, HC);
-        return new ResponseEntity<Map>(nUser.toMap(), CREATED);
+        this.emailService.enviarEmailCredenciales(
+                user.getCorreo(),
+                nUser.get("nombreUsuario").toString(),
+                nUser.get("contrasenaSinEncriptar").toString()
+        );
+        return new ResponseEntity<>(nUser.toMap(), CREATED);
     }
 
 
@@ -55,6 +65,6 @@ public class administradorController {
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> update(@RequestBody Administrador user) {
         var nUser = this.administradorService.agregarOActualizar(user); // No esta manejada la encriptacion de pass
-        return new ResponseEntity<Administrador>(nUser, ACCEPTED);
+        return new ResponseEntity<>(nUser, ACCEPTED);
     }
 }
