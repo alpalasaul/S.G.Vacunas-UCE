@@ -59,7 +59,7 @@ public class estudianteController {
     public ResponseEntity<?> create(@RequestBody Estudiante user) {
         log.info(user.getNombres());
         log.info(user.getApellidos());
-        log.info(user.getApellidos());
+        log.info(user.getCorreo());
         log.info(user.getCarrera());
         var nUser = this.estudianteService.agregar(user);
         this.emailService.enviarEmailCredenciales(
