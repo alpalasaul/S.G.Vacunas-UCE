@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="test" printOrder="Horizontal" pageWidth="420" pageHeight="320" columnWidth="380" leftMargin="20" rightMargin="20" topMargin="14" bottomMargin="0" uuid="6f55504c-44ee-4a3c-a871-5e6c3e07a1db">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="test" printOrder="Horizontal" pageWidth="420" pageHeight="280" columnWidth="380" leftMargin="20" rightMargin="20" topMargin="14" bottomMargin="0" uuid="6f55504c-44ee-4a3c-a871-5e6c3e07a1db">
 
     <field name="centroVacunacion" class="java.lang.String"/>
     <field name="estudiante" class="java.lang.String"/>
@@ -16,21 +16,34 @@
     <field name="cedula" class="java.lang.String"/>
     <field name="fechaNacimiento" class="java.lang.Integer"/>
     <background>
-        <band splitType="Stretch"/>
+        <band height="266" splitType="Stretch">
+            <property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+            <image onErrorType="Icon">
+                <reportElement x="8" y="60" width="151" height="140" uuid="b791ec1f-f559-4fa6-bfc5-92ff7069d5fa"/>
+                <imageExpression><![CDATA["src/main/resources/static/img/vacuna_logo.png"]]></imageExpression>
+            </image>
+            <image onErrorType="Icon">
+                <reportElement x="180" y="70" width="189" height="139" uuid="8ffdc081-3885-4a2e-a52f-dc0288ea934d"/>
+                <imageExpression><![CDATA["src/main/resources/static/img/uce_logo.png"]]></imageExpression>
+            </image>
+        </band>
     </background>
     <title>
-        <band height="21" splitType="Stretch">
+        <band height="20">
             <staticText>
-                <reportElement x="40" y="0" width="290" height="20" uuid="52722683-584d-4074-bea3-9e7a5d26862f"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <reportElement x="45" y="0" width="290" height="20" uuid="52722683-584d-4074-bea3-9e7a5d26862f"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
                 <text><![CDATA[CARNET DE VACUNACIÓN CONTRA LA COVID-19]]></text>
             </staticText>
         </band>
     </title>
-    <detail>
-        <band height="215" splitType="Stretch">
+    <pageHeader>
+        <band height="196">
             <staticText>
-                <reportElement x="0" y="10" width="80" height="11" uuid="55c8ec03-9a23-4884-9bdd-43f9628e5137">
+                <reportElement x="15" y="3" width="80" height="11" uuid="0787a947-e13d-496f-b0de-2cef602c15fe">
                     <property name="com.jaspersoft.studio.unit.y" value="px"/>
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
@@ -40,7 +53,7 @@
                 <text><![CDATA[Centro vacunación:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="130" y="10" width="72" height="11" uuid="f60fef38-31d5-44dc-8a7c-da689f71a416">
+                <reportElement x="145" y="3" width="72" height="11" uuid="91d02138-6bae-440a-aea4-23c467c14c1b">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -49,7 +62,7 @@
                 <text><![CDATA[Edad:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="250" y="10" width="72" height="11" uuid="d4c98506-8dfc-4fe9-95fe-8694f63c0267">
+                <reportElement x="265" y="3" width="72" height="11" uuid="2805ed39-4e52-4057-9a6f-bffa10ff5741">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -58,7 +71,7 @@
                 <text><![CDATA[C.I.:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="0" y="40" width="72" height="11" uuid="c8a6cf19-a871-4212-8b89-e8cebcd0e5be">
+                <reportElement x="15" y="33" width="72" height="11" uuid="965f1106-f8e5-4fa8-a55c-0f67bfb4ac18">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -67,7 +80,7 @@
                 <text><![CDATA[Nombres:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="72" y="74" width="72" height="11" uuid="19349021-a64e-4cd3-b149-f2ab4d216bb8">
+                <reportElement x="87" y="67" width="72" height="11" uuid="45e4efd7-c9f5-4dbe-8cfd-394dff1358ac">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -76,7 +89,7 @@
                 <text><![CDATA[Vacuna:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="0" y="113" width="50" height="12" uuid="be4f3e87-6e27-42b6-8ebb-53f683357154">
+                <reportElement x="15" y="106" width="50" height="12" uuid="8c89ca28-4949-47b0-a24d-ba480d9db3b1">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -85,7 +98,7 @@
                 <text><![CDATA[1era. Dosis]]></text>
             </staticText>
             <staticText>
-                <reportElement x="0" y="125" width="72" height="11" uuid="535a7d36-e2bf-41cc-8e90-2bfd01d2b001">
+                <reportElement x="15" y="118" width="72" height="11" uuid="bbe1b6e1-f316-40c5-952d-584e777cc986">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -94,7 +107,7 @@
                 <text><![CDATA[Fecha:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="100" y="125" width="72" height="11" uuid="02eff8ae-cddb-45d6-b5af-eea2d185a193">
+                <reportElement x="115" y="118" width="72" height="11" uuid="97033fad-60c1-4f59-a277-5b2ab7658267">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -103,7 +116,7 @@
                 <text><![CDATA[Vacunador:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="260" y="125" width="72" height="11" uuid="76754952-1eb0-45f4-b7e9-604d745219f2">
+                <reportElement x="275" y="118" width="72" height="11" uuid="a651cc01-a2a8-4d64-950f-cd7936fc1b06">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -112,7 +125,7 @@
                 <text><![CDATA[Lote:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="0" y="170" width="72" height="11" uuid="b8efc1f6-2cb5-4488-9c35-d2cbee672d18">
+                <reportElement x="15" y="163" width="72" height="11" uuid="8b9df715-9faf-46f1-882d-1d0578c28a4c">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -121,7 +134,7 @@
                 <text><![CDATA[Fecha:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="260" y="170" width="72" height="11" uuid="88f7df5a-3215-413d-a426-fd5cdd0b90ca">
+                <reportElement x="275" y="163" width="72" height="11" uuid="91bee268-e8f0-4254-9bf8-c0c7a16ffa0b">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -130,7 +143,7 @@
                 <text><![CDATA[Lote:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="100" y="170" width="72" height="11" uuid="92a9920a-d0ca-4429-bd5f-6afa4e27a7a6">
+                <reportElement x="115" y="163" width="72" height="11" uuid="4e420ff6-14c8-46e1-81bf-40d8b88a2e18">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement>
@@ -139,87 +152,87 @@
                 <text><![CDATA[Vacunador:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="0" y="158" width="50" height="12" uuid="2a911b15-7a1c-44f5-977c-987155291111"/>
+                <reportElement x="15" y="151" width="50" height="12" uuid="e08b515c-1ce9-4296-8d4b-fe8c9c9da6a5"/>
                 <textElement>
                     <font size="9" isBold="true"/>
                 </textElement>
                 <text><![CDATA[2da. Dosis]]></text>
             </staticText>
             <line>
-                <reportElement x="0" y="37" width="111" height="1" uuid="1c9ca3ea-0574-40db-b241-b086386ace60"/>
+                <reportElement x="15" y="30" width="111" height="1" uuid="45fa67a6-a233-47a3-9fa2-d47384666e31"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="130" y="37" width="90" height="1" uuid="1ab8fcf4-49e7-45c8-812a-7044c3ae3ced"/>
+                <reportElement x="145" y="30" width="90" height="1" uuid="62b120c5-105c-4637-a3d0-f55fa2716d74"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="250" y="38" width="110" height="1" uuid="a6c13161-1c9c-4def-bbe0-170793845c21"/>
+                <reportElement x="265" y="31" width="110" height="1" uuid="e74dc36a-500e-4463-ab10-c84f1508939d"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="0" y="68" width="360" height="1" uuid="8ef2ae73-6728-4d0c-a644-f5d907dfe64f"/>
+                <reportElement x="15" y="61" width="360" height="1" uuid="b0316cd4-99da-4a2e-bc1d-242c11e1fe24"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="0" y="150" width="72" height="1" uuid="ac083ac1-732f-4e4d-9cbc-7c8b455010e6"/>
+                <reportElement x="15" y="143" width="72" height="1" uuid="907d0647-c8a0-439a-b24b-c0e2ce07ac9b"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="100" y="150" width="130" height="1" uuid="8ec0ed02-57d7-49ad-8cb5-1374e36950d1"/>
+                <reportElement x="115" y="143" width="130" height="1" uuid="6b0a6ed2-d294-4157-be70-20cfda1190ac"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="260" y="150" width="100" height="1" uuid="0a12fb01-c909-4112-9ee2-8347aa9545a2"/>
+                <reportElement x="275" y="143" width="100" height="1" uuid="76d47df8-f10b-4ea9-ac28-2a40e4c8aa50"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="101" y="196" width="130" height="1" uuid="d0077592-6823-4cf0-b696-29d71113e4e2"/>
+                <reportElement x="116" y="190" width="130" height="1" uuid="7b290a79-b56b-4031-8df6-ba34e96c18ea"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="260" y="196" width="101" height="1" uuid="2baebd1a-b3e1-408a-9bd6-2dfc5ef30d97"/>
+                <reportElement x="275" y="190" width="101" height="1" uuid="587d1a50-ce15-4a5a-a211-0e97001c26c9"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="1" y="196" width="72" height="1" uuid="ad15a0b8-c56e-497e-a70f-cd1edb770317"/>
+                <reportElement x="15" y="190" width="72" height="1" uuid="666d0444-481b-4d6e-a4b7-7c55f7802a04"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <line>
-                <reportElement x="73" y="100" width="191" height="1" uuid="83162aaa-60af-496f-8650-17b1dec783e8"/>
+                <reportElement x="88" y="93" width="191" height="1" uuid="57ba8802-8c7e-4c58-b4b6-cedf17d61963"/>
                 <graphicElement>
                     <pen lineWidth="0.5"/>
                 </graphicElement>
             </line>
             <textField>
-                <reportElement x="0" y="21" width="111" height="15" uuid="5c2d2880-dd36-4ccb-98f7-bd0a1e39d3d0">
+                <reportElement x="15" y="14" width="111" height="15" uuid="55218556-7536-4913-8ae5-96045d307754">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Bottom"/>
                 <textFieldExpression><![CDATA[$F{centroVacunacion}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="1" y="54" width="359" height="15" uuid="d4dcc2e4-9c3c-498f-9015-301812b5ef19">
+                <reportElement x="16" y="47" width="359" height="15" uuid="768e577d-a5b8-4c0b-bdde-789b4765b580">
                     <property name="com.jaspersoft.studio.unit.y" value="px"/>
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
@@ -227,74 +240,81 @@
                 <textFieldExpression><![CDATA[$F{estudiante}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="73" y="85" width="191" height="15" uuid="cc4a6f9d-437a-4c47-bbcc-51961756b1a8">
+                <reportElement x="88" y="78" width="191" height="15" uuid="75c2aeaf-7200-4e16-a314-57377bfe6049">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Bottom"/>
                 <textFieldExpression><![CDATA[$F{nombreVacuna}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="0" y="136" width="73" height="15" uuid="2cfeb2cb-386d-498a-b884-d141ea675a0e">
+                <reportElement x="15" y="129" width="73" height="15" uuid="700a6b98-b964-4ef4-973e-26da7a648172">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement verticalAlignment="Bottom"/>
                 <textFieldExpression><![CDATA[$F{fechaPrimeraDosis}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="1" y="181" width="73" height="15" uuid="867d91b5-1084-4100-949f-eb05f5a507cf">
-                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
-                </reportElement>
-                <textElement verticalAlignment="Bottom"/>
-                <textFieldExpression><![CDATA[$F{fechaSegundasDosis}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="101" y="136" width="129" height="15" uuid="0c4c98f5-f677-4b52-92d7-ea52a7ca3efb">
+                <reportElement x="116" y="129" width="129" height="15" uuid="f87248a5-d5ac-4837-a6a2-6b04afa3854a">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Bottom"/>
                 <textFieldExpression><![CDATA[$F{vacunadorPrimeraDosis}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="102" y="181" width="128" height="15" uuid="982a68fa-050c-46fb-a45d-53620023167b">
+                <reportElement x="117" y="175" width="128" height="15" uuid="2553aff4-1d6b-4abc-954c-6ce5fd541a4b">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Bottom"/>
                 <textFieldExpression><![CDATA[$F{vacunadorSegundaDosis}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="260" y="135" width="100" height="15" uuid="3f3e2ac0-9f6c-49bf-8998-b8898029489e">
+                <reportElement x="275" y="128" width="100" height="15" uuid="172ced47-82cc-4a8d-9baf-cab0ce184f66">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement verticalAlignment="Bottom"/>
                 <textFieldExpression><![CDATA[$F{loteDosisUno}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="261" y="181" width="100" height="15" uuid="99d25904-cb63-4cb3-a749-6bd6fc058ff7">
+                <reportElement x="276" y="175" width="100" height="15" uuid="06cb3f1a-23e9-4545-b9b7-02c5861de23d">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement verticalAlignment="Bottom"/>
                 <textFieldExpression><![CDATA[$F{loteDosisDos}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="59" y="113" width="71" height="12" uuid="abbd00e5-956f-485c-8b49-b7f2df4fa174">
+                <reportElement x="74" y="106" width="21" height="12" uuid="b1e91ea1-00e2-4784-a7c6-f60b0f920916">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
-                <textElement>
+                <box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+                    <pen lineWidth="0.5" lineStyle="Solid" lineColor="#050505"/>
+                    <topPen lineWidth="0.5" lineStyle="Solid" lineColor="#050505"/>
+                    <leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#050505"/>
+                    <bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#050505"/>
+                    <rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#050505"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="8"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{primeraDosis}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="59" y="160" width="71" height="12" uuid="958be790-baf2-4f36-9399-df08672b94a0">
+                <reportElement x="74" y="151" width="21" height="12" uuid="3e5dc461-9b6f-403f-95b0-f32e4f6a169a">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
-                <textElement>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="8"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{segundaDosis}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="250" y="22" width="110" height="15" uuid="7791d58c-a3ff-47a1-81b0-f32210ab351a">
+                <reportElement x="265" y="15" width="110" height="15" uuid="914535ef-7a3c-41d3-87d7-d174c61065e4">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Bottom">
@@ -303,33 +323,40 @@
                 <textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="130" y="21" width="90" height="15" uuid="27d3bba3-0c7b-4c95-bb28-cc374505613b">
+                <reportElement x="145" y="14" width="90" height="15" uuid="668dd032-7797-4dc1-b12d-7285a8c4d37a">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Bottom"/>
                 <textFieldExpression><![CDATA[$F{fechaNacimiento}]]></textFieldExpression>
             </textField>
+            <textField>
+                <reportElement x="15" y="175" width="72" height="15" uuid="696a1ef1-8b5d-452c-a0bd-066bdc5d485b">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Left" verticalAlignment="Bottom"/>
+                <textFieldExpression><![CDATA[$F{fechaSegundasDosis}]]></textFieldExpression>
+            </textField>
         </band>
-    </detail>
+    </pageHeader>
     <pageFooter>
-        <band height="49" splitType="Stretch">
+        <band height="50">
             <frame>
-                <reportElement mode="Opaque" x="-20" y="2" width="420" height="47" forecolor="#38B3D9" backcolor="#38B3D9" uuid="3c297517-4e65-445d-b4e3-2ce1d84a1206">
+                <reportElement mode="Opaque" x="-20" y="6" width="420" height="44" forecolor="#38B3D9" backcolor="#38B3D9" uuid="34d730ae-c8f4-4a0d-9d92-b5743b960691">
                     <property name="com.jaspersoft.studio.unit.x" value="px"/>
                 </reportElement>
                 <staticText>
-                    <reportElement x="9" y="16" width="170" height="18" forecolor="#FFFFFF" uuid="906d2a4b-908e-428e-9e15-c05f1f537795"/>
-                    <textElement textAlignment="Left" verticalAlignment="Justified">
+                    <reportElement x="10" y="13" width="170" height="18" forecolor="#FFFFFF" uuid="bdaa60c3-4791-42ae-a70a-b67a03ec18b4"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
                         <font size="11"/>
                     </textElement>
                     <text><![CDATA[Ministerio de Salud Pública]]></text>
                 </staticText>
                 <image hAlign="Left" vAlign="Bottom" onErrorType="Icon">
-                    <reportElement x="190" y="6" width="122" height="38" uuid="85689e39-2d67-4e1f-8215-d120097c9547"/>
+                    <reportElement x="184" y="4" width="122" height="38" uuid="9322b0e8-9dd8-4b8f-ba51-3e6ad96d7e53"/>
                     <imageExpression><![CDATA["src/main/resources/static/img/gobBlanco.png"]]></imageExpression>
                 </image>
                 <image onErrorType="Icon">
-                    <reportElement x="330" y="10" width="84" height="31" uuid="2cf61c2d-3b01-45dc-b662-7167d4c747ad"/>
+                    <reportElement x="330" y="7" width="84" height="31" uuid="08853908-927e-4731-a469-0d869f37d339"/>
                     <imageExpression><![CDATA["src/main/resources/static/img/rep.png"]]></imageExpression>
                 </image>
             </frame>

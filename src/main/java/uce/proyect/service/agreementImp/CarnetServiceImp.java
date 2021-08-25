@@ -116,10 +116,8 @@ public class CarnetServiceImp implements CarnetService {
         dataJson.put("loteDosisUno", data.getLoteDosisUno());
         dataJson.put("loteDosisDos", data.getLoteDosisDos());
 
-        ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(dataJson.toString().getBytes());
-
-        JsonDataSource ds = new JsonDataSource(jsonDataStream);
-
+        var jsonDataStream = new ByteArrayInputStream(dataJson.toString().getBytes());
+        var ds = new JsonDataSource(jsonDataStream);
         JasperReport jasperReport = JasperCompileManager.compileReport(resource); // Mando a compilar el reporte que está en la ruta resources
 //        var dataSource = new JRBeanCollectionDataSource(Collections.singletonList(test)); // Cargo los datos que voy a llenar en el reporte en forma de colección
         Map<String, Object> map = new HashMap<>();
@@ -127,7 +125,6 @@ public class CarnetServiceImp implements CarnetService {
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, ds); // Lleno el reporte que compilé con los datos que cague en la colección
 //        JasperExportManager.exportReportToPdfFile(jasperPrint, "C:\\Users\\alpal\\Desktop\\carnet.pdf"); // Genera el PDF Físico en una ruta (Se sobreescribe) podrías usar esta línea para mandar por mail solo lo guardar en una ruta del proyecto y cada vez que lo pidan solo se va a sobreescribir (no debe estar abierto el pdf sino genera error al sobreescribir)
         var bytes = JasperExportManager.exportReportToPdf(jasperPrint);// Exporto mi pdf en una cadena de bytes - ERICK: Uso este mismo metodo para no guardar datos en otro lugar que no sea la DB
-
 //         ERICK: Para no acoplar el servicio de mail aqui envio los recursos necesarios para tratarlo desde el controller
         var jsonObject = new JSONObject();
         jsonObject.put("recurso", bytes);
