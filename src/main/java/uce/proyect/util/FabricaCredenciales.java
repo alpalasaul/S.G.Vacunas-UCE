@@ -18,16 +18,18 @@ public class FabricaCredenciales {
     private static final String[] ESTUDIANTE = {"ROLE_USER"};
 
     public static User generarUsuario(String nombres, String apellidos, String cargo) {
-        var nombresArray = nombres.toLowerCase().split(" "); // Decirles que validen que no haya espacios en blanco a los lados de los nombres
-        var apellidosArray = apellidos.toLowerCase().split(" ");
+        var nombresArray = nombres.trim().toLowerCase().split(" "); // Decirles que validen que no haya espacios en blanco a los lados de los nombres
+        var apellidosArray = apellidos.trim().toLowerCase().split(" ");
         var nombreUsuario = new StringBuilder();
         var contrasena = new StringBuilder();
 
         var random = new Random();
 
+        nombreUsuario.append(nombresArray[0].charAt(0));
+        if (nombresArray.length > 1) {
+            nombreUsuario.append(nombresArray[1].charAt(0));
+        }
         nombreUsuario
-                .append(nombresArray[0].charAt(0))
-                .append(nombresArray[1].charAt(0))
                 .append(apellidosArray[0])
                 .append(apellidosArray[1].charAt(0))
                 .append(random.nextInt(9) + 1)
