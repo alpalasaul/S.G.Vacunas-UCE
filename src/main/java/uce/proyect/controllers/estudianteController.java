@@ -61,7 +61,7 @@ public class estudianteController {
         log.info(user.getApellidos());
         log.info(user.getCorreo());
         log.info(user.getCarrera());
-        log.info(user.getSemestre());
+        log.info(String.valueOf(user.getSemestre()));
         var nUser = this.estudianteService.agregar(user);
         this.emailService.enviarEmailCredenciales(
                 user.getCorreo(),
