@@ -40,6 +40,7 @@ public class CustomerAuthorizationFilter extends OncePerRequestFilter {
                     var username = decodeJWT.getSubject(); // obtengo el usaurio
                     var roles = decodeJWT.getClaim("roles").asList(String.class); // obtengo los roles
                     var authorities = new ArrayList<SimpleGrantedAuthority>();
+                    roles.forEach(log::info);
                     roles.forEach(role -> {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
