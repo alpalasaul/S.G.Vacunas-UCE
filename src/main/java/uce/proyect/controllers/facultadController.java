@@ -29,7 +29,6 @@ public class facultadController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Facultad facultad) {
-        log.info(facultad.getNombre());
         var fac = this.facultadService.agregarOActualizar(facultad);
         return new ResponseEntity<>(fac, ACCEPTED);
     }
