@@ -48,12 +48,12 @@ public class EstudianteServiceImp implements EstudianteService {
         jsonObject.put("nombreUsuario", user.getNombreUsuario());
 
         var estudiante = this.estudianteRespository.save(pojo);
-//        estudiante.setFechaNacimiento(LocalDate.parse(estudiante.getFechaNacimiento().toString()));
-        log.info("Agregado estudiante");
+        log.info("Estudiante agregado en la base de datos");
 //        Cuando se guarde el estudiante se genera un carnet relacionado a dicho usuario
         var carnet = generarCarnet(usuario.getNombreUsuario());
 
         this.carnetRepository.save(carnet);
+        log.info("Agregando carnet por default a bd");
 
         jsonObject.put("estudiante", estudiante);
 

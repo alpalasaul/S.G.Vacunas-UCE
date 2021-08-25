@@ -76,4 +76,7 @@ public class carnetController {
         var datosCarnet = this.carnetService.buscarPorId(estudiante);
         return new ResponseEntity<>(datosCarnet, OK);
     }
+
+    // Agregar algun validador para que el carnet cambie a no voluntario y que se envie uno sin datos
+
 }

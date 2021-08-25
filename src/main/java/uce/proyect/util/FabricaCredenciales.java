@@ -83,6 +83,7 @@ public class FabricaCredenciales {
         carnet_default.setSegundaDosis(false);
         carnet_default.setVacunadorPrimeraDosis("N/A");
         carnet_default.setVacunadorSegundaDosis("N/A");
+        carnet_default.setInoculacionVoluntaria(true); // Todos esmpeizan con inoculacion verdadera, pero en el caso de no querer mabia a falso
         return carnet_default;
     }
 
