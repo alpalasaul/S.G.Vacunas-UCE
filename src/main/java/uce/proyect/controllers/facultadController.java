@@ -1,6 +1,7 @@
 package uce.proyect.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/facultad")
 @AllArgsConstructor
+@Slf4j
 public class facultadController {
 
     private FacultadService facultadService;
@@ -28,6 +30,7 @@ public class facultadController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Facultad facultad) {
+        log.info(facultad.getNombre());
         var fac = this.facultadService.agregarOActualizar(facultad);
         return new ResponseEntity<>(fac, ACCEPTED);
     }
