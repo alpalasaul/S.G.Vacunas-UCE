@@ -56,4 +56,11 @@ public class ControllerAdviceSG {
         jsonObject.put("fase", dae.getFase());
         return new ResponseEntity<>(jsonObject.toMap(), BAD_REQUEST);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIlegalEx(IllegalArgumentException dae) {
+        var jsonObject = new JSONObject();
+        jsonObject.put("mensaje", dae.getMessage());
+        return new ResponseEntity<>(jsonObject.toMap(), BAD_REQUEST);
+    }
 }

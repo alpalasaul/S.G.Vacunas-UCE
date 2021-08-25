@@ -22,7 +22,10 @@ public class FacultadServiceImp implements FacultadService {
 
     @Override
     public Facultad agregarOActualizar(Facultad pojo) {
-        return this.facultadRepository.save(pojo);
+        if (pojo.getNombre() != null) {
+            return this.facultadRepository.save(pojo);
+        }
+        throw new IllegalArgumentException("No se puede agregar debido a campos faltantes");
     }
 
     @Override
