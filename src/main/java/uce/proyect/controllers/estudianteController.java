@@ -55,17 +55,17 @@ public class estudianteController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_HC')")
+//    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Estudiante user) {
-        log.info(user.getNombres());
-        log.info(user.getApellidos());
-        log.info(user.getCorreo());
-        log.info(user.getCarrera());
-        log.info(user.getTelefono());
-        log.info(user.getCedula());
-        log.info(user.getGenero());
-//        log.info(user.getFechaNacimiento().toString());
-        log.info(String.valueOf(user.getSemestre()));
+        log.info("nombres " + user.getNombres());
+        log.info("ape" + user.getApellidos());
+        log.info("correo " + user.getCorreo());
+        log.info("correo " + user.getCarrera());
+        log.info("tlf" + user.getTelefono());
+        log.info("cedula " + user.getCedula());
+        log.info("genero " + user.getGenero());
+        log.info("fecha " + user.getFechaNacimiento());
+        log.info("fecha en string " + String.valueOf(user.getSemestre()));
         var nUser = this.estudianteService.agregar(user);
         this.emailService.enviarEmailCredenciales(
                 user.getCorreo(),
