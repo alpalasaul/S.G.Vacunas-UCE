@@ -30,6 +30,7 @@ public class CustomerAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } else {
             var authorizationHeader = request.getHeader(AUTHORIZATION);
+            log.info(authorizationHeader);
             if (authorizationHeader != null && authorizationHeader.startsWith("SGVUCE ")) { // Defino como debe de ser el inicio del token
                 try {
                     var token = authorizationHeader.substring("SGVUCE ".length()); // obtengo solo la parte del token
