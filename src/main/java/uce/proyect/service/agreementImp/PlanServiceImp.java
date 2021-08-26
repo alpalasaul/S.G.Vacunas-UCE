@@ -3,7 +3,6 @@ package uce.proyect.service.agreementImp;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.NoEncontradorException;
@@ -16,7 +15,8 @@ import uce.proyect.repositories.FacultadRepository;
 import uce.proyect.repositories.PlanRepository;
 import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.PlanService;
-import uce.proyect.util.FabricaCredenciales;
+
+import static  uce.proyect.util.ValidarFechas.validarFechas;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static uce.proyect.util.FabricaCredenciales.PLANES_DIARIOS;
 
@@ -46,6 +45,20 @@ public class PlanServiceImp implements PlanService {
 
     @Override
     public Plan agregarOActualizar(Plan pojo) {
+        List<Plan> lista = this.buscarPorFecha(pojo.getFechaInicio());
+        // Mando a validar
+        validarFechas(pojo, lista);
+
+        // Creo la fase 2 después de 28 días
+        var pojo2 = new Plan();
+        pojo2.setFechaInicio(pojo.getFechaInicio().plusDays(28));
+        pojo2.setFechaFin(pojo.getFechaFin().plusDays(28));
+        pojo2.setFacultad(pojo.getFacultad());
+        pojo2.setCompleto(false);
+        pojo2.setPersonasVacunadas(0);
+        pojo2.setFase("SEGUNDA");
+        this.planRepository.save(pojo2);
+
         return this.planRepository.save(pojo);
     }
 
@@ -101,6 +114,12 @@ public class PlanServiceImp implements PlanService {
     @Override
     public JSONObject obtenerEstudiantesAInocular() {
         return null;
+    }
+
+    @Override
+    public List<Plan> buscarPorFecha(LocalDate fechaInicio) {
+        List<Plan> lista = this.planRepository.findByFechaInicio(fechaInicio);
+        return lista;
     }
 
     //     Se envia las notificaciones a los mails de cada estudiante, para ver como se forma el JSON entra a la documentación de los ENDPOINT

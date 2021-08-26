@@ -14,4 +14,5 @@ public interface PlanRepository extends MongoRepository<Plan, String> {
     Optional<Plan> findByFacultadAndGeneral(String facultad, boolean general);
 //    @Query("{fase: ?0, fechaFin: {$lte: ?1}, completo: ?3}")
     List<Plan> findByFaseAndCompletoAndFechaFinLessThanEqual(String fase, boolean completo, LocalDate fechaFin);
+    List<Plan> findByFechaInicio(LocalDate fechaInicio);
 }
