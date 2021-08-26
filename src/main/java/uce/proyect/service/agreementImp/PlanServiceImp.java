@@ -1,7 +1,9 @@
 package uce.proyect.service.agreementImp;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.NoEncontradorException;
@@ -14,16 +16,22 @@ import uce.proyect.repositories.FacultadRepository;
 import uce.proyect.repositories.PlanRepository;
 import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.PlanService;
+import uce.proyect.util.FabricaCredenciales;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static uce.proyect.util.FabricaCredenciales.PLANES_DIARIOS;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class PlanServiceImp implements PlanService {
 
     private PlanRepository planRepository;
@@ -132,7 +140,7 @@ public class PlanServiceImp implements PlanService {
                         .concat(nuevoPlan.getFacultad()));
             }
             nuevoPlan.setCompleto(false);
-            nuevoPlan.setFacultad("PRIMERA");
+            nuevoPlan.setFase("PRIMERA");
             return estudiantesFinal;
         } else {  // Si no existe la carrera o la facultad se lanza una exepcion
             throw new NoEncontradorException("No existen registros para: "
@@ -140,6 +148,7 @@ public class PlanServiceImp implements PlanService {
         }
     }
 
+    //    Agregar el segundo plan luego de 28 dias
     private void validarNuevoPlan(Plan nuevoPlan) throws PlanException {
 
         var planAntiguo = this.planRepository.findByFacultadAndGeneral(nuevoPlan.getFacultad(), true); // Se determina si esque existe el plan general
@@ -161,4 +170,120 @@ public class PlanServiceImp implements PlanService {
                     planAntiguo.get().getFase());
         }
     }
+
+//    Programacion de tareas, es para determinar el numero de personas que se han vacunado en un plan y eso presentarlo en una grafica en el front
+
+//    @Scheduled(fixedRate = 300000L, initialDelay = 30000L)
+    public void establecerPlanes() { // Cuando acaben con todos lo estudiantes debe haber un boton para que PLANES_DIARIOS regrese a nulo
+        log.info("INICIANDO LA BUSQUEDA DE NUEVOS PLANES");
+//        PLANES_DIARIOS = this.planRepository.findByFaseAndCompletoAndFechaFinLessThanEqual("PRIMERA", false, LocalDate.now());
+//        PLANES_DIARIOS.addAll(this.planRepository.findByFaseAndCompletoAndFechaFinLessThanEqual("SEGUNDA", false, LocalDate.now()));
+        var plan = new Plan();
+        plan.setFase("PRIMERA");
+        plan.setFacultad("FICFM");
+        plan.setPersonasVacunadas(0);
+        plan.setGeneral(true);
+        plan.setCompleto(false);
+        var plan1 = new Plan();
+        plan1.setFase("SEGUNDA");
+        plan1.setFacultad("FIGEMPA");
+        plan1.setCarrera("PETROLEOS");
+        plan1.setPersonasVacunadas(0);
+        plan1.setGeneral(false);
+        plan1.setCompleto(false);
+        var plan2 = new Plan();
+        plan2.setFase("PRIMERA");
+        plan2.setFacultad("MEDICINA");
+        plan2.setCarrera("OBSTETRICIA");
+        plan2.setPersonasVacunadas(0);
+        plan2.setGeneral(false);
+        plan2.setCompleto(false);
+        PLANES_DIARIOS = Arrays.asList(
+            plan, plan1, plan2
+        );
+    }
+
+    //    @Scheduled(fixedRate = 120000L)
+//    @Scheduled(cron = "00 05 * * * ?") // Programo una tarea todos los dias a las 5 am
+    public void contarVacunados() { // Obtengo los planes que no esten completos ya sean segundas o primeras fases, y pueden haber varias
+        // Tener en cuenta que no pueden haber fechas muy anteriores y no esten completas, una vez terminado el dia ese plan debe establecerse como completado
+        var planFasePrimera = this.planRepository.findByFaseAndCompletoAndFechaFinLessThanEqual("PRIMERA", false, LocalDate.now());
+        var planFaseSegunda = this.planRepository.findByFaseAndCompletoAndFechaFinLessThanEqual("SEGUNDA", false, LocalDate.now());
+        log.info("---------------- PRIMERAS FASES --------");
+        planFasePrimera.forEach(plan -> {
+            log.info("-------");
+            log.info(plan.getFacultad());
+            log.info(plan.getFase());
+            log.info(plan.getFechaInicio().toString());
+            log.info(plan.getFechaFin().toString());
+            log.info("-------");
+        });
+        log.info("----------------- SEGUNDAS FASES --------");
+        planFaseSegunda.forEach(plan -> {
+            log.info("-------");
+            log.info(plan.getFacultad());
+            log.info(plan.getFase());
+            log.info(plan.getFechaInicio().toString());
+            log.info(plan.getFechaFin().toString());
+            log.info("-------");
+        });
+    }
+
+//    @Scheduled(fixedRate = 120000L)
+    public void determinarVacunados() {
+
+        if (PLANES_DIARIOS != null) { // Cuando ya este validado los planes o el plan a realizarse tomar el plan de ese dia
+
+            log.info("** DEFINIENDO EL NUMERO DE VACUNADOS PARA LOS PLANES **");
+
+            PLANES_DIARIOS.forEach(plan -> {
+
+                log.info("---------------------------------");
+                log.info("PLAN: ".concat(plan.getFacultad()).concat(" FASE ").concat(plan.getFase().concat(" PERSONAS VACUNADAS ").concat(String.valueOf(plan.getPersonasVacunadas()))));
+                log.info("---------------------------------");
+
+
+                List<Estudiante> estudiantesFinal = new ArrayList<>();
+
+                if (plan.isGeneral()) {
+                    var estudiantes = new ArrayList<Estudiante>();
+                    this.facultadRepository.findByNombre(plan.getFacultad()).ifPresent(facultad -> {
+                        facultad.getCarreras().forEach(carrera -> {
+                            estudiantes.addAll(this.estudianteRepository.findByCarrera(carrera));
+                        });
+                    });
+                    estudiantesFinal = estudiantes;
+                } else {
+                    estudiantesFinal = this.estudianteRepository.findByCarrera(plan.getCarrera());
+                }
+
+                estudiantesFinal.forEach(estudiante -> {
+                    this.carnetRepository.findByEstudianteAndInoculacionVoluntaria(estudiante.getUsuario(), true).ifPresent(carnet -> {
+
+                        if (plan.getFase().equalsIgnoreCase("PRIMERA") && carnet.isPrimeraDosis()) {
+
+                            log.info(carnet.getEstudiante().concat(" PRIMERA DOSIS"));
+
+                            plan.setPersonasVacunadas(plan.getPersonasVacunadas() + 1);
+
+                            log.info("PLAN AGREGADO EN 1  PARA LA PRIMERA FASE");
+
+                        } else if (carnet.isSegundaDosis()) {
+
+                            log.info(carnet.getEstudiante().concat(" SEGUNDA DOSIS"));
+
+                            plan.setPersonasVacunadas(plan.getPersonasVacunadas() + 1);
+
+                        }
+
+                        this.agregarOActualizar(plan);
+
+                    });
+                });
+            });
+        } else {
+            log.info("NO EXISTEN PLANES ACTUALES AUN");
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package uce.proyect.util;
 
 import uce.proyect.models.Carnet;
+import uce.proyect.models.Plan;
 import uce.proyect.models.User;
 
 import java.time.LocalDate;
@@ -8,6 +9,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FabricaCredenciales {
+
+    public static List<Plan> PLANES_DIARIOS;
 
     public static final String EST = "ESTUDIANTE";
     public static final String ADMIN = "ADMINISTRADOR";

@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface CarnetRepository extends MongoRepository<Carnet, String> {
     Optional<Carnet> findByEstudiante(String estudiante);
+    Optional<Carnet> findByEstudianteAndInoculacionVoluntaria(String estudiante, boolean inoculacion);
 }
