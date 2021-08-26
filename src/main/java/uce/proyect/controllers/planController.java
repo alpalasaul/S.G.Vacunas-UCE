@@ -29,23 +29,10 @@ public class planController {
         return new ResponseEntity<>(listar, OK);
     }
 
-//         Este endpoint es para un plan por facultad y carrera
-//        En el JSON se va a enviar la facultad y carrera, y notifica a todos los estudiantes de la facultad y carrera
-    @PostMapping("/carrera")
-    @PreAuthorize("hasRole('ROLE_HC')")
-    public ResponseEntity<?> createC(@RequestBody Plan plan) {
-        var jsonObject = this.planService.generarNotificacionVacuncacionPorCarrera(plan); // Solo al agregar el nuevo plan se realiza la notificación a los mails
-        var pl = this.planService.agregarOActualizar(plan); // Si pasa el envio de mails se lo guarda
-        jsonObject.put("nuevo_plan", pl);
-        return new ResponseEntity<>(jsonObject.toMap(), ACCEPTED);
-    }
-
-//         Este endpoint es para un plan por facultad
-//        En el JSON solo se va a enviar la facultad y no la carrera, y notifica a todos los estudiantes de la facultad
-    @PostMapping("/facultad")
+    @PostMapping
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> createF(@RequestBody Plan plan) {
-        var jsonObject = this.planService.generarNotificacionVacuncacionPorFacultad(plan);
+        var jsonObject = this.planService.generarNotificacionVacuncacion(plan);
         var pl = this.planService.agregarOActualizar(plan);
         jsonObject.put("nuevo_plan", pl);
         return new ResponseEntity<>(jsonObject.toMap(), ACCEPTED);

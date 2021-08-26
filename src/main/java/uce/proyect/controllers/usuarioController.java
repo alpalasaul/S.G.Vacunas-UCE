@@ -13,10 +13,8 @@ import uce.proyect.service.agreement.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.*;
@@ -34,28 +32,28 @@ public class usuarioController {
     @PreAuthorize("hasRole('ROLE_HC')") // Significa que tiene permisos el admin y el hc
     public ResponseEntity<?> getUsers() {
         var listar = this.userService.listar();
-        return new ResponseEntity<Collection>(listar, OK);
+        return new ResponseEntity<>(listar, OK);
     }
 
     @GetMapping("/{nombreUsuario}")
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getUserbyUserName(@PathVariable("nombreUsuario") String user) {
         var listar = this.userService.buscarPorId(user);
-        return new ResponseEntity<User>(listar, OK);
+        return new ResponseEntity<>(listar, OK);
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('ROLE_USER')") // Tiene autorizacion el admin, hc y el usuario
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // Tiene autorizacion el admin, hc y el usuario
     public ResponseEntity<?> update(@RequestBody User user) { // Validar que solo actualize la contrasena, no hay necesidad de actualizar el username
         var nUser = this.userService.agregarOActualizar(user);
-        return new ResponseEntity<User>(nUser, ACCEPTED);
+        return new ResponseEntity<>(nUser, ACCEPTED);
     }
 
     @DeleteMapping("/{nombreUsuario}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Map> delete(@PathVariable("nombreUsuario") String user) {
+    public ResponseEntity<?> delete(@PathVariable("nombreUsuario") String user) {
         var mensaje = this.userService.eliminar(user);
-        return new ResponseEntity<Map>(mensaje.toMap(), ACCEPTED);
+        return new ResponseEntity<>(mensaje.toMap(), ACCEPTED);
     }
 
 //    Para actualizar el token en el caso de que el princial haya pasoda su ciclo de vida

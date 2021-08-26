@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface PlanRepository extends MongoRepository<Plan, String> {
     Optional<Plan> findByFacultadAndCarrera(String facultad, String carrera);
-    Optional<Plan> findByFacultad(String facultad);
+    Optional<Plan> findByCarrera(String carrera);
+    Optional<Plan> findByFacultadAndGeneral(String facultad, boolean general);
 }
