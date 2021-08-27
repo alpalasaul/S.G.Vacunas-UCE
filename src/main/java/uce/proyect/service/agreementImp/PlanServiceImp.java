@@ -21,10 +21,7 @@ import static uce.proyect.util.ValidarFechas.validarFechas;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static uce.proyect.util.FabricaCredenciales.PLANES_DIARIOS;
 
@@ -49,15 +46,36 @@ public class PlanServiceImp implements PlanService {
         // Mando a validar
         validarFechas(pojo, lista);
 
-        // Creo la fase 2 después de 28 días
-        var pojo2 = new Plan();
-        pojo2.setFechaInicio(pojo.getFechaInicio().plusDays(28));
-        pojo2.setFechaFin(pojo.getFechaFin().plusDays(28));
-        pojo2.setFacultad(pojo.getFacultad());
-        pojo2.setCompleto(false);
-        pojo2.setPersonasVacunadas(0);
-        pojo2.setFase("SEGUNDA");
-        this.planRepository.save(pojo2);
+        // Creo la fase 2 después de 28 días (CREAR)
+        if (pojo.get_id() == null) { // Si es diferente de null es una actualización
+            var pojo2 = new Plan();
+            pojo2.setFechaInicio(pojo.getFechaInicio().plusDays(28));
+            pojo2.setFechaFin(pojo.getFechaFin().plusDays(28));
+            pojo2.setFacultad(pojo.getFacultad());
+            pojo2.setCompleto(false);
+            pojo2.setCentroVacunacion(pojo.getCentroVacunacion());
+            pojo2.setPersonasVacunadas(0);
+            pojo2.setFase("SEGUNDA");
+            this.planRepository.save(pojo2);
+        } else {
+            // Si actualiza voy a buscar cual plan quiere actualizar
+            Optional<Plan> plan = this.planRepository.findById(pojo.get_id());
+            if (plan.get().getFase().equals("PRIMERA")) { // Actualizar la primera y la segunda
+                Optional<Plan> plan2Update = this.planRepository.findByFacultadAndFase(pojo.getFacultad(),"SEGUNDA"); // Obtengo el segundo plan para actualizarlo
+                plan2Update.get().setFacultad(pojo.getFacultad());
+                plan2Update.get().setFechaInicio(pojo.getFechaInicio().plusDays(28));
+                plan2Update.get().setFechaFin(pojo.getFechaFin().plusDays(28));
+                plan2Update.get().setCentroVacunacion(pojo.getCentroVacunacion());
+                plan2Update.get().setCompleto(false);
+                plan2Update.get().setPersonasVacunadas(0);
+                pojo.setFase(plan.get().getFase()); // No se permite cambiar de primera a segunda fase
+                this.planRepository.save(plan2Update.get());
+            } else { // Actualizar solo la segunda fase
+                pojo.setFase("SEGUNDA"); // NO se permite cambiar de segunda a primera fase
+                // Opcional enviar exception
+            }
+            // Las validaciones de que no cambia ni la facultad ni la fase EN UN UPDATE se las va a bloquear en el front
+        }
 
         return this.planRepository.save(pojo);
     }
