@@ -35,7 +35,7 @@ public class planController {
         var jsonObject = this.planService.generarNotificacionVacuncacion(plan);
         var pl = this.planService.agregarOActualizar(plan);
         jsonObject.put("nuevo_plan", pl);
-        return new ResponseEntity<>(jsonObject.toMap(), ACCEPTED);
+        return new ResponseEntity<>(jsonObject.toMap(), ACCEPTED); // Importante el toMap() para mostrar el json en el reponse sino devuelve {"empty": false}
     }
 
     @PutMapping("/{id}")
@@ -51,6 +51,6 @@ public class planController {
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> delete(@PathVariable("id") String id) {
         var pl = this.planService.eliminar(id);
-        return new ResponseEntity<>(pl, OK);
+        return new ResponseEntity<>(pl.toMap(), OK);
     }
 }
