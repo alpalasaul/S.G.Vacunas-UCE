@@ -79,7 +79,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         var algorithm = Algorithm.HMAC256("codigoSecreto".getBytes()); // defino el tipo de criptografia del algoritmo
         var access_token = JWT.create()
                 .withSubject(principal.getUsername()) // Se define un atributo que identifique al usuario, puede ser cualquier otro que se unico
-                .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000)) // Defino el tiempo de vida del token 10 min
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1 * 60 * 1000)) // Defino el tiempo de vida del token 10 min
                 .withIssuer(request.getRequestURI().toString())
                 .withClaim("roles", principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
