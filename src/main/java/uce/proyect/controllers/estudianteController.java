@@ -46,7 +46,7 @@ public class estudianteController {
     }
 
     @GetMapping("/{nombreUsuario}")
-    @PreAuthorize("hasRole('ROLE_HC')")
+    @PreAuthorize("hasRole('ROLE_HC') OR hasRole('ROLE_USER')")
     public ResponseEntity<?> getEstudiantebyUserName(@PathVariable("nombreUsuario") String user) {
         var listar = this.estudianteService.buscarPorId(user);
         return new ResponseEntity<Estudiante>(listar, OK);
