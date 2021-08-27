@@ -90,6 +90,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withIssuer(request.getRequestURI().toString())
                 .sign(algorithm);
         var tokens = new HashMap<String, String>();
+        tokens.put("usuario", principal.getUsername());
+        tokens.put("creado_a_las", new Date(System.currentTimeMillis()).toString());
+        tokens.put("expira_en", new Date(System.currentTimeMillis() + 60 * 60 * 1000).toString());
         tokens.put("maximo_role", ROLE_MAXIMO);
         tokens.put("token_acceso", access_token);
         tokens.put("token_actualizado", refresh_token);
