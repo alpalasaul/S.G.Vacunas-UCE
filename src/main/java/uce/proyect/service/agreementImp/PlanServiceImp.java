@@ -121,7 +121,7 @@ public class PlanServiceImp implements PlanService {
         var facultadOptional = this.facultadRepository.findByNombre(nuevoPlan.getFacultad()); // Se busca si existe la facultad
         if (facultadOptional.isPresent()) {
             List<Estudiante> estudiantesFinal = new ArrayList<>();
-            if (nuevoPlan.getCarrera() == null) { // Si es general no hay carrera y por tanto debo obtener todos lo estudiantes
+//            if (nuevoPlan.getCarrera() == null) { // Si es general no hay carrera y por tanto debo obtener todos lo estudiantes
                 var estudiantes = new ArrayList<Estudiante>();
                 facultadOptional.get().getCarreras().forEach(carreraString -> {
                     // Obtengo a cada estudiante de las carreras de la facultad, por eso no debe de haber la misma carrera en otra fac
@@ -129,10 +129,10 @@ public class PlanServiceImp implements PlanService {
                 });
                 nuevoPlan.setGeneral(true); // Defino que es un plan genral
                 estudiantesFinal = estudiantes;
-            } else {
-                estudiantesFinal = this.estudianteRepository.findByCarrera(nuevoPlan.getCarrera()); // Buscamos a todos los estudiantes de la facultad y carrera para notificarlos sobre el plan de vacunacion
-                nuevoPlan.setGeneral(false);
-            }
+//            } else {
+//                estudiantesFinal = this.estudianteRepository.findByCarrera(nuevoPlan.getCarrera()); // Buscamos a todos los estudiantes de la facultad y carrera para notificarlos sobre el plan de vacunacion
+//                nuevoPlan.setGeneral(false);
+//            }
             if (estudiantesFinal.isEmpty()) { // Si no hay registros de estudiantes en esa carrera y facultad se lanza una excepcion
                 throw new NoEncontradorException("No existen registros de estudiantes para: "
                         .concat(nuevoPlan.getCarrera() != null ? nuevoPlan.getCarrera() : "")
@@ -151,7 +151,7 @@ public class PlanServiceImp implements PlanService {
     //    Agregar el segundo plan luego de 28 dias
     private void validarNuevoPlan(Plan nuevoPlan) throws PlanException {
 
-        var planAntiguo = this.planRepository.findByFacultadAndGeneral(nuevoPlan.getFacultad(), true); // Se determina si esque existe el plan general
+        var planAntiguo = this.planRepository.findByFacultad(nuevoPlan.getFacultad()); // Se determina si esque existe el plan general
 
         if (planAntiguo.isPresent()) { // Si se encuentra el plan, se lanza una excepcion
             var stringBuilder =

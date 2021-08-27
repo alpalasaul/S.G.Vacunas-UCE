@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface PlanRepository extends MongoRepository<Plan, String> {
     Optional<Plan> findByFacultadAndCarrera(String facultad, String carrera);
     Optional<Plan> findByCarrera(String carrera);
-    Optional<Plan> findByFacultadAndGeneral(String facultad, boolean general);
+    Optional<Plan> findByFacultad(String facultad);
 //    @Query("{fase: ?0, fechaFin: {$lte: ?1}, completo: ?3}")
     List<Plan> findByFaseAndCompletoAndFechaFinLessThanEqual(String fase, boolean completo, LocalDate fechaFin);
 }
