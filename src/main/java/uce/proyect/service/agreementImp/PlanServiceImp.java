@@ -3,7 +3,6 @@ package uce.proyect.service.agreementImp;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.NoEncontradorException;
@@ -16,7 +15,8 @@ import uce.proyect.repositories.FacultadRepository;
 import uce.proyect.repositories.PlanRepository;
 import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.PlanService;
-import uce.proyect.util.FabricaCredenciales;
+
+import static uce.proyect.util.ValidarFechas.validarFechas;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static uce.proyect.util.FabricaCredenciales.PLANES_DIARIOS;
 
@@ -46,6 +45,20 @@ public class PlanServiceImp implements PlanService {
 
     @Override
     public Plan agregarOActualizar(Plan pojo) {
+        List<Plan> lista = this.buscarPorFecha(pojo.getFechaInicio());
+        // Mando a validar
+        validarFechas(pojo, lista);
+
+        // Creo la fase 2 después de 28 días
+        var pojo2 = new Plan();
+        pojo2.setFechaInicio(pojo.getFechaInicio().plusDays(28));
+        pojo2.setFechaFin(pojo.getFechaFin().plusDays(28));
+        pojo2.setFacultad(pojo.getFacultad());
+        pojo2.setCompleto(false);
+        pojo2.setPersonasVacunadas(0);
+        pojo2.setFase("SEGUNDA");
+        this.planRepository.save(pojo2);
+
         return this.planRepository.save(pojo);
     }
 
@@ -103,6 +116,12 @@ public class PlanServiceImp implements PlanService {
         return null;
     }
 
+    @Override
+    public List<Plan> buscarPorFecha(LocalDate fechaInicio) {
+        List<Plan> lista = this.planRepository.findByFechaInicio(fechaInicio);
+        return lista;
+    }
+
     //     Se envia las notificaciones a los mails de cada estudiante, para ver como se forma el JSON entra a la documentación de los ENDPOINT
     private void cargarMensaje(
             List<Estudiante> estudiantes,
@@ -120,28 +139,28 @@ public class PlanServiceImp implements PlanService {
     private List<Estudiante> validarEstudiantesEnFacultadYCarrera(Plan nuevoPlan) {
         var facultadOptional = this.facultadRepository.findByNombre(nuevoPlan.getFacultad()); // Se busca si existe la facultad
         if (facultadOptional.isPresent()) {
-            List<Estudiante> estudiantesFinal = new ArrayList<>();
+//            List<Estudiante> estudiantesFinal = new ArrayList<>();
 //            if (nuevoPlan.getCarrera() == null) { // Si es general no hay carrera y por tanto debo obtener todos lo estudiantes
-                var estudiantes = new ArrayList<Estudiante>();
-                facultadOptional.get().getCarreras().forEach(carreraString -> {
-                    // Obtengo a cada estudiante de las carreras de la facultad, por eso no debe de haber la misma carrera en otra fac
-                    estudiantes.addAll(this.estudianteRepository.findByCarrera(carreraString));
-                });
-                nuevoPlan.setGeneral(true); // Defino que es un plan genral
-                estudiantesFinal = estudiantes;
+            var estudiantes = new ArrayList<Estudiante>();
+            facultadOptional.get().getCarreras().forEach(carreraString -> {
+                // Obtengo a cada estudiante de las carreras de la facultad, por eso no debe de haber la misma carrera en otra fac
+                estudiantes.addAll(this.estudianteRepository.findByCarrera(carreraString));
+            });
+//                nuevoPlan.setGeneral(true); // Defino que es un plan genral
+//                estudiantesFinal = estudiantes;
 //            } else {
 //                estudiantesFinal = this.estudianteRepository.findByCarrera(nuevoPlan.getCarrera()); // Buscamos a todos los estudiantes de la facultad y carrera para notificarlos sobre el plan de vacunacion
 //                nuevoPlan.setGeneral(false);
 //            }
-            if (estudiantesFinal.isEmpty()) { // Si no hay registros de estudiantes en esa carrera y facultad se lanza una excepcion
+            if (estudiantes.isEmpty()) { // Si no hay registros de estudiantes en esa carrera y facultad se lanza una excepcion
                 throw new NoEncontradorException("No existen registros de estudiantes para: "
-                        .concat(nuevoPlan.getCarrera() != null ? nuevoPlan.getCarrera() : "")
-                        .concat(" - ")
+//                        .concat(nuevoPlan.getCarrera() != null ? nuevoPlan.getCarrera() : "")
+//                        .concat(" - ")
                         .concat(nuevoPlan.getFacultad()));
             }
             nuevoPlan.setCompleto(false);
             nuevoPlan.setFase("PRIMERA");
-            return estudiantesFinal;
+            return estudiantes;
         } else {  // Si no existe la carrera o la facultad se lanza una exepcion
             throw new NoEncontradorException("No existen registros para: "
                     .concat(nuevoPlan.getFacultad()));
@@ -157,12 +176,12 @@ public class PlanServiceImp implements PlanService {
             var stringBuilder =
                     new StringBuilder("Ya existe un plan de vacunacion para: ")
                             .append(nuevoPlan.getFacultad());
-            if (nuevoPlan.getCarrera() != null) {
-                stringBuilder
-                        .append(" de ")
-                        .append(nuevoPlan.getCarrera())
-                        .append(" Y es un plan general.");
-            }
+//            if (nuevoPlan.getCarrera() != null) {
+//                stringBuilder
+//                        .append(" de ")
+//                        .append(nuevoPlan.getCarrera())
+//                        .append(" Y es un plan general.");
+//            }
             throw new PlanException(stringBuilder.toString(),
                     planAntiguo.get().getFechaInicio(),
                     planAntiguo.get().getFechaFin(),
@@ -173,7 +192,7 @@ public class PlanServiceImp implements PlanService {
 
 //    Programacion de tareas, es para determinar el numero de personas que se han vacunado en un plan y eso presentarlo en una grafica en el front
 
-//    @Scheduled(fixedRate = 300000L, initialDelay = 30000L)
+    //    @Scheduled(fixedRate = 300000L, initialDelay = 30000L)
     public void establecerPlanes() { // Cuando acaben con todos lo estudiantes debe haber un boton para que PLANES_DIARIOS regrese a nulo
         log.info("INICIANDO LA BUSQUEDA DE NUEVOS PLANES");
 //        PLANES_DIARIOS = this.planRepository.findByFaseAndCompletoAndFechaFinLessThanEqual("PRIMERA", false, LocalDate.now());
@@ -182,24 +201,24 @@ public class PlanServiceImp implements PlanService {
         plan.setFase("PRIMERA");
         plan.setFacultad("FICFM");
         plan.setPersonasVacunadas(0);
-        plan.setGeneral(true);
+//        plan.setGeneral(true);
         plan.setCompleto(false);
         var plan1 = new Plan();
         plan1.setFase("SEGUNDA");
         plan1.setFacultad("FIGEMPA");
-        plan1.setCarrera("PETROLEOS");
+//        plan1.setCarrera("PETROLEOS");
         plan1.setPersonasVacunadas(0);
-        plan1.setGeneral(false);
+//        plan1.setGeneral(false);
         plan1.setCompleto(false);
         var plan2 = new Plan();
         plan2.setFase("PRIMERA");
         plan2.setFacultad("MEDICINA");
-        plan2.setCarrera("OBSTETRICIA");
+//        plan2.setCarrera("OBSTETRICIA");
         plan2.setPersonasVacunadas(0);
-        plan2.setGeneral(false);
+//        plan2.setGeneral(false);
         plan2.setCompleto(false);
         PLANES_DIARIOS = Arrays.asList(
-            plan, plan1, plan2
+                plan, plan1, plan2
         );
     }
 
@@ -229,7 +248,7 @@ public class PlanServiceImp implements PlanService {
         });
     }
 
-//    @Scheduled(fixedRate = 120000L)
+    //    @Scheduled(fixedRate = 120000L)
     public void determinarVacunados() {
 
         if (PLANES_DIARIOS != null) { // Cuando ya este validado los planes o el plan a realizarse tomar el plan de ese dia
@@ -245,17 +264,17 @@ public class PlanServiceImp implements PlanService {
 
                 List<Estudiante> estudiantesFinal = new ArrayList<>();
 
-                if (plan.isGeneral()) {
-                    var estudiantes = new ArrayList<Estudiante>();
-                    this.facultadRepository.findByNombre(plan.getFacultad()).ifPresent(facultad -> {
-                        facultad.getCarreras().forEach(carrera -> {
-                            estudiantes.addAll(this.estudianteRepository.findByCarrera(carrera));
-                        });
+//                if (plan.isGeneral()) {
+                var estudiantes = new ArrayList<Estudiante>();
+                this.facultadRepository.findByNombre(plan.getFacultad()).ifPresent(facultad -> {
+                    facultad.getCarreras().forEach(carrera -> {
+                        estudiantes.addAll(this.estudianteRepository.findByCarrera(carrera));
                     });
-                    estudiantesFinal = estudiantes;
-                } else {
-                    estudiantesFinal = this.estudianteRepository.findByCarrera(plan.getCarrera());
-                }
+                });
+                estudiantesFinal = estudiantes;
+//                } else {
+//                    estudiantesFinal = this.estudianteRepository.findByCarrera(plan.getCarrera());
+//                }
 
                 estudiantesFinal.forEach(estudiante -> {
                     this.carnetRepository.findByEstudianteAndInoculacionVoluntaria(estudiante.getUsuario(), true).ifPresent(carnet -> {
