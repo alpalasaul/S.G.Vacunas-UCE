@@ -104,6 +104,8 @@ public class PlanServiceImp implements PlanService {
         var jsonObject = new JSONObject();
         if (plan.isPresent()) {
             this.planRepository.delete(plan.get());
+            var plan2 = this.planRepository.findByFacultad(plan.get().getFacultad());
+            this.planRepository.delete(plan2.get()); // Borrar ambos planes si se borra uno
             jsonObject.put("Eliminado_P", "Se ha eliminado el plan: "
                     .concat(plan.get().get_id())
                     .concat(" con programación: ")
