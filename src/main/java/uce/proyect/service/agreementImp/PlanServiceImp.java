@@ -3,10 +3,12 @@ package uce.proyect.service.agreementImp;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.exceptions.PlanException;
+import uce.proyect.models.Carnet;
 import uce.proyect.models.Estudiante;
 import uce.proyect.models.Plan;
 import uce.proyect.repositories.CarnetRepository;
@@ -16,14 +18,16 @@ import uce.proyect.repositories.PlanRepository;
 import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.PlanService;
 
-import static uce.proyect.util.ValidarFechas.validarFechas;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static uce.proyect.util.FabricaCredenciales.PLANES_DIARIOS;
+import static uce.proyect.util.ValidarFechas.validarFechas;
 
 @Service
 @AllArgsConstructor
@@ -49,8 +53,8 @@ public class PlanServiceImp implements PlanService {
         // Creo la fase 2 después de 28 días (CREAR)
         if (pojo.get_id() == null) { // Si es diferente de null es una actualización
             var pojo2 = new Plan();
-            pojo2.setFechaInicio(pojo.getFechaInicio().plusDays(28));
-            pojo2.setFechaFin(pojo.getFechaFin().plusDays(28));
+            pojo2.setFechaInicio(pojo.getFechaInicio().plusDays(4));
+            pojo2.setFechaFin(pojo.getFechaFin().plusDays(4));
             pojo2.setFacultad(pojo.getFacultad());
             pojo2.setCompleto(false);
             pojo2.setCentroVacunacion(pojo.getCentroVacunacion());
@@ -61,10 +65,10 @@ public class PlanServiceImp implements PlanService {
             // Si actualiza voy a buscar cual plan quiere actualizar
             Optional<Plan> plan = this.planRepository.findById(pojo.get_id());
             if (plan.get().getFase().equals("PRIMERA")) { // Actualizar la primera y la segunda
-                Optional<Plan> plan2Update = this.planRepository.findByFacultadAndFase(pojo.getFacultad(),"SEGUNDA"); // Obtengo el segundo plan para actualizarlo
+                Optional<Plan> plan2Update = this.planRepository.findByFacultadAndFase(pojo.getFacultad(), "SEGUNDA"); // Obtengo el segundo plan para actualizarlo
                 plan2Update.get().setFacultad(pojo.getFacultad());
-                plan2Update.get().setFechaInicio(pojo.getFechaInicio().plusDays(28));
-                plan2Update.get().setFechaFin(pojo.getFechaFin().plusDays(28));
+                plan2Update.get().setFechaInicio(pojo.getFechaInicio().plusDays(4));
+                plan2Update.get().setFechaFin(pojo.getFechaFin().plusDays(4));
                 plan2Update.get().setCentroVacunacion(pojo.getCentroVacunacion());
                 plan2Update.get().setCompleto(false);
                 plan2Update.get().setPersonasVacunadas(0);
@@ -100,18 +104,13 @@ public class PlanServiceImp implements PlanService {
 
     @Override
     public JSONObject eliminar(String identificador) {
-        var plan = this.planRepository.findById(identificador);
+        var plan = this.planRepository.findByFacultad(identificador); // Obtengo los 2 planes de existir
         var jsonObject = new JSONObject();
-        if (plan.isPresent()) {
-            this.planRepository.delete(plan.get());
-            var plan2 = this.planRepository.findByFacultad(plan.get().getFacultad());
-            this.planRepository.delete(plan2.get()); // Borrar ambos planes si se borra uno
-            jsonObject.put("Eliminado_P", "Se ha eliminado el plan: "
-                    .concat(plan.get().get_id())
-                    .concat(" con programación: ")
-                    .concat("I: ".concat(plan.get().getFechaInicio().toString()))
-                    .concat(" F: ".concat(plan.get().getFechaFin().toString())));
+        if (plan.isEmpty()) {
+            throw new NoEncontradorException("No se han encontrado planes para ".concat(identificador));
         }
+        this.planRepository.deleteAll(plan);
+        jsonObject.put("Eliminado_P", "Planes eliminados para :".concat(plan.get(0).getFacultad()));
         return jsonObject;
     }
 
@@ -123,7 +122,7 @@ public class PlanServiceImp implements PlanService {
 
         var estudiantes = this.validarEstudiantesEnFacultadYCarrera(nuevoPlan);
 
-        this.cargarMensaje(estudiantes, nuevoPlan.getFechaInicio(), nuevoPlan.getFechaFin(), nuevoPlan.getCentroVacunacion());
+        this.cargarMensaje(estudiantes, nuevoPlan.getFechaInicio(), nuevoPlan.getFechaFin(), nuevoPlan.getCentroVacunacion(), nuevoPlan.getFase());
 
         var jsonObject = new JSONObject();
         jsonObject.put("notificados", estudiantes.size());
@@ -131,9 +130,29 @@ public class PlanServiceImp implements PlanService {
         return jsonObject;
     }
 
+    // Se debe de enviar la facultad del plan y la fase en la que se encuentra
     @Override
-    public JSONObject obtenerEstudiantesAInocular() {
-        return null;
+    public JSONObject obtenerEstudiantesAInocular(String facultadNombre, String fase) {
+        var jsonObject = new JSONObject();
+        var carnets = new ArrayList<Carnet>();
+        this.facultadRepository.findByNombre(facultadNombre).ifPresent(facultad -> {
+
+            facultad.getCarreras().forEach(carrera -> {
+
+                this.estudianteRepository.findByCarrera(carrera).forEach(estudiante -> {
+
+                    carnets.addAll(this.carnetRepository.findByEstudianteAndInoculacionVoluntariaAndPrimeraDosis(
+                            estudiante.getUsuario(),
+                            true, // Inoculacion Voluntaria
+                            fase.equalsIgnoreCase("SEGUNDA") // Si es la segunda dosis entonces la primera debe estar en true
+                    ).stream().collect(Collectors.toList())); // Ver si en las pruebas aqui no se desborda, sino usar ifPresent
+
+
+                });
+            });
+        });
+        jsonObject.put("carnets", carnets);
+        return jsonObject;
     }
 
     @Override
@@ -147,182 +166,96 @@ public class PlanServiceImp implements PlanService {
             List<Estudiante> estudiantes,
             LocalDate fechaInicio,
             LocalDate fechaFinal,
-            String centroVacunacion
+            String centroVacunacion,
+            String fase
     ) {
-        estudiantes.forEach(estudiante -> this.emailService.enviarEmail(
+        estudiantes.forEach(estudiante -> this.emailService.enviarEmailPlan(
                 estudiante.getCorreo(),
                 fechaInicio,
                 fechaFinal,
-                centroVacunacion));
+                centroVacunacion,
+                fase
+        ));
     }
 
-    private List<Estudiante> validarEstudiantesEnFacultadYCarrera(Plan nuevoPlan) {
-        var facultadOptional = this.facultadRepository.findByNombre(nuevoPlan.getFacultad()); // Se busca si existe la facultad
+    private List<Estudiante> validarEstudiantesEnFacultadYCarrera(Plan plan) {
+        var facultadOptional = this.facultadRepository.findByNombre(plan.getFacultad()); // Se busca si existe la facultad
         if (facultadOptional.isPresent()) {
-//            List<Estudiante> estudiantesFinal = new ArrayList<>();
-//            if (nuevoPlan.getCarrera() == null) { // Si es general no hay carrera y por tanto debo obtener todos lo estudiantes
             var estudiantes = new ArrayList<Estudiante>();
             facultadOptional.get().getCarreras().forEach(carreraString -> {
-                // Obtengo a cada estudiante de las carreras de la facultad, por eso no debe de haber la misma carrera en otra fac
+//                 Obtengo a cada estudiante de las carreras de la facultad, por eso no debe de haber la misma carrera en otra facultad
                 estudiantes.addAll(this.estudianteRepository.findByCarrera(carreraString));
             });
-//                nuevoPlan.setGeneral(true); // Defino que es un plan genral
-//                estudiantesFinal = estudiantes;
-//            } else {
-//                estudiantesFinal = this.estudianteRepository.findByCarrera(nuevoPlan.getCarrera()); // Buscamos a todos los estudiantes de la facultad y carrera para notificarlos sobre el plan de vacunacion
-//                nuevoPlan.setGeneral(false);
-//            }
             if (estudiantes.isEmpty()) { // Si no hay registros de estudiantes en esa carrera y facultad se lanza una excepcion
                 throw new NoEncontradorException("No existen registros de estudiantes para: "
-//                        .concat(nuevoPlan.getCarrera() != null ? nuevoPlan.getCarrera() : "")
-//                        .concat(" - ")
-                        .concat(nuevoPlan.getFacultad()));
+                        .concat(plan.getFacultad()));
             }
-            nuevoPlan.setCompleto(false);
-            nuevoPlan.setFase("PRIMERA");
             return estudiantes;
         } else {  // Si no existe la carrera o la facultad se lanza una exepcion
             throw new NoEncontradorException("No existen registros para: "
-                    .concat(nuevoPlan.getFacultad()));
+                    .concat(plan.getFacultad()));
         }
     }
 
     //    Agregar el segundo plan luego de 28 dias
     private void validarNuevoPlan(Plan nuevoPlan) throws PlanException {
 
-        var planAntiguo = this.planRepository.findByFacultad(nuevoPlan.getFacultad()); // Se determina si esque existe el plan general
+        var planesAntiguos = this.planRepository.findByFacultad(nuevoPlan.getFacultad()); // Se determina si esque existe el plan general
 
-        if (planAntiguo.isPresent()) { // Si se encuentra el plan, se lanza una excepcion
-            var stringBuilder =
-                    new StringBuilder("Ya existe un plan de vacunacion para: ")
-                            .append(nuevoPlan.getFacultad());
-//            if (nuevoPlan.getCarrera() != null) {
-//                stringBuilder
-//                        .append(" de ")
-//                        .append(nuevoPlan.getCarrera())
-//                        .append(" Y es un plan general.");
-//            }
-            throw new PlanException(stringBuilder.toString(),
-                    planAntiguo.get().getFechaInicio(),
-                    planAntiguo.get().getFechaFin(),
-                    planAntiguo.get().getPersonasVacunadas(),
-                    planAntiguo.get().getFase());
+        if (!planesAntiguos.isEmpty()) { // Si se encuentra el plan, se lanza una excepcion
+            throw new PlanException(
+                    "Ya existe un plan de vacunacion para: ".concat(nuevoPlan.getFacultad()),
+                    planesAntiguos.get(0).getFechaInicio(),
+                    planesAntiguos.get(0).getFechaFin(),
+                    planesAntiguos.get(0).getPersonasVacunadas(),
+                    planesAntiguos.get(0).getFase());
         }
     }
 
-//    Programacion de tareas, es para determinar el numero de personas que se han vacunado en un plan y eso presentarlo en una grafica en el front
-
-    //    @Scheduled(fixedRate = 300000L, initialDelay = 30000L)
-    public void establecerPlanes() { // Cuando acaben con todos lo estudiantes debe haber un boton para que PLANES_DIARIOS regrese a nulo
-        log.info("INICIANDO LA BUSQUEDA DE NUEVOS PLANES");
-//        PLANES_DIARIOS = this.planRepository.findByFaseAndCompletoAndFechaFinLessThanEqual("PRIMERA", false, LocalDate.now());
-//        PLANES_DIARIOS.addAll(this.planRepository.findByFaseAndCompletoAndFechaFinLessThanEqual("SEGUNDA", false, LocalDate.now()));
-        var plan = new Plan();
-        plan.setFase("PRIMERA");
-        plan.setFacultad("FICFM");
-        plan.setPersonasVacunadas(0);
-//        plan.setGeneral(true);
-        plan.setCompleto(false);
-        var plan1 = new Plan();
-        plan1.setFase("SEGUNDA");
-        plan1.setFacultad("FIGEMPA");
-//        plan1.setCarrera("PETROLEOS");
-        plan1.setPersonasVacunadas(0);
-//        plan1.setGeneral(false);
-        plan1.setCompleto(false);
-        var plan2 = new Plan();
-        plan2.setFase("PRIMERA");
-        plan2.setFacultad("MEDICINA");
-//        plan2.setCarrera("OBSTETRICIA");
-        plan2.setPersonasVacunadas(0);
-//        plan2.setGeneral(false);
-        plan2.setCompleto(false);
-        PLANES_DIARIOS = Arrays.asList(
-                plan, plan1, plan2
-        );
+    @Override
+    public JSONObject establecerPlanes() {
+        var respuestaJson = new JSONObject();
+        log.info("INICIANDO BUSQUEDA DE NUEVOS PLANES PARA ".concat(LocalDate.now().toString()));
+        var planesActuales = this.planRepository.findByFaseAndCompletoAndFechaInicioLessThanEqual("PRIMERA", false, LocalDate.now());
+        planesActuales.addAll(this.planRepository.findByFaseAndCompletoAndFechaInicioLessThanEqual("SEGUNDA", false, LocalDate.now()));
+        respuestaJson.put("planes_actuales", "No existen planes disponibles.");
+        if (planesActuales.isEmpty()) {
+            planesActuales = this.planRepository.findByCompleto(false);
+            respuestaJson.put("planes_para_proximas_fechas", planesActuales);
+        } else {
+            respuestaJson.put("planes_actuales", planesActuales);
+        }
+        return respuestaJson;
     }
 
-    //    @Scheduled(fixedRate = 120000L)
-//    @Scheduled(cron = "00 05 * * * ?") // Programo una tarea todos los dias a las 5 am
-    public void contarVacunados() { // Obtengo los planes que no esten completos ya sean segundas o primeras fases, y pueden haber varias
-        // Tener en cuenta que no pueden haber fechas muy anteriores y no esten completas, una vez terminado el dia ese plan debe establecerse como completado
-        var planFasePrimera = this.planRepository.findByFaseAndCompletoAndFechaFinLessThanEqual("PRIMERA", false, LocalDate.now());
-        var planFaseSegunda = this.planRepository.findByFaseAndCompletoAndFechaFinLessThanEqual("SEGUNDA", false, LocalDate.now());
-        log.info("---------------- PRIMERAS FASES --------");
-        planFasePrimera.forEach(plan -> {
-            log.info("-------");
-            log.info(plan.getFacultad());
-            log.info(plan.getFase());
-            log.info(plan.getFechaInicio().toString());
-            log.info(plan.getFechaFin().toString());
-            log.info("-------");
-        });
-        log.info("----------------- SEGUNDAS FASES --------");
-        planFaseSegunda.forEach(plan -> {
-            log.info("-------");
-            log.info(plan.getFacultad());
-            log.info(plan.getFase());
-            log.info(plan.getFechaInicio().toString());
-            log.info(plan.getFechaFin().toString());
-            log.info("-------");
-        });
-    }
+    //    @Scheduled(fixedRate = 12000L, initialDelay = 30000L)
+    @Scheduled(cron = "0 25 20 * * ?") // Programo una tarea todos los dias a las 7:35 pm para enviar mail 4 dias antes de la segunda dosis
+    public void enviarNotificacionSegundaDosis() { // Envio un mail una semana antes de la segunda dosis, para presentar el proyecto se debe de hacer en menos tiempo
+        log.info("----------------- INGRESANDO AL PROCESO PROGRAMADO --------");
 
-    //    @Scheduled(fixedRate = 120000L)
-    public void determinarVacunados() {
+        this.planRepository.findByFechaInicioAndFase(LocalDate.now().plusDays(4L), "SEGUNDA").forEach(plan -> { // Obtengo los planes proximos a 7 dias que sean de segunda dosis
+            log.info("----------------- SEGUNDAS FASES --------");
+            log.info("FECHA INICIO".concat(plan.getFechaInicio().toString()));
 
-        if (PLANES_DIARIOS != null) { // Cuando ya este validado los planes o el plan a realizarse tomar el plan de ese dia
+            this.facultadRepository.findByNombre(plan.getFacultad()).ifPresent(facultad -> { // Como al agregar el plan ya se valida que haya estudiantes y la facultad no me preocupo de eso
+                log.info("FACULTAD ".concat(facultad.getNombre()));
 
-            log.info("** DEFINIENDO EL NUMERO DE VACUNADOS PARA LOS PLANES **");
+                facultad.getCarreras().forEach(carrera -> {
+                    log.info("CARRERA ".concat(carrera));
 
-            PLANES_DIARIOS.forEach(plan -> {
+                    this.estudianteRepository.findByCarrera(carrera).forEach(estudiante -> { // Por cada carrera busco a los estudiantes
+                        log.info("MAIL HACIA ".concat(estudiante.getCorreo()));
 
-                log.info("---------------------------------");
-                log.info("PLAN: ".concat(plan.getFacultad()).concat(" FASE ").concat(plan.getFase().concat(" PERSONAS VACUNADAS ").concat(String.valueOf(plan.getPersonasVacunadas()))));
-                log.info("---------------------------------");
-
-
-                List<Estudiante> estudiantesFinal = new ArrayList<>();
-
-//                if (plan.isGeneral()) {
-                var estudiantes = new ArrayList<Estudiante>();
-                this.facultadRepository.findByNombre(plan.getFacultad()).ifPresent(facultad -> {
-                    facultad.getCarreras().forEach(carrera -> {
-                        estudiantes.addAll(this.estudianteRepository.findByCarrera(carrera));
-                    });
-                });
-                estudiantesFinal = estudiantes;
-//                } else {
-//                    estudiantesFinal = this.estudianteRepository.findByCarrera(plan.getCarrera());
-//                }
-
-                estudiantesFinal.forEach(estudiante -> {
-                    this.carnetRepository.findByEstudianteAndInoculacionVoluntaria(estudiante.getUsuario(), true).ifPresent(carnet -> {
-
-                        if (plan.getFase().equalsIgnoreCase("PRIMERA") && carnet.isPrimeraDosis()) {
-
-                            log.info(carnet.getEstudiante().concat(" PRIMERA DOSIS"));
-
-                            plan.setPersonasVacunadas(plan.getPersonasVacunadas() + 1);
-
-                            log.info("PLAN AGREGADO EN 1  PARA LA PRIMERA FASE");
-
-                        } else if (carnet.isSegundaDosis()) {
-
-                            log.info(carnet.getEstudiante().concat(" SEGUNDA DOSIS"));
-
-                            plan.setPersonasVacunadas(plan.getPersonasVacunadas() + 1);
-
-                        }
-
-                        this.agregarOActualizar(plan);
-
+                        this.emailService.enviarEmailPlan( // Envio el email de segunda fase
+                                estudiante.getCorreo(),
+                                plan.getFechaInicio(),
+                                plan.getFechaFin(),
+                                plan.getCentroVacunacion(),
+                                plan.getFase()
+                        );
                     });
                 });
             });
-        } else {
-            log.info("NO EXISTEN PLANES ACTUALES AUN");
-        }
+        });
     }
-
 }

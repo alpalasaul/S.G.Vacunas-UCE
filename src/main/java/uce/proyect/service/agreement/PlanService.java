@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface PlanService extends CoreService<Plan> {
     JSONObject generarNotificacionVacuncacion(Plan plan) throws NoEncontradorException;
-    JSONObject obtenerEstudiantesAInocular();
+    JSONObject obtenerEstudiantesAInocular(String facultadNombre, String fase);
     List<Plan> buscarPorFecha(LocalDate fechaInicio);
+    JSONObject establecerPlanes();
 }

@@ -34,7 +34,7 @@ public class carnetController {
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('ROLE_HC')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> update(@RequestBody Carnet carnet) {
         var cart = this.carnetService.agregarOActualizar(carnet);
         return new ResponseEntity<>(cart, ACCEPTED);

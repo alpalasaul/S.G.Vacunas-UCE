@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public interface EmailService {
     String enviarEmail();
 
-    void enviarEmail(String destinatario, LocalDate fechaInicio, LocalDate fechaFinal, String facultad);
+    void enviarEmailPlan(String destinatario, LocalDate fechaInicio, LocalDate fechaFinal, String facultad, String fase);
 
     JSONObject enviarComprobante(JSONObject recursos) throws MessagingException, IOException;
 

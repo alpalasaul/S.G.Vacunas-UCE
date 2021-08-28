@@ -35,7 +35,7 @@ public class EmailServiceImp implements EmailService {
     }
 
     @Override
-    public void enviarEmail(String destinatario, LocalDate fechaInicio, LocalDate fechaFinal, String facultad) { // Envio de las fechas del plan de vacunacion
+    public void enviarEmailPlan(String destinatario, LocalDate fechaInicio, LocalDate fechaFinal, String facultad, String fase) { // Envio de las fechas del plan de vacunacion
 
         var mailMessage = new SimpleMailMessage();
 
@@ -43,7 +43,9 @@ public class EmailServiceImp implements EmailService {
         mailMessage.setTo(destinatario);
         mailMessage.setSubject("Calendario Vacunación");
         mailMessage.setText(
-                "Tenga un cordial saludo, le informamos el día de su vacunación"
+                "Tenga un cordial saludo, le informamos el día de su vacunación de "
+                        .concat(fase.toLowerCase())
+                        .concat(" dosis")
                         .concat("\n\nFecha Inicio: ").concat(fechaInicio.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                         .concat("\n\nFecha Final: ").concat(fechaFinal.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                         .concat("\n\nLugar Vacunación: ".concat(facultad))

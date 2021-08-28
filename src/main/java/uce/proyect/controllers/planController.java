@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Plan;
-import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.PlanService;
-
-import java.util.Map;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
@@ -20,13 +17,30 @@ public class planController {
 
     private PlanService planService;
 
-    private EmailService emailService;
-
     @GetMapping
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getPlanes() {
         var listar = this.planService.listar();
         return new ResponseEntity<>(listar, OK);
+    }
+
+    //    Obtener todos los planes diarios
+    @GetMapping("/planesDiarios")
+    @PreAuthorize("hasRole('ROLE_HC')")
+    public ResponseEntity<?> getPlanesDiarios() {
+        var respuesta = this.planService.establecerPlanes();
+        return new ResponseEntity<>(respuesta.toMap(), OK);
+    }
+
+    //    Obtener todos los estudiantes del plan de inoculacion
+    @GetMapping("{nombreFacultad}/{fase}")
+    @PreAuthorize("hasRole('ROLE_HC')")
+    public ResponseEntity<?> getEstudiantesInocular(
+            @PathVariable("nombreFacultad") String nombreFacultad,
+            @PathVariable("fase") String fase
+    ) {
+        var respuesta = this.planService.obtenerEstudiantesAInocular(nombreFacultad, fase);
+        return new ResponseEntity<>(respuesta.toMap(), OK);
     }
 
     @PostMapping
@@ -47,10 +61,12 @@ public class planController {
         return new ResponseEntity<>(pl, ACCEPTED);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_HC')")
-    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+    @DeleteMapping("/{nombreFacultad}") // Elimina los planes por el nombre de la facultad
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> delete(@PathVariable("nombreFacultad") String id) {
         var pl = this.planService.eliminar(id);
         return new ResponseEntity<>(pl.toMap(), OK);
     }
+
+
 }
