@@ -91,7 +91,7 @@ public class EmailServiceImp implements EmailService {
         simpleMailMessage.setTo(email);
         simpleMailMessage.setSubject("Credenciales S.G.V UCE");
         simpleMailMessage.setText(
-                "Tenga un cordial saludo, sus credenciales para el ingreso a la plataforma S.G.V UCE son \n"
+                "Buen día, sus credenciales para el ingreso a la plataforma S.G.V UCE son \n"
                         .concat("Nombre de usuario: ").concat(nombreUsuario)
                         .concat("\nCotraseña: ").concat(password)
                         .concat("\n\n\nGuardelas correctamente, pues no podrán ser cambiadas.")

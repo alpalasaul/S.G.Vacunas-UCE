@@ -144,7 +144,7 @@ public class CarnetServiceImp implements CarnetService {
             this.planRepository.save(plan);
             log.info("Se han aumentado en 1 el numero de vacunados para ".concat(plan.getFacultad()));
             this.carnetRepository.save(carnet);
-            log.info("El carnet se ha guardado correctamente");
+            log.info("El carnet se ha actualizado correctamente.");
         });
     }
 }

@@ -32,10 +32,10 @@ public class planController {
         return new ResponseEntity<>(respuesta.toMap(), OK);
     }
 
-    @GetMapping("/{idPlan}")
+    @GetMapping("/{nombreFacultad}")
     @PreAuthorize("hasRole('ROLE_HC')")
-    public ResponseEntity<?> getPlanesDiarios(@PathVariable idPlan) {
-        var respuesta = this.planService.buscarPorId(idPlan);
+    public ResponseEntity<?> getTotalInoculados(@PathVariable String nombreFacultad) {
+        var respuesta = this.planService.porcentajeInoculados(nombreFacultad);
         return new ResponseEntity<>(respuesta.toMap(), OK);
     }
 

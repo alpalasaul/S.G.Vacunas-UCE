@@ -132,8 +132,8 @@ public class PlanServiceImp implements PlanService {
         return jsonObject;
     }
 
-    private void actualizarCarnetEstudiantes(List<Estudiante> estudiantes, String centroVacunacionActualizado) { // Al agregar el nuevo plan se actualiza el centro de vacunacion en los carnets
-        estudiantes.forEach(estudiante -> this.carnetRepository.findByEstudiante(estudiante.getUsuario()).ifPresent(carnet -> {
+    private void actualizarCarnetEstudiantes(List<Estudiante> estudiantes, String centroVacunacionActualizado) { // Al agregar el nuevo plan se actualiza el centro de vacunacion en los carnets, solo los que deseearon
+        estudiantes.forEach(estudiante -> this.carnetRepository.findByEstudianteAndInoculacionVoluntaria(estudiante.getUsuario(), true).ifPresent(carnet -> {
             carnet.setCentroVacunacion(centroVacunacionActualizado);
             this.carnetRepository.save(carnet);
         }));
@@ -231,27 +231,48 @@ public class PlanServiceImp implements PlanService {
     }
 
     @Override
-    public JSONObject porcentajeInoculados(String idPlan) {
+    public JSONObject porcentajeInoculados(String nombreFacultad) {
         var jsonObject = new JSONObject();
-        this.planRepository.findById(idPlan).ifPresent(plan -> { // Todos los carnets de ese plan tendran el mismo centro de vacunacion, ya sean voluntarios o no, por eso actualizar el carnet de todos los estudiantes
-            jsonObject.put("personas_inoculadas", plan.getPersonasVacunadas());
-            var voluntarios = this.carnetRepository.findByCentroVacunacionAndInoculacionVoluntaria(plan.getCentroVacunacion(), true);
-            var noVoluntarios = this.carnetRepository.findByCentroVacunacionAndInoculacionVoluntaria(plan.getCentroVacunacion(), false);
-            jsonObject.put("personas_a_inocular", voluntarios);
-            jsonObject.put("personas_no_voluntarias", noVoluntarios);
-            jsonObject.put("total_personas", voluntarios + noVoluntarios);
+
+        var planes = this.planRepository.findByFacultad(nombreFacultad);
+
+        if (planes.isEmpty()) { // Valido que primeramente exista el plan para la facultad
+            throw new NoEncontradorException("No se han encontrado planes para ".concat(nombreFacultad));
+        }
+
+        planes.forEach(plan -> {
+            if (plan.getFase().equalsIgnoreCase("PRIMERA")) {
+                jsonObject.put("total_inoculados_primera_fase_".concat(nombreFacultad.toLowerCase()), plan.getPersonasVacunadas()); // total de primera fase
+            } else {
+                jsonObject.put("total_inoculados_segunda_fase_".concat(nombreFacultad.toLowerCase()), plan.getPersonasVacunadas()); // total de segunda fase
+            }
+        });
+
+        this.facultadRepository.findByNombre(nombreFacultad).ifPresent(facultad -> {
+            facultad.getCarreras().forEach(carrera -> {
+                var totalCarnetsFacultad = this.estudianteRepository.findByCarrera(carrera).stream().map(estudiante -> {
+                    return this.carnetRepository.findByEstudiante(estudiante.getUsuario()).orElseThrow();
+                }).collect(Collectors.toList());
+
+                jsonObject.put("total_estudiantes_".concat(nombreFacultad.toLowerCase()), totalCarnetsFacultad.size()); // Total de estudiantes de la facultad
+                var voluntarios = totalCarnetsFacultad.stream().filter(Carnet::isInoculacionVoluntaria).count();
+                var noVoluntarios = totalCarnetsFacultad.stream().filter(carnet -> !carnet.isInoculacionVoluntaria()).count();
+                jsonObject.put("estudiantes_a_inocular_de_".concat(nombreFacultad.toLowerCase()), voluntarios); // total de estudiantes a inocular voluntarios
+                jsonObject.put("estudiantes_no_voluntarios_de_".concat(nombreFacultad.toLowerCase()), noVoluntarios); // total de estudiantes no voluntarios
+
+            });
         });
         return jsonObject;
     }
 
     //    @Scheduled(fixedRate = 12000L, initialDelay = 30000L)
-    // Programo una tarea todos los dias a las 7:35 pm para enviar mail 4 dias antes de la segunda dosis
-    @Scheduled(cron = "0 25 20 * * ?")
+    // Programo una tarea todos los dias a las 5 am para enviar mail 4 dias antes de la segunda dosis
+    @Scheduled(cron = "0 37 13 * * ?")
     public void enviarNotificacionSegundaDosis() { // Envio un mail una semana antes de la segunda dosis, para presentar el proyecto se debe de hacer en menos tiempo
-        log.info("----------------- INGRESANDO AL PROCESO PROGRAMADO --------");
+        log.info("----------------- INGRESANDO AL PROCESO PROGRAMADO ---------------");
 
         this.planRepository.findByFechaInicioAndFase(LocalDate.now().plusDays(4L), "SEGUNDA").forEach(plan -> { // Obtengo los planes proximos a 7 dias que sean de segunda dosis
-            log.info("----------------- SEGUNDAS FASES --------");
+            log.info("----------------- SEGUNDAS FASES ------------------");
             log.info("FECHA INICIO".concat(plan.getFechaInicio().toString()));
 
             this.facultadRepository.findByNombre(plan.getFacultad()).ifPresent(facultad -> { // Como al agregar el plan ya se valida que haya estudiantes y la facultad no me preocupo de eso
