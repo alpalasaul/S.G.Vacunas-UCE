@@ -12,4 +12,6 @@ public interface CarnetService extends CoreService<Carnet> {
     Carnet buscarCarnetPorEstudiante(String estudiante) throws NoEncontradorException;
 
     JSONObject generarPdfEnBytes(String estudiante) throws IOException, JRException;
+
+    void actualizarCarnetVacunado(String idPlan, Carnet carnet);
 }

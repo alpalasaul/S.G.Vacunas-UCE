@@ -40,6 +40,13 @@ public class carnetController {
         return new ResponseEntity<>(cart, ACCEPTED);
     }
 
+    @PutMapping("/{idPlan}")
+    @ResponseStatus(OK)
+    @PreAuthorize("hasRole('ROLE_HC')")
+    public void updateCarnet(@RequestBody Carnet carnet, @PathVariable String idPlan) {
+        this.carnetService.actualizarCarnetVacunado(idPlan, carnet);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> delete(@PathVariable("id") String id) {

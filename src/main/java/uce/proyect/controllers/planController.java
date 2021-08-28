@@ -32,6 +32,13 @@ public class planController {
         return new ResponseEntity<>(respuesta.toMap(), OK);
     }
 
+    @GetMapping("/{idPlan}")
+    @PreAuthorize("hasRole('ROLE_HC')")
+    public ResponseEntity<?> getPlanesDiarios(@PathVariable idPlan) {
+        var respuesta = this.planService.buscarPorId(idPlan);
+        return new ResponseEntity<>(respuesta.toMap(), OK);
+    }
+
     //    Obtener todos los estudiantes del plan de inoculacion
     @GetMapping("{nombreFacultad}/{fase}")
     @PreAuthorize("hasRole('ROLE_HC')")

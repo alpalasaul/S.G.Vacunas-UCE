@@ -115,12 +115,14 @@ public class PlanServiceImp implements PlanService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public JSONObject generarNotificacionVacuncacion(Plan nuevoPlan) throws PlanException { // Logica de negocio para agregar un plan de vacunación
 
         this.validarNuevoPlan(nuevoPlan);
 
         var estudiantes = this.validarEstudiantesEnFacultadYCarrera(nuevoPlan);
+
+        this.actualizarCarnetEstudiantes(estudiantes, nuevoPlan.getCentroVacunacion());
 
         this.cargarMensaje(estudiantes, nuevoPlan.getFechaInicio(), nuevoPlan.getFechaFin(), nuevoPlan.getCentroVacunacion(), nuevoPlan.getFase());
 
@@ -130,35 +132,35 @@ public class PlanServiceImp implements PlanService {
         return jsonObject;
     }
 
+    private void actualizarCarnetEstudiantes(List<Estudiante> estudiantes, String centroVacunacionActualizado) { // Al agregar el nuevo plan se actualiza el centro de vacunacion en los carnets
+        estudiantes.forEach(estudiante -> this.carnetRepository.findByEstudiante(estudiante.getUsuario()).ifPresent(carnet -> {
+            carnet.setCentroVacunacion(centroVacunacionActualizado);
+            this.carnetRepository.save(carnet);
+        }));
+    }
+
     // Se debe de enviar la facultad del plan y la fase en la que se encuentra
     @Override
     public JSONObject obtenerEstudiantesAInocular(String facultadNombre, String fase) {
         var jsonObject = new JSONObject();
         var carnets = new ArrayList<Carnet>();
-        this.facultadRepository.findByNombre(facultadNombre).ifPresent(facultad -> {
+        this.facultadRepository.findByNombre(facultadNombre).ifPresent(facultad -> facultad.getCarreras().forEach(carrera -> this.estudianteRepository.findByCarrera(carrera).forEach(estudiante -> {
 
-            facultad.getCarreras().forEach(carrera -> {
-
-                this.estudianteRepository.findByCarrera(carrera).forEach(estudiante -> {
-
-                    carnets.addAll(this.carnetRepository.findByEstudianteAndInoculacionVoluntariaAndPrimeraDosis(
-                            estudiante.getUsuario(),
-                            true, // Inoculacion Voluntaria
-                            fase.equalsIgnoreCase("SEGUNDA") // Si es la segunda dosis entonces la primera debe estar en true
-                    ).stream().collect(Collectors.toList())); // Ver si en las pruebas aqui no se desborda, sino usar ifPresent
+            carnets.addAll(this.carnetRepository.findByEstudianteAndInoculacionVoluntariaAndPrimeraDosis(
+                    estudiante.getUsuario(),
+                    true, // Inoculacion Voluntaria
+                    fase.equalsIgnoreCase("SEGUNDA") // Si es la segunda dosis entonces la primera debe estar en true
+            ).stream().collect(Collectors.toList())); // Ver si en las pruebas aqui no se desborda, sino usar ifPresent
 
 
-                });
-            });
-        });
+        })));
         jsonObject.put("carnets", carnets);
         return jsonObject;
     }
 
     @Override
     public List<Plan> buscarPorFecha(LocalDate fechaInicio) {
-        List<Plan> lista = this.planRepository.findByFechaInicio(fechaInicio);
-        return lista;
+        return this.planRepository.findByFechaInicio(fechaInicio);
     }
 
     //     Se envia las notificaciones a los mails de cada estudiante, para ver como se forma el JSON entra a la documentación de los ENDPOINT
@@ -228,8 +230,23 @@ public class PlanServiceImp implements PlanService {
         return respuestaJson;
     }
 
+    @Override
+    public JSONObject porcentajeInoculados(String idPlan) {
+        var jsonObject = new JSONObject();
+        this.planRepository.findById(idPlan).ifPresent(plan -> { // Todos los carnets de ese plan tendran el mismo centro de vacunacion, ya sean voluntarios o no, por eso actualizar el carnet de todos los estudiantes
+            jsonObject.put("personas_inoculadas", plan.getPersonasVacunadas());
+            var voluntarios = this.carnetRepository.findByCentroVacunacionAndInoculacionVoluntaria(plan.getCentroVacunacion(), true);
+            var noVoluntarios = this.carnetRepository.findByCentroVacunacionAndInoculacionVoluntaria(plan.getCentroVacunacion(), false);
+            jsonObject.put("personas_a_inocular", voluntarios);
+            jsonObject.put("personas_no_voluntarias", noVoluntarios);
+            jsonObject.put("total_personas", voluntarios + noVoluntarios);
+        });
+        return jsonObject;
+    }
+
     //    @Scheduled(fixedRate = 12000L, initialDelay = 30000L)
-    @Scheduled(cron = "0 25 20 * * ?") // Programo una tarea todos los dias a las 7:35 pm para enviar mail 4 dias antes de la segunda dosis
+    // Programo una tarea todos los dias a las 7:35 pm para enviar mail 4 dias antes de la segunda dosis
+    @Scheduled(cron = "0 25 20 * * ?")
     public void enviarNotificacionSegundaDosis() { // Envio un mail una semana antes de la segunda dosis, para presentar el proyecto se debe de hacer en menos tiempo
         log.info("----------------- INGRESANDO AL PROCESO PROGRAMADO --------");
 

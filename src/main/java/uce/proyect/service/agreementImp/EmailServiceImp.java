@@ -45,11 +45,11 @@ public class EmailServiceImp implements EmailService {
         mailMessage.setText(
                 "Tenga un cordial saludo, le informamos el día de su vacunación de "
                         .concat(fase.toLowerCase())
-                        .concat(" dosis")
+                        .concat(" dosis.")
                         .concat("\n\nFecha Inicio: ").concat(fechaInicio.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                         .concat("\n\nFecha Final: ").concat(fechaFinal.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                         .concat("\n\nLugar Vacunación: ".concat(facultad))
-                        .concat("\n\n\nLos horarios de atención serán de 08:00 AM hasta 16:00 PM. Tome las devidas precauciones.")
+                        .concat("\n\n\nLos horarios de atención serán de 08:00 AM hasta 16:00 PM. Tome las debidas precauciones.")
                         .concat("\n\n\n\n\n\n")
                         .concat("No responder a este mensaje."));
         this.javaMailSender.send(mailMessage);
@@ -91,7 +91,7 @@ public class EmailServiceImp implements EmailService {
         simpleMailMessage.setTo(email);
         simpleMailMessage.setSubject("Credenciales S.G.V UCE");
         simpleMailMessage.setText(
-                "Buen día, sus credenciales para el ingreso a la plataforma S.G.V UCE son \n"
+                "Tenga un cordial saludo, sus credenciales para el ingreso a la plataforma S.G.V UCE son \n"
                         .concat("Nombre de usuario: ").concat(nombreUsuario)
                         .concat("\nCotraseña: ").concat(password)
                         .concat("\n\n\nGuardelas correctamente, pues no podrán ser cambiadas.")

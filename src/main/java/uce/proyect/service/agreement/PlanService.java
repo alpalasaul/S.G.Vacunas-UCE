@@ -12,4 +12,5 @@ public interface PlanService extends CoreService<Plan> {
     JSONObject obtenerEstudiantesAInocular(String facultadNombre, String fase);
     List<Plan> buscarPorFecha(LocalDate fechaInicio);
     JSONObject establecerPlanes();
+    JSONObject porcentajeInoculados(String idPlan);
 }

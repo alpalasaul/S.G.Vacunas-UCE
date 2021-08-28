@@ -13,6 +13,7 @@ import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Carnet;
 import uce.proyect.repositories.CarnetRepository;
 import uce.proyect.repositories.EstudianteRepository;
+import uce.proyect.repositories.PlanRepository;
 import uce.proyect.service.agreement.CarnetService;
 import uce.proyect.service.agreement.EstudianteService;
 
@@ -34,6 +35,8 @@ public class CarnetServiceImp implements CarnetService {
     private EstudianteRepository estudianteRepository;
 
     private EstudianteService estudianteService;
+
+    private PlanRepository planRepository;
 
     @Override
     public Carnet agregarOActualizar(Carnet pojo) {
@@ -130,5 +133,18 @@ public class CarnetServiceImp implements CarnetService {
         jsonObject.put("recurso", bytes);
         jsonObject.put("mailDestinatario", estu.getCorreo());
         return jsonObject;
+    }
+
+    @Override
+    @Transactional
+    public void actualizarCarnetVacunado(String idPlan, Carnet carnet) {
+        var jsonObject = new JSONObject();
+        this.planRepository.findById(idPlan).ifPresent(plan -> {
+            plan.setPersonasVacunadas(plan.getPersonasVacunadas() + 1);
+            this.planRepository.save(plan);
+            log.info("Se han aumentado en 1 el numero de vacunados para ".concat(plan.getFacultad()));
+            this.carnetRepository.save(carnet);
+            log.info("El carnet se ha guardado correctamente");
+        });
     }
 }
