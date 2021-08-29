@@ -20,10 +20,7 @@ import uce.proyect.service.agreement.EstudianteService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -40,7 +37,20 @@ public class CarnetServiceImp implements CarnetService {
 
     @Override
     public Carnet agregarOActualizar(Carnet pojo) {
-        return this.carnetRepository.save(pojo);
+        Optional<Carnet> carnet = this.carnetRepository.findByEstudiante(pojo.getEstudiante());
+        if (pojo.isPrimeraDosis() && !pojo.isSegundaDosis()) { // true - false  (registra la primera dosis)
+            return this.carnetRepository.save(pojo);
+        }
+        // buscar que primera dosis sea true
+        if (pojo.isPrimeraDosis() && pojo.isSegundaDosis()) { // true - true (registra la segunda dosis)
+            // buscar en la db que exista la fecha uno para poder crear la fecha 2 y evitar que cree ambos registros en el mismo día
+            if (carnet.get().getFechaPrimeraDosis() != null) {
+                return this.carnetRepository.save(pojo);
+            } else {
+                throw new CarnetException("No se puede registrar las 2 vacunas al mismo tiempo, fuera de plan");
+            }
+        }
+        throw new CarnetException("No se puede registrar la segunda fecha si no tiene la primera");
     }
 
     @Override
