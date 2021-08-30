@@ -7,6 +7,7 @@ import net.sf.jasperreports.engine.data.JsonDataSource;
 import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.SavepointManager;
 import org.springframework.transaction.annotation.Transactional;
 import uce.proyect.exceptions.CarnetException;
 import uce.proyect.exceptions.NoEncontradorException;
@@ -49,6 +50,9 @@ public class CarnetServiceImp implements CarnetService {
             } else {
                 throw new CarnetException("No se puede registrar las 2 vacunas al mismo tiempo, fuera de plan");
             }
+        }
+        if (!pojo.isPrimeraDosis() && !pojo.isSegundaDosis()) { // false - false edita el registro voluntario
+            return this.carnetRepository.save(pojo);
         }
         throw new CarnetException("No se puede registrar la segunda fecha si no tiene la primera");
     }
