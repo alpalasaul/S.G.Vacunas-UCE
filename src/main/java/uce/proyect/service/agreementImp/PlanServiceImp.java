@@ -21,10 +21,7 @@ import uce.proyect.service.agreement.PlanService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static uce.proyect.util.ValidarFechas.validarFechas;
@@ -144,7 +141,7 @@ public class PlanServiceImp implements PlanService {
     public JSONObject obtenerEstudiantesAInocular(String facultadNombre, String fase) {
         var jsonObject = new JSONObject();
         var carnets = new ArrayList<Carnet>();
-        var datosUsuario = new JSONObject();
+
         var datos = new ArrayList<JSONObject>();
         this.facultadRepository.findByNombre(facultadNombre).ifPresent(facultad -> facultad.getCarreras().forEach(carrera -> this.estudianteRepository.findByCarrera(carrera).forEach(estudiante -> {
 
@@ -154,17 +151,14 @@ public class PlanServiceImp implements PlanService {
                     fase.equalsIgnoreCase("SEGUNDA") // Si es la segunda dosis entonces la primera debe estar en true
             ).stream().collect(Collectors.toList())); // Ver si en las pruebas aqui no se desborda, sino usar ifPresent
 
+            var datosUsuario = new JSONObject();
+            datosUsuario.put("usuario", estudiante.getUsuario());
+            datosUsuario.put("nombre", estudiante.getNombres());
+            datosUsuario.put("apellido", estudiante.getApellidos());
+            datosUsuario.put("cedula", estudiante.getCedula());
+            datos.add(datosUsuario);
 
         })));
-
-        carnets.forEach(carnet -> {
-            var estu = this.estudianteRepository.findByUsuario(carnet.getEstudiante());
-            datosUsuario.put("usuario", estu.get().getUsuario());
-            datosUsuario.put("nombre", estu.get().getNombres());
-            datosUsuario.put("apellido", estu.get().getApellidos());
-            datosUsuario.put("cedula", estu.get().getCedula());
-            datos.add(datosUsuario);
-        });
 
         jsonObject.put("carnets", carnets);
         jsonObject.put("data", datos);
