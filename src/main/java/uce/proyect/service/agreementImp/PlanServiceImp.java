@@ -144,6 +144,8 @@ public class PlanServiceImp implements PlanService {
     public JSONObject obtenerEstudiantesAInocular(String facultadNombre, String fase) {
         var jsonObject = new JSONObject();
         var carnets = new ArrayList<Carnet>();
+        var datosUsuario = new JSONObject();
+        var datos = new ArrayList<JSONObject>();
         this.facultadRepository.findByNombre(facultadNombre).ifPresent(facultad -> facultad.getCarreras().forEach(carrera -> this.estudianteRepository.findByCarrera(carrera).forEach(estudiante -> {
 
             carnets.addAll(this.carnetRepository.findByEstudianteAndInoculacionVoluntariaAndPrimeraDosis(
@@ -154,7 +156,18 @@ public class PlanServiceImp implements PlanService {
 
 
         })));
+
+        carnets.forEach(carnet -> {
+            var estu = this.estudianteRepository.findByUsuario(carnet.getEstudiante());
+            datosUsuario.put("usuario", estu.get().getUsuario());
+            datosUsuario.put("nombre", estu.get().getNombres());
+            datosUsuario.put("apellido", estu.get().getApellidos());
+            datosUsuario.put("cedula", estu.get().getCedula());
+            datos.add(datosUsuario);
+        });
+
         jsonObject.put("carnets", carnets);
+        jsonObject.put("data", datos);
         return jsonObject;
     }
 
