@@ -175,7 +175,7 @@ public class PlanServiceImp implements PlanService {
 
         })));
 
-        jsonObject.put("carnets", carnets);
+//        jsonObject.put("carnets", carnets);
         jsonObject.put("data", datos);
         return jsonObject;
     }
