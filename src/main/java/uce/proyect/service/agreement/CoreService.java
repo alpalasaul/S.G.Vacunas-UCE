@@ -2,6 +2,7 @@ package uce.proyect.service.agreement;
 
 import org.json.JSONObject;
 import org.springframework.transaction.annotation.Transactional;
+import uce.proyect.exceptions.NoEncontradorException;
 
 import java.util.Collection;
 
@@ -12,7 +13,7 @@ public interface CoreService<T> {
     T agregarOActualizar(T pojo);
 
     @Transactional(readOnly = true)
-    Collection<T> listar() throws RuntimeException; // Igual la excepcion, no es necesario
+    Collection<T> listar() throws NoEncontradorException; // Igual la excepcion, no es necesario
 
     @Transactional(readOnly = true)
     T buscarPorId(String identificador);

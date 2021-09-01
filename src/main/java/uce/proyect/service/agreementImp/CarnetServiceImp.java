@@ -58,10 +58,10 @@ public class CarnetServiceImp implements CarnetService {
     }
 
     @Override
-    public Collection<Carnet> listar() throws RuntimeException {
+    public Collection<Carnet> listar() throws NoEncontradorException {
         var list = this.carnetRepository.findAll();
         if (list.isEmpty()) {
-            throw new RuntimeException("Sin registros");
+            throw new NoEncontradorException("Sin registros");
         }
         return list;
     }

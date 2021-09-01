@@ -29,16 +29,16 @@ public class FacultadServiceImp implements FacultadService {
     }
 
     @Override
-    public Collection<Facultad> listar() throws RuntimeException {
+    public Collection<Facultad> listar() throws NoEncontradorException {
         var list = this.facultadRepository.findAll();
         if (list.isEmpty()) {
-            throw new RuntimeException("Sin registros");
+            throw new NoEncontradorException("Sin registros");
         }
         return list;
     }
 
     @Override
-    public Facultad buscarPorId(String identificador) throws RuntimeException {
+    public Facultad buscarPorId(String identificador) throws NoEncontradorException {
         var facultad = this.facultadRepository.findById(identificador);
         if (facultad.isPresent()) {
             return facultad.get();

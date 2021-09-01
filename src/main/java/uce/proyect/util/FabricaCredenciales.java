@@ -73,16 +73,16 @@ public class FabricaCredenciales {
     public static Carnet generarCarnet(String nombreUsuario) {
         var carnet_default = new Carnet();
         carnet_default.setEstudiante(nombreUsuario);
-        carnet_default.setCentroVacunacion("N/A");
+        carnet_default.setCentroVacunacion("");
         carnet_default.setFechaPrimeraDosis(null);
         carnet_default.setFechaSegundasDosis(null);
-        carnet_default.setLoteDosisDos("N/A");
-        carnet_default.setLoteDosisUno("N/A");
-        carnet_default.setNombreVacuna("N/A");
+        carnet_default.setLoteDosisDos("");
+        carnet_default.setLoteDosisUno("");
+        carnet_default.setNombreVacuna("");
         carnet_default.setPrimeraDosis(false);
         carnet_default.setSegundaDosis(false);
-        carnet_default.setVacunadorPrimeraDosis("N/A");
-        carnet_default.setVacunadorSegundaDosis("N/A");
+        carnet_default.setVacunadorPrimeraDosis("");
+        carnet_default.setVacunadorSegundaDosis("");
         carnet_default.setInoculacionVoluntaria(true); // Todos esmpeizan con inoculacion verdadera, pero en el caso de no querer mabia a falso
         return carnet_default;
     }

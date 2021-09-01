@@ -56,16 +56,16 @@ public class AdministradorServiceImp implements AdministradorService {
     }
 
     @Override
-    public Collection<Administrador> listar() throws RuntimeException {
+    public Collection<Administrador> listar() throws NoEncontradorException {
         var list = this.administradorRepository.findAll();
         if (list.isEmpty()) {
-            throw new RuntimeException("Sin registros");
+            throw new NoEncontradorException("Sin registros");
         }
         return list;
     }
 
     @Override
-    public Administrador buscarPorId(String identificador) throws RuntimeException {
+    public Administrador buscarPorId(String identificador) throws NoEncontradorException {
         var admin = this.administradorRepository.findByUsuario(identificador);
         if (admin.isPresent()) {
             return admin.get();

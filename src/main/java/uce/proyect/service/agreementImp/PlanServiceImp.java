@@ -82,10 +82,10 @@ public class PlanServiceImp implements PlanService {
     }
 
     @Override
-    public Collection<Plan> listar() throws RuntimeException {
+    public Collection<Plan> listar() throws NoEncontradorException {
         var list = this.planRepository.findAll();
         if (list.isEmpty()) {
-            throw new RuntimeException("Sin registros");
+            throw new NoEncontradorException("Sin registros");
         }
         return list;
     }

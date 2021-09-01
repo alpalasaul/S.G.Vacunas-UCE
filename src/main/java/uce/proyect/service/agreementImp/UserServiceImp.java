@@ -33,16 +33,16 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Collection<User> listar() throws RuntimeException {
+    public Collection<User> listar() throws NoEncontradorException {
         var list = this.userRepository.findAll();
         if (list.isEmpty()) {
-            throw new RuntimeException("Sin registros");
+            throw new NoEncontradorException("Sin registros");
         }
         return list;
     }
 
     @Override
-    public User buscarPorId(String identificador) throws RuntimeException {
+    public User buscarPorId(String identificador) throws NoEncontradorException {
         var user = this.userRepository.findByNombreUsuario(identificador);
 
         if (user.isPresent()) {

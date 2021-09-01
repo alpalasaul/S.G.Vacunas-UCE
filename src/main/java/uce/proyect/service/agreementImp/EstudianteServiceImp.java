@@ -68,16 +68,16 @@ public class EstudianteServiceImp implements EstudianteService {
     }
 
     @Override
-    public Collection<Estudiante> listar() throws RuntimeException {
+    public Collection<Estudiante> listar() throws NoEncontradorException {
         var list = this.estudianteRespository.findAll();
         if (list.isEmpty()) {
-            throw new RuntimeException("Sin registros");
+            throw new NoEncontradorException("Sin registros");
         }
         return list;
     }
 
     @Override
-    public Estudiante buscarPorId(String identificador) throws RuntimeException {
+    public Estudiante buscarPorId(String identificador) throws NoEncontradorException {
         var persona = this.estudianteRespository.findByUsuario(identificador);
         if (persona.isPresent()) {
             return persona.get();
