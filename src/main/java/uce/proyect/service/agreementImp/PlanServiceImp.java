@@ -153,7 +153,6 @@ public class PlanServiceImp implements PlanService {
 
         })));
 
-
         carnets.forEach(carnet -> {
             var estudiante = this.estudianteRepository.findByUsuario(carnet.getEstudiante());
             var datosUsuario = new JSONObject();
@@ -172,9 +171,6 @@ public class PlanServiceImp implements PlanService {
             datosUsuario.put("primeraDosis", carnet.isPrimeraDosis());
             datos.add(datosUsuario);
         });
-
-
-
 
 //        jsonObject.put("carnets", carnets);
         jsonObject.put("data", datos);
