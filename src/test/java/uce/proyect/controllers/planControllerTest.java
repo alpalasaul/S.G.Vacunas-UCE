@@ -1,8 +1,10 @@
 package uce.proyect.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.gson.Gson;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import uce.proyect.exceptions.NoEncontradorException;
 import uce.proyect.models.Plan;
 import uce.proyect.service.agreement.PlanService;
 
@@ -18,11 +21,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(planController.class)
@@ -117,7 +121,23 @@ class planControllerTest {
         verify(this.planService).agregarOActualizar(plan);
     }
 
+    @WithMockUser("admin")
+    @DisplayName("Fallo en eliminacion de metodo")
     @Test
-    void getTotalInoculados() {
+    void deberiaLanzarExcepcionEnPlan() throws Exception {
+        // GIVEN
+        var plan = new Plan();
+        plan.setFacultad("FACSO");
+
+        when(this.planService.eliminar("FACSO")).thenThrow(new NoEncontradorException("No se encuetran registros para FACSO"));
+
+        // WHEN
+        this.mvc.perform(delete("/plan/FACSO"))
+                // THEN
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.mensaje", is("No se encuetran registros para FACSO")));
+
+        verify(this.planService).eliminar(argThat(arg -> arg != null && arg.equalsIgnoreCase("FACSO")));
     }
+
 }

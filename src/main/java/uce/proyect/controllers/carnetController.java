@@ -27,14 +27,14 @@ public class carnetController {
     private EmailService emailService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_HC')")
+//    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getCarnets() {
         var listar = this.carnetService.listar();
         return new ResponseEntity<>(listar, OK);
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> update(@RequestBody Carnet carnet) {
         var cart = this.carnetService.agregarOActualizar(carnet);
         return new ResponseEntity<>(cart, ACCEPTED);
@@ -42,13 +42,13 @@ public class carnetController {
 
     @PutMapping("/{idPlan}")
     @ResponseStatus(OK)
-    @PreAuthorize("hasRole('ROLE_HC')")
+//    @PreAuthorize("hasRole('ROLE_HC')")
     public void updateCarnet(@RequestBody Carnet carnet, @PathVariable String idPlan) {
         this.carnetService.actualizarCarnetVacunado(idPlan, carnet);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_HC')")
+//    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> delete(@PathVariable("id") String id) {
         var cart = this.carnetService.eliminar(id);
         return new ResponseEntity<>(cart, OK);

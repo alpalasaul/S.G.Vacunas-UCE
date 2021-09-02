@@ -1,5 +1,6 @@
 package uce.proyect.exceptions.handleException;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.json.JSONObject;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import uce.proyect.exceptions.PlanException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -19,10 +21,9 @@ public class ControllerAdviceSG {
 
     @ExceptionHandler(NoEncontradorException.class)
     public ResponseEntity<?> handleNoEncontradoEx(NoEncontradorException nee) {
-        var jsonObject = new JSONObject();
-        jsonObject.put("mensaje", nee.getMessage());
-        jsonObject.put("fecha", LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")));
-        return new ResponseEntity<>(jsonObject.toMap(), NOT_FOUND);
+        var map = new HashMap<String, String>();
+        map.put("mensaje", nee.getMessage());
+        return new ResponseEntity<>(map, NOT_FOUND);
     }
 
     @ExceptionHandler(DataAccessException.class)
