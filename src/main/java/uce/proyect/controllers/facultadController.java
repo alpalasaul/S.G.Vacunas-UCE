@@ -49,7 +49,7 @@ public class facultadController {
     public ResponseEntity<?> delete(
             @PathVariable("nombreFacultad") String facultad,
             @PathVariable("nombreCarrera") String carrera) {
-        var cadena = facultad.concat(" ").concat(carrera);
+        var cadena = facultad.concat("-").concat(carrera);
         var fac = this.facultadService.eliminar(cadena);
         return new ResponseEntity<>(fac.toMap(), OK);
     }

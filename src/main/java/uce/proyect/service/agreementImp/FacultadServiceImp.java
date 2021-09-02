@@ -48,7 +48,9 @@ public class FacultadServiceImp implements FacultadService {
 
     @Override
     public JSONObject eliminar(String identificador) throws NoEncontradorException {
-        var strings = identificador.split(" "); // 0 es nombre de la facu, 1 el nombre de la carrera
+        // con el SPLIT se desborda porque se especifica separar en 2 pero si una carrera tiene 2 palabras se va ala shite xd
+        // Solución cambiar el tipo de separador ( ) por (-)
+        var strings = identificador.split("-"); // 0 es nombre de la facu, 1 el nombre de la carrera
         var facultad = this.facultadRepository.findByNombre(strings[0]);
         var jsonObject = new JSONObject();
         if (facultad.isPresent() && facultad.get().getCarreras() != null) {
