@@ -149,31 +149,32 @@ public class PlanServiceImp implements PlanService {
                     estudiante.getUsuario(),
                     true, // Inoculacion Voluntaria
                     fase.equalsIgnoreCase("SEGUNDA") // Si es la segunda dosis entonces la primera debe estar en true
-            ).stream().collect(Collectors.toList())); // Ver si en las pruebas aqui no se desborda, sino usar ifPresent
-
-            var aux = this.carnetRepository.findByEstudianteAndInoculacionVoluntariaAndPrimeraDosis(
-                    estudiante.getUsuario(),
-                    true, // Inoculacion Voluntaria
-                    fase.equalsIgnoreCase("SEGUNDA"));
-
-            var datosUsuario = new JSONObject();
-            datosUsuario.put("usuario", estudiante.getUsuario());
-            datosUsuario.put("nombre", estudiante.getNombres());
-            datosUsuario.put("apellido", estudiante.getApellidos());
-            datosUsuario.put("cedula", estudiante.getCedula());
-            datosUsuario.put("vacunadorSegundaDosis", aux.get().getVacunadorSegundaDosis());
-            datosUsuario.put("nombreVacuna", aux.get().getNombreVacuna());
-            datosUsuario.put("segundaDosis", aux.get().isSegundaDosis());
-            datosUsuario.put("inoculacionVoluntaria", aux.get().isInoculacionVoluntaria());
-            datosUsuario.put("centroVacunacion", aux.get().getCentroVacunacion());
-            datosUsuario.put("loteDosisUno", aux.get().getLoteDosisUno());
-            datosUsuario.put("vacunadorPrimeraDosis", aux.get().getVacunadorPrimeraDosis());
-            datosUsuario.put("loteDosisDos", aux.get().getLoteDosisDos());
-            datosUsuario.put("primeraDosis", aux.get().isPrimeraDosis());
-
-            datos.add(datosUsuario);
+            ).stream().collect(Collectors.toList())); // Ver si en las pruebas aquí no se desborda, sino usar ifPresent
 
         })));
+
+
+        carnets.forEach(carnet -> {
+            var estudiante = this.estudianteRepository.findByUsuario(carnet.getEstudiante());
+            var datosUsuario = new JSONObject();
+            datosUsuario.put("usuario", estudiante.get().getUsuario());
+            datosUsuario.put("nombre", estudiante.get().getNombres());
+            datosUsuario.put("apellido", estudiante.get().getApellidos());
+            datosUsuario.put("cedula", estudiante.get().getCedula());
+            datosUsuario.put("vacunadorSegundaDosis", carnet.getVacunadorSegundaDosis());
+            datosUsuario.put("nombreVacuna", carnet.getNombreVacuna());
+            datosUsuario.put("segundaDosis", carnet.isSegundaDosis());
+            datosUsuario.put("inoculacionVoluntaria", carnet.isInoculacionVoluntaria());
+            datosUsuario.put("centroVacunacion", carnet.getCentroVacunacion());
+            datosUsuario.put("loteDosisUno", carnet.getLoteDosisUno());
+            datosUsuario.put("vacunadorPrimeraDosis", carnet.getVacunadorPrimeraDosis());
+            datosUsuario.put("loteDosisDos", carnet.getLoteDosisDos());
+            datosUsuario.put("primeraDosis", carnet.isPrimeraDosis());
+            datos.add(datosUsuario);
+        });
+
+
+
 
 //        jsonObject.put("carnets", carnets);
         jsonObject.put("data", datos);
