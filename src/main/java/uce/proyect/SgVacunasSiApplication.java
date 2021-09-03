@@ -8,6 +8,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @SpringBootApplication
 //@EnableScheduling
 @EnableEncryptableProperties
@@ -24,5 +28,14 @@ public class SgVacunasSiApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("Perfil activo: ".concat(this.perfilActivo));
+
+        LocalDate hoy = LocalDate.now(); // fecha
+        LocalTime ahora = LocalTime.now(); // hora
+        LocalDateTime fecha = LocalDateTime.of(hoy, ahora);
+
+        log.error(hoy.toString());
+        log.error(ahora.toString());
+        log.error(fecha.toString());
+
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 public class ValidarFechas {
 
     public static void validarFechas(Plan pojo, List<Plan> lista ) throws PlanException {
-        if (pojo.getFase().equalsIgnoreCase("PRIMERA") && lista.size() >= 2) { // defino que pueda existir dos facultades máximo
+        if (pojo.getFase().equalsIgnoreCase("PRIMERA") && lista.size() >= 4) { // defino que pueda existir dos facultades máximo
             throw new IllegalArgumentException("No puede existir más de 2 Facultades dentro de la misma fecha");
         }
 
