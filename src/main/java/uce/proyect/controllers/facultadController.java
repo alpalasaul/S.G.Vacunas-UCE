@@ -19,7 +19,7 @@ public class facultadController {
     private FacultadService facultadService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_HC')")
+//    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getFacultades() {
         var listar = this.facultadService.listar();
         return new ResponseEntity<>(listar, OK);
@@ -27,7 +27,7 @@ public class facultadController {
 
     // Solo enviar la nueva facultad, luego si se quieren agregar carreras usar el endpoint /{nombreFacultad}/{nombreCarrera}
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_HC')")
+//    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> create(@RequestBody Facultad facultad) {
         var fac = this.facultadService.agregarOActualizar(facultad);
         return new ResponseEntity<>(fac, ACCEPTED);
@@ -35,7 +35,7 @@ public class facultadController {
 
     // No se si se necesite algun metodo para actualizar el nombre de la fac o el nombre de una carrera
     @PutMapping("/{nombreFacultad}/{nombreCarrera}")
-    @PreAuthorize("hasRole('ROLE_HC')")
+//    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> update(
             @PathVariable("nombreFacultad") String facultad,
             @PathVariable("nombreCarrera") String carrera) {
@@ -45,7 +45,7 @@ public class facultadController {
 
 //    No se si se requiera un metodo que elimine toda la facultad
     @DeleteMapping("/{nombreFacultad}/{nombreCarrera}")
-    @PreAuthorize("hasRole('ROLE_HC')")
+//    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> delete(
             @PathVariable("nombreFacultad") String facultad,
             @PathVariable("nombreCarrera") String carrera) {
