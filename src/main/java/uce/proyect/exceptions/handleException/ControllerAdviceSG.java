@@ -63,4 +63,11 @@ public class ControllerAdviceSG {
         jsonObject.put("mensaje", dae.getMessage());
         return new ResponseEntity<>(jsonObject.toMap(), BAD_REQUEST);
     }
+
+    @ExceptionHandler(ArithmeticException.class)
+    public ResponseEntity<?> handleAritmeticEx(IllegalArgumentException dae) {
+        var jsonObject = new JSONObject();
+        jsonObject.put("mensaje", dae.getMessage());
+        return new ResponseEntity<>(jsonObject.toMap(), BAD_REQUEST);
+    }
 }

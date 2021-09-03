@@ -126,8 +126,8 @@ public class CarnetServiceImp implements CarnetService {
         dataJson.put("nombreVacuna", data.getNombreVacuna());
         dataJson.put("fechaPrimeraDosis", (data.getFechaPrimeraDosis() == null) ? "" : data.getFechaPrimeraDosis().toString());
         dataJson.put("fechaSegundasDosis", (data.getFechaSegundasDosis() == null ? "" : data.getFechaSegundasDosis().toString()));
-        dataJson.put("vacunadorPrimeraDosis", this.estudianteService.nombres(data.getVacunadorPrimeraDosis()));
-        dataJson.put("vacunadorSegundaDosis", this.estudianteService.nombres(data.getVacunadorSegundaDosis()));
+        dataJson.put("vacunadorPrimeraDosis", data.getVacunadorPrimeraDosis());
+        dataJson.put("vacunadorSegundaDosis", data.getVacunadorSegundaDosis());
         dataJson.put("primeraDosis", (data.isPrimeraDosis()) ? "Sí" : "No");
         dataJson.put("segundaDosis", (data.isSegundaDosis()) ? "Sí" : "No");
         dataJson.put("loteDosisUno", data.getLoteDosisUno());
