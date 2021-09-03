@@ -21,7 +21,7 @@ public class ControllerAdviceSG {
     public ResponseEntity<?> handleNoEncontradoEx(NoEncontradorException nee) {
         var jsonObject = new JSONObject();
         jsonObject.put("mensaje", nee.getMessage());
-        jsonObject.put("fecha", LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")));
+        jsonObject.put("fecha", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         return new ResponseEntity<>(jsonObject.toMap(), NOT_FOUND);
     }
 
@@ -30,7 +30,7 @@ public class ControllerAdviceSG {
         var jsonObject = new JSONObject();
         jsonObject.put("mensaje", dae.getMessage());
         jsonObject.put("causa", dae.getMostSpecificCause().toString());
-        jsonObject.put("fecha", LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm")));
+        jsonObject.put("fecha", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         return new ResponseEntity<>(jsonObject.toMap(), INTERNAL_SERVER_ERROR);
     }
 

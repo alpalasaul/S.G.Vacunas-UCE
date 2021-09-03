@@ -43,41 +43,6 @@ public class PlanServiceImp implements PlanService {
 
     @Override
     public Plan agregarOActualizar(Plan pojo) {
-        List<Plan> lista = this.buscarPorFecha(pojo.getFechaInicio());
-        // Mando a validar
-        validarFechas(pojo, lista);
-
-        // Creo la fase 2 después de 28 días (CREAR)
-        if (pojo.get_id() == null) { // Si es diferente de null es una actualización
-            var pojo2 = new Plan();
-            pojo2.setFechaInicio(pojo.getFechaInicio().plusDays(4));
-            pojo2.setFechaFin(pojo.getFechaFin().plusDays(4));
-            pojo2.setFacultad(pojo.getFacultad());
-            pojo2.setCompleto(false);
-            pojo2.setCentroVacunacion(pojo.getCentroVacunacion());
-            pojo2.setPersonasVacunadas(0);
-            pojo2.setFase("SEGUNDA");
-            this.planRepository.save(pojo2);
-        } else {
-            // Si actualiza voy a buscar cual plan quiere actualizar
-            Optional<Plan> plan = this.planRepository.findById(pojo.get_id());
-            if (plan.get().getFase().equals("PRIMERA")) { // Actualizar la primera y la segunda
-                Optional<Plan> plan2Update = this.planRepository.findByFacultadAndFase(pojo.getFacultad(), "SEGUNDA"); // Obtengo el segundo plan para actualizarlo
-                plan2Update.get().setFacultad(pojo.getFacultad());
-                plan2Update.get().setFechaInicio(pojo.getFechaInicio().plusDays(4));
-                plan2Update.get().setFechaFin(pojo.getFechaFin().plusDays(4));
-                plan2Update.get().setCentroVacunacion(pojo.getCentroVacunacion());
-                plan2Update.get().setCompleto(false);
-                plan2Update.get().setPersonasVacunadas(0);
-                pojo.setFase(plan.get().getFase()); // No se permite cambiar de primera a segunda fase
-                this.planRepository.save(plan2Update.get());
-            } else { // Actualizar solo la segunda fase
-                pojo.setFase("SEGUNDA"); // NO se permite cambiar de segunda a primera fase
-                // Opcional enviar exception
-            }
-            // Las validaciones de que no cambia ni la facultad ni la fase EN UN UPDATE se las va a bloquear en el front
-        }
-
         return this.planRepository.save(pojo);
     }
 
@@ -115,13 +80,54 @@ public class PlanServiceImp implements PlanService {
     @Transactional
     public JSONObject generarNotificacionVacuncacion(Plan nuevoPlan) throws PlanException { // Logica de negocio para agregar un plan de vacunación
 
-        this.validarNuevoPlan(nuevoPlan);
+        // Si es plan está completo no se sigue el resto del metodo
+        if (nuevoPlan.isCompleto()) { // SI LO MANDA COMO COMPLETO SOLO LO DEBE DE GUARDAR
+            var jsonObject = new JSONObject();
+            jsonObject.put("actualizado", this.planRepository.save(nuevoPlan));
+            return jsonObject;
+        }
+
+        List<Plan> lista = this.buscarPorFecha(nuevoPlan.getFechaInicio());
+        // Mando a validar
+        validarFechas(nuevoPlan, lista);
+
+        Plan pojo2 = null;
+
+        if (nuevoPlan.get_id() == null) {
+            this.validarNuevoPlan(nuevoPlan);
+
+            pojo2 = new Plan();
+            pojo2.setFechaInicio(nuevoPlan.getFechaInicio());
+            pojo2.setFechaFin(nuevoPlan.getFechaFin());
+            pojo2.setFacultad(nuevoPlan.getFacultad());
+            pojo2.setCompleto(false);
+            pojo2.setCentroVacunacion(nuevoPlan.getCentroVacunacion());
+            pojo2.setPersonasVacunadas(0);
+            pojo2.setFase("SEGUNDA");
+        } else { // ES ACTUALIZACION, SI ES SEGUNDA FASE SOLO PERMITIR QUE PUEDA ACTUALIZAR EL CENTRO DE VACUNACION
+            this.planRepository.findById(nuevoPlan.get_id()).ifPresent(plan -> {
+                if (plan.getFase().equalsIgnoreCase("PRIMERA")) {
+                    this.planRepository.findByFacultadAndFase(plan.getFacultad(), "SEGUNDA")
+                            .ifPresent(segundoPlan -> {
+                                segundoPlan.setFechaInicio(nuevoPlan.getFechaInicio());
+                                segundoPlan.setFechaFin(nuevoPlan.getFechaFin());
+                                segundoPlan.setCentroVacunacion(nuevoPlan.getCentroVacunacion()); // Todos los demas datos del segundo plan estan en 0 y false
+                                this.planRepository.save(segundoPlan);
+                            });
+                } // En el carnet aparece solo el ultimo centro de vacunacion
+            });
+        }
 
         var estudiantes = this.validarEstudiantesEnFacultadYCarrera(nuevoPlan);
 
         this.actualizarCarnetEstudiantes(estudiantes, nuevoPlan.getCentroVacunacion());
 
+        this.planRepository.save(nuevoPlan);
         this.cargarMensaje(estudiantes, nuevoPlan.getFechaInicio(), nuevoPlan.getFechaFin(), nuevoPlan.getCentroVacunacion(), nuevoPlan.getFase());
+        if (pojo2 != null) {
+            this.planRepository.save(pojo2);
+            this.cargarMensaje(estudiantes, pojo2.getFechaInicio(), pojo2.getFechaFin(), pojo2.getCentroVacunacion(), pojo2.getFase()); // El mismo rato se envian los mail para segunda dosis
+        }
 
         var jsonObject = new JSONObject();
         jsonObject.put("notificados", estudiantes.size());
@@ -218,7 +224,7 @@ public class PlanServiceImp implements PlanService {
         }
     }
 
-    //    Agregar el segundo plan luego de 28 dias
+    //    Agregar el segundo plan el mismo dia
     private void validarNuevoPlan(Plan nuevoPlan) throws PlanException {
 
         var planesAntiguos = this.planRepository.findByFacultad(nuevoPlan.getFacultad()); // Se determina si esque existe el plan general
@@ -286,11 +292,11 @@ public class PlanServiceImp implements PlanService {
 
     //    @Scheduled(fixedRate = 12000L, initialDelay = 30000L)
     // Programo una tarea todos los dias a las 5 am para enviar mail 4 dias antes de la segunda dosis
-    @Scheduled(cron = "0 37 13 * * ?")
+//    @Scheduled(cron = "0 37 13 * * ?")
     public void enviarNotificacionSegundaDosis() { // Envio un mail una semana antes de la segunda dosis, para presentar el proyecto se debe de hacer en menos tiempo
         log.info("----------------- INGRESANDO AL PROCESO PROGRAMADO ---------------");
 
-        this.planRepository.findByFechaInicioAndFase(LocalDate.now().plusDays(4L), "SEGUNDA").forEach(plan -> { // Obtengo los planes proximos a 7 dias que sean de segunda dosis
+        this.planRepository.findByFechaInicioAndFase(LocalDate.now(), "SEGUNDA").forEach(plan -> { // Obtengo los planes proximos a 7 dias que sean de segunda dosis
             log.info("----------------- SEGUNDAS FASES ------------------");
             log.info("FECHA INICIO".concat(plan.getFechaInicio().toString()));
 

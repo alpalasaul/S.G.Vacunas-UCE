@@ -54,18 +54,16 @@ public class planController {
     @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> createF(@RequestBody Plan plan) {
         var jsonObject = this.planService.generarNotificacionVacuncacion(plan);
-        var pl = this.planService.agregarOActualizar(plan);
-        jsonObject.put("nuevo_plan", pl);
         return new ResponseEntity<>(jsonObject.toMap(), ACCEPTED); // Importante el toMap() para mostrar el json en el reponse sino devuelve {"empty": false}
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_HC')")
-    public ResponseEntity<?> update(@RequestBody Plan plan, @PathVariable("id") String id) { // Si se actualizan las fechas es importante notificar o no actualizar
+    public ResponseEntity<?> update(@RequestBody Plan plan, @PathVariable("id") String id) { // Si se actualizan las fechas es importante notificar
         this.planService.buscarPorId(id); // importante para no crear registros al intentar actualizar
         plan.set_id(id);
-        var pl = this.planService.agregarOActualizar(plan);
-        return new ResponseEntity<>(pl, ACCEPTED);
+        var pl = this.planService.generarNotificacionVacuncacion(plan);
+        return new ResponseEntity<>(pl.toMap(), ACCEPTED);
     }
 
     @DeleteMapping("/{nombreFacultad}") // Elimina los planes por el nombre de la facultad
