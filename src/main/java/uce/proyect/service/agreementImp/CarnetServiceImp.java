@@ -124,8 +124,8 @@ public class CarnetServiceImp implements CarnetService {
         dataJson.put("cedula", estu.getCedula());
         dataJson.put("fechaNacimiento", LocalDate.now().getYear() - estu.getFechaNacimiento().getYear()); // Solo es hilar mas fino
         dataJson.put("nombreVacuna", data.getNombreVacuna());
-        dataJson.put("fechaPrimeraDosis", data.getFechaPrimeraDosis().toString());
-        dataJson.put("fechaSegundasDosis", data.getFechaSegundasDosis().toString());
+        dataJson.put("fechaPrimeraDosis", (data.getFechaPrimeraDosis() == null) ? "" : data.getFechaPrimeraDosis().toString());
+        dataJson.put("fechaSegundasDosis", (data.getFechaSegundasDosis() == null ? "" : data.getFechaSegundasDosis().toString()));
         dataJson.put("vacunadorPrimeraDosis", this.estudianteService.nombres(data.getVacunadorPrimeraDosis()));
         dataJson.put("vacunadorSegundaDosis", this.estudianteService.nombres(data.getVacunadorSegundaDosis()));
         dataJson.put("primeraDosis", (data.isPrimeraDosis()) ? "Sí" : "No");
