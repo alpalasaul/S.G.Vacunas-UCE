@@ -113,6 +113,7 @@ public class PlanServiceImp implements PlanService {
                                 segundoPlan.setFechaInicio(nuevoPlan.getFechaInicio());
                                 segundoPlan.setFechaFin(nuevoPlan.getFechaFin());
                                 segundoPlan.setCentroVacunacion(nuevoPlan.getCentroVacunacion()); // Todos los demas datos del segundo plan estan en 0 y false
+                                this.planRepository.save(segundoPlan);
                             });
                 } else {
                     this.planRepository.findByFacultadAndFase(plan.getFacultad(), "PRIMERA").ifPresent(primerPlan -> {
