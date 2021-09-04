@@ -60,7 +60,7 @@ public class carnetController {
      * EJ: http://localhost:8080/carnet/ddlopezs52
      * */
     @GetMapping("/descargarCarnert/{estudiante}")
-//    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<byte[]> generarCarnet(@PathVariable("estudiante") String estudiante) throws JRException, IOException {
         var jsonObject = this.carnetService.generarPdfEnBytes(estudiante);
         var export = (byte[]) jsonObject.get("recurso");// Genero mi pdf y lo guardo en una cadena de bytes
