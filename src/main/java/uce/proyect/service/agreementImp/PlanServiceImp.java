@@ -183,6 +183,8 @@ public class PlanServiceImp implements PlanService {
             datosUsuario.put("vacunadorPrimeraDosis", carnet.getVacunadorPrimeraDosis());
             datosUsuario.put("loteDosisDos", carnet.getLoteDosisDos());
             datosUsuario.put("primeraDosis", carnet.isPrimeraDosis());
+            datosUsuario.put("fechaPrimeraDosis", carnet.getFechaPrimeraDosis());
+            datosUsuario.put("fechaSegundasDosis", carnet.getFechaSegundasDosis());
             datos.add(datosUsuario);
         });
 
