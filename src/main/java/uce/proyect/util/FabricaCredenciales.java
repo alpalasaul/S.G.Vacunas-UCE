@@ -1,8 +1,10 @@
 package uce.proyect.util;
 
+import org.bson.codecs.jsr310.LocalDateCodec;
 import uce.proyect.models.Carnet;
 import uce.proyect.models.User;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -71,11 +73,12 @@ public class FabricaCredenciales {
     }
 
     public static Carnet generarCarnet(String nombreUsuario) {
+        LocalDate date = LocalDate.of(0, 1, 1);
         var carnet_default = new Carnet();
         carnet_default.setEstudiante(nombreUsuario);
         carnet_default.setCentroVacunacion("");
-        carnet_default.setFechaPrimeraDosis(null);
-        carnet_default.setFechaSegundasDosis(null);
+        carnet_default.setFechaPrimeraDosis(date);
+        carnet_default.setFechaSegundasDosis(date);
         carnet_default.setLoteDosisDos("");
         carnet_default.setLoteDosisUno("");
         carnet_default.setNombreVacuna("");
