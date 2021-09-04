@@ -6,6 +6,7 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JsonDataSource;
 import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.SavepointManager;
 import org.springframework.transaction.annotation.Transactional;

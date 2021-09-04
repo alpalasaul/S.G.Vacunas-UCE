@@ -2,6 +2,7 @@ package uce.proyect.controllers;
 
 import lombok.AllArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -60,12 +61,14 @@ public class carnetController {
      * EJ: http://localhost:8080/carnet/ddlopezs52
      * */
     @GetMapping("/descargarCarnert/{estudiante}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<byte[]> generarCarnet(@PathVariable("estudiante") String estudiante) throws JRException, IOException {
+//    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> generarCarnet(@PathVariable("estudiante") String estudiante) throws JRException, IOException {
         var jsonObject = this.carnetService.generarPdfEnBytes(estudiante);
         var export = (byte[]) jsonObject.get("recurso");// Genero mi pdf y lo guardo en una cadena de bytes
         var headers = new HttpHeaders(); // Mando la respuesta de manera intuitiva, lo mando por la cabecera
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=carnetVacunacion-".concat(estudiante).concat(".pdf")); // habilito la actividad de examen en línea (inline) para que el navegador me permita descargarlo y le pongo un nombre al pdf
+        var nombreArchivo = "carnetVacunacion-".concat(estudiante);
+        headers.add("File-Name", nombreArchivo);
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;File-Name=".concat(nombreArchivo).concat(".pdf")); // habilito la actividad de examen en línea (inline) para que el navegador me permita descargarlo y le pongo un nombre al pdf
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(export); // Devuelvo la respuesta
     }
 
