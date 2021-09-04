@@ -65,7 +65,7 @@ public class carnetController {
         var jsonObject = this.carnetService.generarPdfEnBytes(estudiante);
         var export = (byte[]) jsonObject.get("recurso");// Genero mi pdf y lo guardo en una cadena de bytes
         var headers = new HttpHeaders(); // Mando la respuesta de manera intuitiva, lo mando por la cabecera
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=carnetVacunacion-".concat(estudiante).concat(".pdf")); // habilito la actividad de examen en línea (inline) para que el navegador me permita descargarlo y le pongo un nombre al pdf
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=carnetVacunacion-".concat(estudiante).concat(".pdf")); // habilito la actividad de examen en línea (inline) para que el navegador me permita descargarlo y le pongo un nombre al pdf
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(export); // Devuelvo la respuesta
     }
 

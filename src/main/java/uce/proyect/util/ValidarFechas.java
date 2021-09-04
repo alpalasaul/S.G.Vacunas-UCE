@@ -1,10 +1,12 @@
 package uce.proyect.util;
 
+import lombok.extern.slf4j.Slf4j;
 import uce.proyect.exceptions.PlanException;
 import uce.proyect.models.Plan;
 
 import java.util.List;
 
+@Slf4j
 public class ValidarFechas {
 
     public static void validarFechas(Plan pojo, List<Plan> lista) throws PlanException {

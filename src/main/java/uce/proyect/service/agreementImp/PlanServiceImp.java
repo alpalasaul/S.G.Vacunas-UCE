@@ -106,7 +106,7 @@ public class PlanServiceImp implements PlanService {
             pojo2.setFase("SEGUNDA");
         } else {
             this.planRepository.findById(nuevoPlan.get_id()).ifPresent(plan -> {
-                validarFechasActualizacion(plan, lista); // Valida que no tome el plan que estoy enviando en el caso de solo actualizar por ejemplo el centro de vacunacion
+                validarFechasActualizacion(nuevoPlan, lista); // Valida que no tome el plan que estoy enviando en el caso de solo actualizar por ejemplo el centro de vacunacion
                 if (plan.getFase().equalsIgnoreCase("PRIMERA")) {
                     this.planRepository.findByFacultadAndFase(plan.getFacultad(), "SEGUNDA")
                             .ifPresent(segundoPlan -> {
@@ -116,7 +116,7 @@ public class PlanServiceImp implements PlanService {
                             });
                 } else {
                     this.planRepository.findByFacultadAndFase(plan.getFacultad(), "PRIMERA").ifPresent(primerPlan -> {
-                        if (plan.getFechaInicio().isBefore(primerPlan.getFechaInicio())) { // Solo con que la fecha de inicio del segundo plan sea anterior a la inicial de la primera falla
+                        if (nuevoPlan.getFechaInicio().isBefore(primerPlan.getFechaInicio())) { // Solo con que la fecha de inicio del segundo plan sea anterior a la inicial de la primera falla
                             throw new IllegalArgumentException("El plan de la segunda dosis no puede ser anterior al de la primera");
                         }
                     });
