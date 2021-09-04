@@ -277,26 +277,28 @@ public class PlanServiceImp implements PlanService {
 
         planes.forEach(plan -> {
             if (plan.getFase().equalsIgnoreCase("PRIMERA")) {
-                jsonObject.put("total_inoculados_primera_fase_".concat(nombreFacultad.toLowerCase()), plan.getPersonasVacunadas()); // total de primera fase
+                jsonObject.put("total_inoculados_primera_fase_".concat(nombreFacultad), plan.getPersonasVacunadas()); // total de primera fase
             } else {
-                jsonObject.put("total_inoculados_segunda_fase_".concat(nombreFacultad.toLowerCase()), plan.getPersonasVacunadas()); // total de segunda fase
+                jsonObject.put("total_inoculados_segunda_fase_".concat(nombreFacultad), plan.getPersonasVacunadas()); // total de segunda fase
             }
         });
 
-        this.facultadRepository.findByNombre(nombreFacultad).ifPresent(facultad -> {
-            facultad.getCarreras().forEach(carrera -> {
-                var totalCarnetsFacultad = this.estudianteRepository.findByCarrera(carrera).stream().map(estudiante -> {
-                    return this.carnetRepository.findByEstudiante(estudiante.getUsuario()).orElseThrow();
-                }).collect(Collectors.toList());
 
-                jsonObject.put("total_estudiantes_".concat(nombreFacultad.toLowerCase()), totalCarnetsFacultad.size()); // Total de estudiantes de la facultad
-                var voluntarios = totalCarnetsFacultad.stream().filter(Carnet::isInoculacionVoluntaria).count();
-                var noVoluntarios = totalCarnetsFacultad.stream().filter(carnet -> !carnet.isInoculacionVoluntaria()).count();
-                jsonObject.put("estudiantes_a_inocular_de_".concat(nombreFacultad.toLowerCase()), voluntarios); // total de estudiantes a inocular voluntarios
-                jsonObject.put("estudiantes_no_voluntarios_de_".concat(nombreFacultad.toLowerCase()), noVoluntarios); // total de estudiantes no voluntarios
+        List<Carnet> totalCarnetsFacultad = new ArrayList<>();
 
-            });
-        });
+        for (String carrera :
+                this.facultadRepository.findByNombre(nombreFacultad).orElseThrow().getCarreras()) {
+            totalCarnetsFacultad.addAll(this.estudianteRepository.findByCarrera(carrera).stream().map(estudiante -> {
+                return this.carnetRepository.findByEstudiante(estudiante.getUsuario()).orElseThrow();
+            }).collect(Collectors.toList()));
+        }
+
+        jsonObject.put("total_estudiantes_".concat(nombreFacultad), totalCarnetsFacultad.size()); // Total de estudiantes de la facultad
+        var voluntarios = totalCarnetsFacultad.stream().filter(Carnet::isInoculacionVoluntaria).count();
+        var noVoluntarios = totalCarnetsFacultad.stream().filter(carnet -> !carnet.isInoculacionVoluntaria()).count();
+        jsonObject.put("estudiantes_a_inocular_de_".concat(nombreFacultad), voluntarios); // total de estudiantes a inocular voluntarios
+        jsonObject.put("estudiantes_no_voluntarios_de_".concat(nombreFacultad), noVoluntarios); // total de estudiantes no voluntarios
+
         return jsonObject;
     }
 
