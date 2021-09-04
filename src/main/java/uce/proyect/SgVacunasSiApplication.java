@@ -28,14 +28,5 @@ public class SgVacunasSiApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("Perfil activo: ".concat(this.perfilActivo));
-
-        LocalDate hoy = LocalDate.now(); // fecha
-        LocalTime ahora = LocalTime.now(); // hora
-        LocalDateTime fecha = LocalDateTime.of(hoy, ahora);
-
-        log.error(hoy.toString());
-        log.error(ahora.toString());
-        log.error(fecha.toString());
-
     }
 }

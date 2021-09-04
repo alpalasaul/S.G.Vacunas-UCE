@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static uce.proyect.util.ValidarFechas.validarFechas;
+import static uce.proyect.util.ValidarFechas.validarFechasActualizacion;
 
 @Service
 @AllArgsConstructor
@@ -88,12 +89,11 @@ public class PlanServiceImp implements PlanService {
         }
 
         List<Plan> lista = this.buscarPorFecha(nuevoPlan.getFechaInicio());
-        // Mando a validar
-        validarFechas(nuevoPlan, lista);
 
         Plan pojo2 = null;
 
         if (nuevoPlan.get_id() == null) {
+            validarFechas(nuevoPlan, lista);
             this.validarNuevoPlan(nuevoPlan);
 
             pojo2 = new Plan();
@@ -104,17 +104,24 @@ public class PlanServiceImp implements PlanService {
             pojo2.setCentroVacunacion(nuevoPlan.getCentroVacunacion());
             pojo2.setPersonasVacunadas(0);
             pojo2.setFase("SEGUNDA");
-        } else { // ES ACTUALIZACION, SI ES SEGUNDA FASE SOLO PERMITIR QUE PUEDA ACTUALIZAR EL CENTRO DE VACUNACION
+        } else {
             this.planRepository.findById(nuevoPlan.get_id()).ifPresent(plan -> {
+                validarFechasActualizacion(plan, lista); // Valida que no tome el plan que estoy enviando en el caso de solo actualizar por ejemplo el centro de vacunacion
                 if (plan.getFase().equalsIgnoreCase("PRIMERA")) {
                     this.planRepository.findByFacultadAndFase(plan.getFacultad(), "SEGUNDA")
                             .ifPresent(segundoPlan -> {
                                 segundoPlan.setFechaInicio(nuevoPlan.getFechaInicio());
                                 segundoPlan.setFechaFin(nuevoPlan.getFechaFin());
                                 segundoPlan.setCentroVacunacion(nuevoPlan.getCentroVacunacion()); // Todos los demas datos del segundo plan estan en 0 y false
-                                this.planRepository.save(segundoPlan);
                             });
-                } // En el carnet aparece solo el ultimo centro de vacunacion
+                } else {
+                    this.planRepository.findByFacultadAndFase(plan.getFacultad(), "PRIMERA").ifPresent(primerPlan -> {
+                        if (plan.getFechaInicio().isBefore(primerPlan.getFechaInicio())) { // Solo con que la fecha de inicio del segundo plan sea anterior a la inicial de la primera falla
+                            throw new IllegalArgumentException("El plan de la segunda dosis no puede ser anterior al de la primera");
+                        }
+                    });
+                }
+                this.planRepository.save(plan);
             });
         }
 
