@@ -89,8 +89,9 @@
                 <text><![CDATA[Vacuna:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="15" y="106" width="50" height="12" uuid="8c89ca28-4949-47b0-a24d-ba480d9db3b1">
+                <reportElement x="15" y="106" width="54" height="12" uuid="8c89ca28-4949-47b0-a24d-ba480d9db3b1">
                     <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
                 </reportElement>
                 <textElement>
                     <font size="9" isBold="true"/>
@@ -152,7 +153,9 @@
                 <text><![CDATA[Vacunador:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="15" y="151" width="50" height="12" uuid="e08b515c-1ce9-4296-8d4b-fe8c9c9da6a5"/>
+                <reportElement x="15" y="151" width="54" height="12" uuid="e08b515c-1ce9-4296-8d4b-fe8c9c9da6a5">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
                 <textElement>
                     <font size="9" isBold="true"/>
                 </textElement>
