@@ -244,6 +244,12 @@
 
                             <table cellspacing="0" cellpadding="0" class="force-full-width" bgcolor="#ebebeb">
                                 <tr>
+                                    <td style="padding: 0 30px;">
+                                    <a href="https://sgvuce.herokuapp.com/login">Accede a la plataforma
+                                        desde aquí.</a><br/><br/>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td style="padding: 0 30px; padding-bottom: 30px;">
                                         Toma las devidas precauciones. Respeta el distanciamiento.<br><br>
                                         Saludos,<br>
