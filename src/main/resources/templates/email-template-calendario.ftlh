@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Carnet</title>
+    <title>Calendario</title>
 
     <style type="text/css">
 
@@ -16,6 +16,7 @@
         .backgroundTable {margin:0 auto; padding:0; width:100%;!important;}
         table td {border-collapse: collapse;}
         .ExternalClass * {line-height: 115%;}
+
 
         td {
             font-family: Arial, sans-serif;
@@ -79,6 +80,16 @@
             font-size: 24px;
         }
 
+        .grey-header {
+            background-color: #dedede;
+            padding: 5px;
+            font-weight: bold;
+        }
+
+        .white-header {
+            background-color: #f3f3f3;
+            padding: 5px;
+        }
 
 
     </style>
@@ -93,7 +104,6 @@
     </style>
 
     <style type="text/css" media="only screen and (max-width: 599px)">
-        /* Mobile styles */
         @media only screen and (max-width: 599px) {
 
             table[class*="w320"] {
@@ -135,6 +145,11 @@
                 font-size: 0 !important;
             }
 
+            td[class="mobile-block"] {
+                display: block !important;
+                width: 260px !important;
+            }
+
 
         }
     </style>
@@ -160,8 +175,7 @@
                                         <br>
                                         <br>
                                         <p style="font-size: 19px; text-align: center;">Sistema de Gestión de Vacunas U.C.E</p><br><br>
-                                        Un cordial saludo, <br/><br/>
-                                        Se adjunta su certificado de vacunación contra la COVID-19.
+                                        Este email tiene el propósito de informar tus horarios de vacunación.
                                         <br>
                                     </td>
                                 </tr>
@@ -170,18 +184,70 @@
 
                             <table class="force-full-width" cellspacing="0" cellpadding="30" bgcolor="#ebebeb">
                                 <tr>
-                                    <td>
-                                        <table cellspacing="0" cellpadding="0" class="force-full-width">
+                                    <td class="mobile-block" width="325">
+                                        <table cellspacing="0" cellpadding="0" width="100%">
                                             <tr>
                                                 <td>
-                                                    <span class="header">Preguntas?</span><br>
-                                                    Contactate con nosotros! <a href="mailto:sgvuce@gmail.com">
-                                                        En cualquier momento.</a><br/><br/>
-                                                    Saludos,<br/>
-                                                    Team Java.
+                                                    <table cellspacing="0" cellpadding="0" width="100%">
+                                                        <tr>
+                                                            <td class="grey-header">
+                                                                Fase
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="white-header">
+                                                                ${fase}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <table cellspacing="0" cellpadding="0" width="100%">
+                                                        <tr>
+                                                            <td class="grey-header">
+                                                                Centro Vacunación
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="white-header">
+                                                                ${centroVacunacion}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <table cellspacing="0" cellpadding="0" width="100%">
+                                                        <tr>
+                                                            <td class="grey-header">
+                                                                Fecha
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="white-header">
+                                                                ${fechaInicio} hasta ${fechaFinal} de 8:00 am - 16:00 pm
+                                                            </td>
+                                                        </tr>
+                                                    </table>
                                                 </td>
                                             </tr>
                                         </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+                            <table cellspacing="0" cellpadding="0" class="force-full-width" bgcolor="#ebebeb">
+                                <tr>
+                                    <td style="padding: 0 30px; padding-bottom: 30px;">
+                                        Toma las devidas precauciones. Respeta el distanciamiento.<br><br>
+                                        Saludos,<br>
+                                        Team Java
                                     </td>
                                 </tr>
                             </table>

@@ -1,5 +1,6 @@
 package uce.proyect.service.agreementImp;
 
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -18,6 +19,8 @@ import uce.proyect.repositories.PlanRepository;
 import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.PlanService;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -206,13 +209,23 @@ public class PlanServiceImp implements PlanService {
             String centroVacunacion,
             String fase
     ) {
-        estudiantes.forEach(estudiante -> this.emailService.enviarEmailPlan(
-                estudiante.getCorreo(),
-                fechaInicio,
-                fechaFinal,
-                centroVacunacion,
-                fase
-        ));
+        estudiantes.forEach(estudiante -> {
+            try {
+                this.emailService.enviarEmailPlan(
+                        estudiante.getCorreo(),
+                        fechaInicio,
+                        fechaFinal,
+                        centroVacunacion,
+                        fase
+                );
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TemplateException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private List<Estudiante> validarEstudiantesEnFacultadYCarrera(Plan plan) {
@@ -305,32 +318,32 @@ public class PlanServiceImp implements PlanService {
     //    @Scheduled(fixedRate = 12000L, initialDelay = 30000L)
     // Programo una tarea todos los dias a las 5 am para enviar mail 4 dias antes de la segunda dosis
 //    @Scheduled(cron = "0 37 13 * * ?")
-    public void enviarNotificacionSegundaDosis() { // Envio un mail una semana antes de la segunda dosis, para presentar el proyecto se debe de hacer en menos tiempo
-        log.info("----------------- INGRESANDO AL PROCESO PROGRAMADO ---------------");
-
-        this.planRepository.findByFechaInicioAndFase(LocalDate.now(), "SEGUNDA").forEach(plan -> { // Obtengo los planes proximos a 7 dias que sean de segunda dosis
-            log.info("----------------- SEGUNDAS FASES ------------------");
-            log.info("FECHA INICIO".concat(plan.getFechaInicio().toString()));
-
-            this.facultadRepository.findByNombre(plan.getFacultad()).ifPresent(facultad -> { // Como al agregar el plan ya se valida que haya estudiantes y la facultad no me preocupo de eso
-                log.info("FACULTAD ".concat(facultad.getNombre()));
-
-                facultad.getCarreras().forEach(carrera -> {
-                    log.info("CARRERA ".concat(carrera));
-
-                    this.estudianteRepository.findByCarrera(carrera).forEach(estudiante -> { // Por cada carrera busco a los estudiantes
-                        log.info("MAIL HACIA ".concat(estudiante.getCorreo()));
-
-                        this.emailService.enviarEmailPlan( // Envio el email de segunda fase
-                                estudiante.getCorreo(),
-                                plan.getFechaInicio(),
-                                plan.getFechaFin(),
-                                plan.getCentroVacunacion(),
-                                plan.getFase()
-                        );
-                    });
-                });
-            });
-        });
-    }
+//    public void enviarNotificacionSegundaDosis() { // Envio un mail una semana antes de la segunda dosis, para presentar el proyecto se debe de hacer en menos tiempo
+//        log.info("----------------- INGRESANDO AL PROCESO PROGRAMADO ---------------");
+//
+//        this.planRepository.findByFechaInicioAndFase(LocalDate.now(), "SEGUNDA").forEach(plan -> { // Obtengo los planes proximos a 7 dias que sean de segunda dosis
+//            log.info("----------------- SEGUNDAS FASES ------------------");
+//            log.info("FECHA INICIO".concat(plan.getFechaInicio().toString()));
+//
+//            this.facultadRepository.findByNombre(plan.getFacultad()).ifPresent(facultad -> { // Como al agregar el plan ya se valida que haya estudiantes y la facultad no me preocupo de eso
+//                log.info("FACULTAD ".concat(facultad.getNombre()));
+//
+//                facultad.getCarreras().forEach(carrera -> {
+//                    log.info("CARRERA ".concat(carrera));
+//
+//                    this.estudianteRepository.findByCarrera(carrera).forEach(estudiante -> { // Por cada carrera busco a los estudiantes
+//                        log.info("MAIL HACIA ".concat(estudiante.getCorreo()));
+//
+//                        this.emailService.enviarEmailPlan( // Envio el email de segunda fase
+//                                estudiante.getCorreo(),
+//                                plan.getFechaInicio(),
+//                                plan.getFechaFin(),
+//                                plan.getCentroVacunacion(),
+//                                plan.getFase()
+//                        );
+//                    });
+//                });
+//            });
+//        });
+//    }
 }

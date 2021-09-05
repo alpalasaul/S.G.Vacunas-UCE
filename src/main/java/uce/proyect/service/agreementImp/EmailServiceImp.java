@@ -4,7 +4,6 @@ import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,7 +14,6 @@ import uce.proyect.service.agreement.EmailService;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,24 +42,28 @@ public class EmailServiceImp implements EmailService {
     }
 
     @Override
-    public void enviarEmailPlan(String destinatario, LocalDate fechaInicio, LocalDate fechaFinal, String facultad, String fase) { // Envio de las fechas del plan de vacunacion
+    public void enviarEmailPlan(String destinatario, LocalDate fechaInicio, LocalDate fechaFinal, String centroVacunacion, String fase) throws MessagingException, IOException, TemplateException { // Envio de las fechas del plan de vacunacion
 
-        var mailMessage = new SimpleMailMessage();
+        var mimeMessage = this.javaMailSender.createMimeMessage();
+        var mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 
-        mailMessage.setFrom("sgvuce@gmail.com");
-        mailMessage.setTo(destinatario);
-        mailMessage.setSubject("Calendario Vacunación");
-        mailMessage.setText(
-                "Tenga un cordial saludo, le informamos el día de su vacunación de "
-                        .concat(fase.toLowerCase())
-                        .concat(" dosis.")
-                        .concat("\n\nFecha Inicio: ").concat(fechaInicio.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                        .concat("\n\nFecha Final: ").concat(fechaFinal.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                        .concat("\n\nLugar Vacunación: ".concat(facultad))
-                        .concat("\n\n\nLos horarios de atención serán de 08:00 AM hasta 16:00 PM. Tome las debidas precauciones.")
-                        .concat("\n\n\n\n\n\n")
-                        .concat("No responder a este mensaje."));
-        this.javaMailSender.send(mailMessage);
+        mimeMessageHelper.setFrom("sgvuce@gmail.com");
+        mimeMessageHelper.setTo("erickdp@hotmail.com");
+        mimeMessageHelper.setSubject("Calendario Vacunación");
+
+        var stringObjectHashMap = new HashMap<String, Object>();
+        stringObjectHashMap.put("centroVacunacion", centroVacunacion);
+        stringObjectHashMap.put("fechaInicio", fechaInicio.toString());
+        stringObjectHashMap.put("fechaFinal", fechaFinal.toString());
+        stringObjectHashMap.put("fase", fase);
+
+        var template = freeMarkerConfigurer.getConfiguration().getTemplate("/email-template-calendario.ftlh");
+        var templatePreparado = FreeMarkerTemplateUtils.processTemplateIntoString(template, stringObjectHashMap);
+
+        mimeMessageHelper.setText(
+                templatePreparado,
+                true);
+        this.javaMailSender.send(mimeMessage);
     }
 
     // Metodo que permite enviar archivo adjuntos en los email
@@ -82,7 +84,9 @@ public class EmailServiceImp implements EmailService {
 
         var template = freeMarkerConfigurer.getConfiguration().getTemplate("/email-template-certificado.ftlh");
         var templatePreparado = FreeMarkerTemplateUtils.processTemplateIntoString(template, stringObjectHashMap);
-        mimeMessageHelper.setText(templatePreparado, true);
+        mimeMessageHelper.setText(
+                templatePreparado,
+                true);
 
         mimeMessageHelper.addAttachment("carnet-vacunacion.pdf", new ByteArrayResource(carnet)); // Se envia la ruta definina dentro de resources statics img
 
