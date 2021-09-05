@@ -35,12 +35,6 @@ public class carnetController {
         return new ResponseEntity<>(listar, OK);
     }
 
-    @GetMapping("/send")
-    @ResponseStatus(OK)
-    public void getEmail() throws MessagingException, TemplateException, IOException {
-        this.emailService.enviarEmailCredenciales("dd", "erickdp", "eediaz");
-    }
-
     @PutMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> update(@RequestBody Carnet carnet) {

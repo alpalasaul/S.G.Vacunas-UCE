@@ -5,11 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Credenciales de Usuario</title>
-    <!-- Designed by https://github.com/kaytcat -->
-    <!-- Header image designed by Freepik.com -->
 
     <style type="text/css">
-        /* Take care of image borders and formatting */
 
         img {
             max-width: 600px;
@@ -53,8 +50,6 @@
             line-height: 115%;
         }
 
-
-        /* General styling */
 
         td {
             font-family: Arial, sans-serif;
@@ -124,7 +119,6 @@
     <style type="text/css" media="screen">
         @media screen {
             @import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700);
-            /* Thanks Outlook 2013! */
             * {
                 font-family: 'PT Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;
             }
@@ -132,7 +126,6 @@
     </style>
 
     <style type="text/css" media="only screen and (max-width: 599px)">
-        /* Mobile styles */
         @media only screen and (max-width: 599px) {
 
             table[class*="w320"] {
@@ -190,25 +183,30 @@
                         <td align="center" valign="top">
 
                             <table class="force-full-width" cellspacing="0" cellpadding="0" bgcolor="#232925">
-                                <tr>
-                                    <td class="icons">
-                                        <br>
-                                        <a href="https://github.com/erickdp/S.G.Vacunas-UCE"><img width="40" height="40" src="../static/img/git.png"></a>
-                                    </td>
+                                <td class="icons">
+                                    <br>
+                                    <a href="https://github.com/erickdp/S.G.Vacunas-UCE"><img width="20" height="20"
+                                                                                              src="https://cdn-icons-png.flaticon.com/512/25/25231.png"></a>
+                                </td>
                                 </tr>
                             </table>
 
                             <table cellspacing="0" cellpadding="0" class="force-full-width" bgcolor="#232925">
                                 <tr>
                                     <td class="computer-image">
-                                        <br class="mobile-hide"/>
+                                        <br>
+                                        <br class="mobile-hide" />
                                         <img style="display:block;" width="220" height="213"
-                                             src="../static/img/sello_400.png" alt="hello">
+                                             src="https://aka-cdn.uce.edu.ec/ares/tmp/SIIU/anuncios/sello_400.png"
+                                             alt="hello">
                                         <br/>
                                     </td>
+                                    <br/>
                                     <td style="color: #ffffff;" class="header-text">
+                                        <br/>
                                         <div>
-                                            <p style="font-size: 21px;text-align: center;">Sistema de Gestión de Vacunas U.C.E</p><br><br>
+                                            <p style="font-size: 21px;text-align: center;">Sistema de Gestión de Vacunas
+                                                U.C.E</p><br><br>
                                         </div>
                                         Un cordial saludo y bienvenido a la plataforma, aquí usted podrá
                                         <ul>
@@ -229,8 +227,9 @@
                                                     Usuario: <a href="#">${nombreUsuario}</a> <br>
                                                     Contraseña: <a href="#">${password}</a> <br><br>
                                                     <span class="header">Preguntas?</span><br>
-                                                    Contactate con nosotros! <a href="mailto:sgvuce@gmail.com" >
-                                                    En cualquier momento.</a><br/><br/>
+                                                    Contactate con nosotros! <a href="mailto:sgvuce@gmail.com">
+                                                        En cualquier momento. AQUI IRIA EL LINK DEL FRONT SI EL SAUL NO
+                                                        SE HICIERA EL LOCO</a><br/><br/>
                                                     Que tengas una excelente experiencia,<br/>
                                                     Team Java.
                                                 </td>
@@ -244,7 +243,8 @@
                             <table class="force-full-width" cellspacing="0" cellpadding="20" bgcolor="#2b934f">
                                 <tr>
                                     <td style="background-color:#2b934f; color:#ffffff; font-size: 12px; text-align: center;">
-                                        © 2021 All Rights Reserved - Alpala Saúl | Erazo Doménica | Jara Samantha | Díaz Erick C.E.O
+                                        © 2021 All Rights Reserved - Alpala Saúl | Erazo Doménica | Jara Samantha | Díaz
+                                        Erick C.E.O
                                     </td>
                                 </tr>
                             </table>
