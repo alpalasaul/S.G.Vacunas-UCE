@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         var jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManagerBean()); // Los filtros son interceptores de las peticiones http y ejecutan una accion
         jwtAuthenticationFilter.setFilterProcessesUrl("/sgv/login"); // No reemplaza al login por defecto, sino que cambia la url de donde aplica el filtro para generar el token
-        http.authorizeRequests().antMatchers("/sgv/login", "/usuario/actualizarToken", "/carnet/descargarCarnert/**", "/plan/**").permitAll() // para la autenticacion se debe de permitir cualquier peticion, borrar el endpoint de plan luego
+        http.authorizeRequests().antMatchers("/sgv/login", "/usuario/actualizarToken", "/carnet/descargarCarnert/**").permitAll() // para la autenticacion se debe de permitir cualquier peticion, borrar el endpoint de plan luego
                 .anyRequest().authenticated()// Todas las rutas requieren autenticacion, usar los tokens para validar las session, se debe enviar un basic auth
                 .and().csrf().disable().httpBasic().authenticationEntryPoint(this.authenticationEntryPoint) // csf no permite actualizar recursos, httpbasics permite habilitar basic auth a los endpoint que tengan preAuthorize
                 // Spring Security al logearme guarda una sesion durante el tiempo que se ejecute la app

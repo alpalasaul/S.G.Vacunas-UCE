@@ -51,7 +51,7 @@ public class planController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasRole('ROLE_HC')")
+    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> createF(@RequestBody Plan plan) {
         var jsonObject = this.planService.generarNotificacionVacuncacion(plan);
         return new ResponseEntity<>(jsonObject.toMap(), ACCEPTED); // Importante el toMap() para mostrar el json en el reponse sino devuelve {"empty": false}
