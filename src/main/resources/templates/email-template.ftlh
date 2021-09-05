@@ -1,54 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Credenciales de Usuario</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Email de Credenciales</title>
 
     <style type="text/css">
 
-        img {
-            max-width: 600px;
-            outline: none;
-            text-decoration: none;
-            -ms-interpolation-mode: bicubic;
-        }
-
-        a img {
-            border: none;
-        }
-
-        table {
-            border-collapse: collapse !important;
-        }
-
-        #outlook a {
-            padding: 0;
-        }
-
-        .ReadMsgBody {
-            width: 100%;
-        }
-
-        .ExternalClass {
-            width: 100%;
-        }
-
-        .backgroundTable {
-            margin: 0 auto;
-            padding: 0;
-            width: 100%;
-        !important;
-        }
-
-        table td {
-            border-collapse: collapse;
-        }
-
-        .ExternalClass * {
-            line-height: 115%;
-        }
+        img { max-width: 600px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;}
+        a img { border: none; }
+        table { border-collapse: collapse !important; }
+        #outlook a { padding:0; }
+        .ReadMsgBody { width: 100%; }
+        .ExternalClass {width:100%;}
+        .backgroundTable {margin:0 auto; padding:0; width:100%;!important;}
+        table td {border-collapse: collapse;}
+        .ExternalClass * {line-height: 115%;}
 
 
         td {
@@ -59,8 +26,8 @@
         }
 
         body {
-            -webkit-font-smoothing: antialiased;
-            -webkit-text-size-adjust: none;
+            -webkit-font-smoothing:antialiased;
+            -webkit-text-size-adjust:none;
             width: 100%;
             height: 100%;
             color: #5e5e5e;
@@ -114,6 +81,7 @@
         }
 
 
+
     </style>
 
     <style type="text/css" media="screen">
@@ -155,7 +123,7 @@
             td[class*="header-text"] {
                 display: block !important;
                 text-align: center !important;
-                padding: 0 25px !important;
+                padding: 0 25px!important;
                 padding-bottom: 25px !important;
             }
 
@@ -171,8 +139,7 @@
         }
     </style>
 </head>
-<body offset="0" class="body"
-      style="padding:0; margin:0; display:block; background:#ffffff; -webkit-text-size-adjust:none" bgcolor="#ffffff">
+<body  offset="0" class="body" style="padding:0; margin:0; display:block; background:#ffffff; -webkit-text-size-adjust:none" bgcolor="#ffffff">
 <table align="center" cellpadding="0" cellspacing="0" width="100%" height="100%">
     <tr>
         <td align="center" valign="top" style="background-color:#ffffff" width="100%">
@@ -183,11 +150,11 @@
                         <td align="center" valign="top">
 
                             <table class="force-full-width" cellspacing="0" cellpadding="0" bgcolor="#232925">
-                                <td class="icons">
-                                    <br>
-                                    <a href="https://github.com/erickdp/S.G.Vacunas-UCE"><img width="25" height="25"
-                                                                                              src="https://cdn-icons-png.flaticon.com/512/25/25231.png"></a>
-                                </td>
+                                <tr>
+                                    <td class="icons">
+                                        <br>
+                                        <a href="https://github.com/erickdp/S.G.Vacunas-UCE"><img width="30" height="30" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="Git Backend"></a>
+                                    </td>
                                 </tr>
                             </table>
 
@@ -196,26 +163,22 @@
                                     <td class="computer-image">
                                         <br>
                                         <br class="mobile-hide" />
-                                        <img style="display:block;" width="220" height="213"
-                                             src="https://aka-cdn.uce.edu.ec/ares/tmp/SIIU/anuncios/sello_400.png"
-                                             alt="sello">
-                                        <br/>
+                                        <img style="display:block; margin-bottom: 20px;" width="224" height="213" src="https://aka-cdn.uce.edu.ec/ares/tmp/SIIU/anuncios/sello_400.png" alt="sello">
                                     </td>
-                                    <br/>
                                     <td style="color: #ffffff;" class="header-text">
-                                        <br/>
-                                        <div>
-                                            <p style="font-size: 21px;text-align: center;">Sistema de Gestión de Vacunas
-                                                U.C.E</p><br><br>
-                                        </div>
-                                        Un cordial saludo y bienvenido a la plataforma, aquí usted podrá
+                                        <br>
+                                        <br>
+                                        <p style="font-size: 19px; text-align: center;">Sistema de Gestión de Vacunas U.C.E</p><br><br>
+                                        Un cordial saludo, bienvenido a la plataforma, aquí podrás
                                         <ul>
-                                            <li>Consultar sus datos de vacunación</li>
-                                            <li>Acceder a la vacunación voluntaria</li>
+                                            <li>Consultar tus datos de vacunación contra la COVID-19.</li>
+                                            <li>Acceder a la vacunación voluntaria.</li>
                                         </ul>
+                                        <br>
                                     </td>
                                 </tr>
                             </table>
+
 
                             <table class="force-full-width" cellspacing="0" cellpadding="30" bgcolor="#ebebeb">
                                 <tr>
@@ -223,15 +186,15 @@
                                         <table cellspacing="0" cellpadding="0" class="force-full-width">
                                             <tr>
                                                 <td>
-                                                    <span class="header">Sus credenciales de acceso:</span><br>
+                                                    <span class="header">Tus credenciales de acceso:</span><br>
                                                     Usuario: <a href="#">${nombreUsuario}</a> <br>
                                                     Contraseña: <a href="#">${password}</a> <br><br>
+                                                    <a href="https://sgvuce.herokuapp.com/login">Accede a la plataforma desde aquí.</a><br/><br/>
                                                     <span class="header">Preguntas?</span><br>
-                                                    Contactate con nosotros! <a href="mailto:sgvuce@gmail.com">
-                                                        En cualquier momento. AQUI IRIA EL LINK DEL FRONT SI EL SAUL NO
-                                                        SE HICIERA EL LOCO</a><br/><br/>
-                                                    Que tengas una excelente experiencia,<br/>
-                                                    Team Java.
+                                                    Contactate con nosotros! <a href="mailto:sgvuce@gmail.com">en cualquier momento.</a><br><br>
+
+                                                    Saludos,<br>
+                                                    Team Java
                                                 </td>
                                             </tr>
                                         </table>
@@ -242,9 +205,8 @@
 
                             <table class="force-full-width" cellspacing="0" cellpadding="20" bgcolor="#2b934f">
                                 <tr>
-                                    <td style="background-color:#2b934f; color:#ffffff; font-size: 12px; text-align: center;">
-                                        © 2021 All Rights Reserved - Alpala Saúl | Erazo Doménica | Jara Samantha | Díaz
-                                        Erick C.E.O
+                                    <td style="background-color:#2b934f; color:#ffffff; font-size: 14px; text-align: center;">
+                                        © 2021 All Rights Reserved - Alpala Saúl | Erazo Doménica | Jara Samantha | Díaz Erick
                                     </td>
                                 </tr>
                             </table>
