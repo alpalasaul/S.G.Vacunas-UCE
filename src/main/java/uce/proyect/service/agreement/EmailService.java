@@ -1,5 +1,6 @@
 package uce.proyect.service.agreement;
 
+import freemarker.template.TemplateException;
 import org.json.JSONObject;
 
 import javax.mail.MessagingException;
@@ -13,5 +14,5 @@ public interface EmailService {
 
     JSONObject enviarComprobante(JSONObject recursos) throws MessagingException, IOException;
 
-    void enviarEmailCredenciales(String email, String nombreUsuario, String password);
+    void enviarEmailCredenciales(String email, String nombreUsuario, String password) throws MessagingException, IOException, TemplateException;
 }

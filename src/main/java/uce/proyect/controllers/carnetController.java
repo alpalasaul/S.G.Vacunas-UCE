@@ -1,5 +1,6 @@
 package uce.proyect.controllers;
 
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
 import org.springframework.core.io.ByteArrayResource;
@@ -32,6 +33,12 @@ public class carnetController {
     public ResponseEntity<?> getCarnets() {
         var listar = this.carnetService.listar();
         return new ResponseEntity<>(listar, OK);
+    }
+
+    @GetMapping("/send")
+    @ResponseStatus(OK)
+    public void getEmail() throws MessagingException, TemplateException, IOException {
+        this.emailService.enviarEmailCredenciales("dd", "erickdp", "eediaz");
     }
 
     @PutMapping

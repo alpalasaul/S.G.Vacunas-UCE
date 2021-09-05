@@ -1,5 +1,6 @@
 package uce.proyect.controllers;
 
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Estudiante;
 import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.EstudianteService;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -54,7 +58,7 @@ public class estudianteController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_HC')")
-    public ResponseEntity<?> create(@RequestBody Estudiante user) {
+    public ResponseEntity<?> create(@RequestBody Estudiante user) throws MessagingException, TemplateException, IOException {
         var nUser = this.estudianteService.agregar(user);
         this.emailService.enviarEmailCredenciales(
                 user.getCorreo(),

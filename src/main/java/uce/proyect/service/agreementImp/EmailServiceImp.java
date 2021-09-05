@@ -1,24 +1,33 @@
 package uce.proyect.service.agreementImp;
 
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.boot.autoconfigure.jms.JmsProperties;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import uce.proyect.service.agreement.EmailService;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 @Service
 @AllArgsConstructor
 public class EmailServiceImp implements EmailService {
 
     private JavaMailSender javaMailSender;
+
+    private FreeMarkerConfigurer freeMarkerConfigurer;
 
     @Override
     public String enviarEmail() { // Metodo de email de prueba
@@ -84,19 +93,24 @@ public class EmailServiceImp implements EmailService {
     }
 
     @Override
-    public void enviarEmailCredenciales(String email, String nombreUsuario, String password) {
-        var simpleMailMessage = new SimpleMailMessage();
+    public void enviarEmailCredenciales(String email, String nombreUsuario, String password) throws MessagingException, IOException, TemplateException {
+        var mimeMessage = this.javaMailSender.createMimeMessage();
+        var mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 
-        simpleMailMessage.setFrom("sgvuce@gmail.com");
-        simpleMailMessage.setTo(email);
-        simpleMailMessage.setSubject("Credenciales S.G.V UCE");
-        simpleMailMessage.setText(
-                "Cordial saludo, sus credenciales para el ingreso a la plataforma S.G.V UCE son \n"
-                        .concat("Nombre de usuario: ").concat(nombreUsuario)
-                        .concat("\nCotraseña: ").concat(password)
-                        .concat("\n\n\nGuardelas correctamente, pues no podrán ser cambiadas.")
+        mimeMessageHelper.setFrom("sgvuce@gmail.com");
+        mimeMessageHelper.setTo("erickdp@hotmail.com");
+        mimeMessageHelper.setSubject("Credenciales S.G.V UCE");
+
+        var stringObjectHashMap = new HashMap<String, Object>();
+        stringObjectHashMap.put("nombreUsuario", nombreUsuario);
+        stringObjectHashMap.put("password", password);
+
+        var template = freeMarkerConfigurer.getConfiguration().getTemplate("/email-template.ftlh");
+        var templatePreparado = FreeMarkerTemplateUtils.processTemplateIntoString(template, stringObjectHashMap);
+        mimeMessageHelper.setText(
+                templatePreparado.toString(), true
         );
 
-        this.javaMailSender.send(simpleMailMessage);
+        this.javaMailSender.send(mimeMessage);
     }
 }
