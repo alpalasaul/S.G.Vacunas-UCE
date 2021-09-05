@@ -251,7 +251,7 @@
                                 </tr>
                                 <tr>
                                     <td style="padding: 0 30px; padding-bottom: 30px;">
-                                        Toma las devidas precauciones. Respeta el distanciamiento.<br><br>
+                                        Toma las debidas precauciones. Respeta el distanciamiento.<br><br>
                                         Saludos,<br>
                                         Team Java
                                     </td>
