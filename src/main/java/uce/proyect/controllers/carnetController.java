@@ -74,7 +74,7 @@ public class carnetController {
     }
 
     @GetMapping("/enviarCarnet/{estudiante}")
-//    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> generarCarnetAlmacenado(@PathVariable("estudiante") String estudiante) throws JRException, IOException, MessagingException, TemplateException {
         var recursos = this.carnetService.generarPdfEnBytes(estudiante);// Genero mi pdf y lo guardo en una cadena de bytes
         var respuesta = this.emailService.enviarComprobante(recursos);
