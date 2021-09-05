@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Credenciales de Usuario</title>
+    <title>Template para carnet</title>
 
     <style type="text/css">
 
@@ -195,27 +195,25 @@
                                 <tr>
                                     <td class="computer-image">
                                         <br>
-                                        <br class="mobile-hide" />
+                                        <br class="mobile-hide"/>
                                         <img style="display:block;" width="220" height="213"
                                              src="https://aka-cdn.uce.edu.ec/ares/tmp/SIIU/anuncios/sello_400.png"
                                              alt="sello">
-                                        <br/>
+                                    <br/>
                                     </td>
                                     <br/>
                                     <td style="color: #ffffff;" class="header-text">
-                                        <br/>
-                                        <div>
-                                            <p style="font-size: 21px;text-align: center;">Sistema de Gestión de Vacunas
-                                                U.C.E</p><br><br>
-                                        </div>
-                                        Un cordial saludo y bienvenido a la plataforma, aquí usted podrá
-                                        <ul>
-                                            <li>Consultar sus datos de vacunación</li>
-                                            <li>Acceder a la vacunación voluntaria</li>
-                                        </ul>
+                                        <br>
+                                        <br>
+                                        <p style="font-size: 21px;text-align: center;">Sistema de Gestión de Vacunas
+                                            U.C.E</p><br><br>
+                                        Un cordial saludo, se adjunta su certificado de vacunación contra la COVID-19.
+                                        <br>
+                                        <br>
                                     </td>
                                 </tr>
                             </table>
+
 
                             <table class="force-full-width" cellspacing="0" cellpadding="30" bgcolor="#ebebeb">
                                 <tr>
@@ -223,14 +221,10 @@
                                         <table cellspacing="0" cellpadding="0" class="force-full-width">
                                             <tr>
                                                 <td>
-                                                    <span class="header">Sus credenciales de acceso:</span><br>
-                                                    Usuario: <a href="#">${nombreUsuario}</a> <br>
-                                                    Contraseña: <a href="#">${password}</a> <br><br>
                                                     <span class="header">Preguntas?</span><br>
                                                     Contactate con nosotros! <a href="mailto:sgvuce@gmail.com">
-                                                        En cualquier momento. AQUI IRIA EL LINK DEL FRONT SI EL SAUL NO
-                                                        SE HICIERA EL LOCO</a><br/><br/>
-                                                    Que tengas una excelente experiencia,<br/>
+                                                        En cualquier momento.</a><br/><br/>
+                                                    Saludos,<br/>
                                                     Team Java.
                                                 </td>
                                             </tr>
@@ -244,7 +238,7 @@
                                 <tr>
                                     <td style="background-color:#2b934f; color:#ffffff; font-size: 12px; text-align: center;">
                                         © 2021 All Rights Reserved - Alpala Saúl | Erazo Doménica | Jara Samantha | Díaz
-                                        Erick C.E.O
+                                        Erick
                                     </td>
                                 </tr>
                             </table>

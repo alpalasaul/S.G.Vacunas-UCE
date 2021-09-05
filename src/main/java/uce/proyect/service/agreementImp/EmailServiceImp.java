@@ -1,11 +1,10 @@
 package uce.proyect.service.agreementImp;
 
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.boot.autoconfigure.jms.JmsProperties;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,6 +15,7 @@ import uce.proyect.service.agreement.EmailService;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -66,7 +66,7 @@ public class EmailServiceImp implements EmailService {
 
     // Metodo que permite enviar archivo adjuntos en los email
     @Override
-    public JSONObject enviarComprobante(JSONObject recursos) throws MessagingException {
+    public JSONObject enviarComprobante(JSONObject recursos) throws MessagingException, IOException, TemplateException {
 
         var carnet = (byte[]) recursos.get("recurso"); // tomo el pdf en bytes que genero el estudiante para enviarlo
         var mailDestinatario = recursos.get("mailDestinatario").toString(); // el destinatario igual
@@ -75,11 +75,16 @@ public class EmailServiceImp implements EmailService {
         var mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
         mimeMessageHelper.setFrom("sgvuce@gmail.com"); // cambiar destinatario a emisor, solo es para desarrollo
-        mimeMessageHelper.setTo(mailDestinatario);
+        mimeMessageHelper.setTo("erickdp@hotmail.com");
         mimeMessageHelper.setSubject("Carnet Vacunación");
-        mimeMessageHelper.setText("<h4>Buena día. Adjuntamos su carnet de Vacunación contra la COVID-19.</h4>", true); // Se puede enviar html
 
-        mimeMessageHelper.addAttachment("carnetVacunacion.pdf", new ByteArrayResource(carnet)); // Se envia la ruta definina dentro de resources statics img
+        var stringObjectHashMap = new HashMap<String, Object>();
+
+        var template = freeMarkerConfigurer.getConfiguration().getTemplate("/email-template-certificado.ftlh");
+        var templatePreparado = FreeMarkerTemplateUtils.processTemplateIntoString(template, stringObjectHashMap);
+        mimeMessageHelper.setText(templatePreparado, true);
+
+        mimeMessageHelper.addAttachment("carnet-vacunacion.pdf", new ByteArrayResource(carnet)); // Se envia la ruta definina dentro de resources statics img
 
         this.javaMailSender.send(mimeMessage);
 
@@ -98,7 +103,7 @@ public class EmailServiceImp implements EmailService {
         var mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 
         mimeMessageHelper.setFrom("sgvuce@gmail.com");
-        mimeMessageHelper.setTo("erickdp@hotmail.com");
+        mimeMessageHelper.setTo(email);
         mimeMessageHelper.setSubject("Credenciales S.G.V UCE");
 
         var stringObjectHashMap = new HashMap<String, Object>();

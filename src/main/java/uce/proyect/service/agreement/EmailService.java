@@ -12,7 +12,7 @@ public interface EmailService {
 
     void enviarEmailPlan(String destinatario, LocalDate fechaInicio, LocalDate fechaFinal, String facultad, String fase);
 
-    JSONObject enviarComprobante(JSONObject recursos) throws MessagingException, IOException;
+    JSONObject enviarComprobante(JSONObject recursos) throws MessagingException, IOException, TemplateException;
 
     void enviarEmailCredenciales(String email, String nombreUsuario, String password) throws MessagingException, IOException, TemplateException;
 }
