@@ -170,7 +170,7 @@
                                         <br>
                                         <p style="font-size: 19px; text-align: center;">Sistema de Gestión de Vacunas U.C.E</p><br><br>
                                         Un cordial saludo, <br/><br/>
-                                        Se adjunta tu certificado de vacunación contra la COVID-19.
+                                        Se adjunta su certificado de vacunación contra la COVID-19.
                                         <br>
                                     </td>
                                 </tr>
