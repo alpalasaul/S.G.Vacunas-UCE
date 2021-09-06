@@ -48,7 +48,7 @@ public class EmailServiceImp implements EmailService {
         var mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 
         mimeMessageHelper.setFrom("sgvuce@gmail.com");
-        mimeMessageHelper.setTo("erickdp@hotmail.com");
+        mimeMessageHelper.setTo(destinatario);
         mimeMessageHelper.setSubject("Calendario Vacunación");
 
         var stringObjectHashMap = new HashMap<String, Object>();
@@ -77,7 +77,7 @@ public class EmailServiceImp implements EmailService {
         var mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
         mimeMessageHelper.setFrom("sgvuce@gmail.com"); // cambiar destinatario a emisor, solo es para desarrollo
-        mimeMessageHelper.setTo("erickdp@hotmail.com");
+        mimeMessageHelper.setTo(mailDestinatario);
         mimeMessageHelper.setSubject("Carnet Vacunación");
 
         var stringObjectHashMap = new HashMap<String, Object>();
