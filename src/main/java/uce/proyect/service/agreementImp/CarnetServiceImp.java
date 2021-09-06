@@ -39,23 +39,24 @@ public class CarnetServiceImp implements CarnetService {
 
     @Override
     public Carnet agregarOActualizar(Carnet pojo) {
-        Optional<Carnet> carnet = this.carnetRepository.findByEstudiante(pojo.getEstudiante());
-        if (pojo.isPrimeraDosis() && !pojo.isSegundaDosis()) { // true - false  (registra la primera dosis)
-            return this.carnetRepository.save(pojo);
-        }
-        // buscar que primera dosis sea true
-        if (pojo.isPrimeraDosis() && pojo.isSegundaDosis()) { // true - true (registra la segunda dosis)
-            // buscar en la db que exista la fecha uno para poder crear la fecha 2 y evitar que cree ambos registros en el mismo día
-            if (carnet.get().getFechaPrimeraDosis() != null) {
-                return this.carnetRepository.save(pojo);
-            } else {
-                throw new CarnetException("No se puede registrar las 2 vacunas al mismo tiempo, fuera de plan");
-            }
-        }
-        if (!pojo.isPrimeraDosis() && !pojo.isSegundaDosis()) { // false - false edita el registro voluntario
-            return this.carnetRepository.save(pojo);
-        }
-        throw new CarnetException("No se puede registrar la segunda fecha si no tiene la primera");
+//        Optional<Carnet> carnet = this.carnetRepository.findByEstudiante(pojo.getEstudiante());
+        return this.carnetRepository.save(pojo);
+
+//        if (pojo.isPrimeraDosis() && !pojo.isSegundaDosis()) { // true - false  (registra la primera dosis)
+//        }
+//         buscar que primera dosis sea true
+//        if (pojo.isPrimeraDosis() && pojo.isSegundaDosis()) { // true - true (registra la segunda dosis)
+//             buscar en la db que exista la fecha uno para poder crear la fecha 2 y evitar que cree ambos registros en el mismo día
+//            if (carnet.get().getFechaPrimeraDosis() != null) {
+//                return this.carnetRepository.save(pojo);
+//            } else {
+//                throw new CarnetException("No se puede registrar las 2 vacunas al mismo tiempo, fuera de plan");
+//            }
+//        }
+//        if (!pojo.isPrimeraDosis() && !pojo.isSegundaDosis()) { // false - false edita el registro voluntario
+//            return this.carnetRepository.save(pojo);
+//        }
+//        throw new CarnetException("No se puede registrar la segunda fecha si no tiene la primera");
     }
 
     @Override
