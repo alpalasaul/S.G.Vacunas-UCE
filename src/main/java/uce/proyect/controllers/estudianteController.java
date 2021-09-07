@@ -27,7 +27,7 @@ public class estudianteController {
     }
 
     @GetMapping("filtrarfc/{nombreCarrera}")
-    @PreAuthorize("hasRole('ROLE_HC')")
+//    @PreAuthorize("hasRole('ROLE_HC')")
     public ResponseEntity<?> getEstudiantes(@PathVariable("nombreCarrera") String carrera) {
         var listar = this.estudianteService.buscarEstudiantesPorFacultadYCarrera(carrera); // Obtiene a los usuarios por carrera
         return new ResponseEntity<>(listar, OK);
