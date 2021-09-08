@@ -1,0 +1,570 @@
+@startuml
+
+title __SGVACUNAS_SI's Class Diagram__\n
+
+  namespace  {
+    class MavenWrapperDownloader {
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      class uce.proyect.SgVacunasSiApplication {
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace controllers {
+        class uce.proyect.controllers.administradorController {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace controllers {
+        class uce.proyect.controllers.carnetController {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace controllers {
+        class uce.proyect.controllers.estudianteController {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace controllers {
+        class uce.proyect.controllers.facultadController {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace controllers {
+        class uce.proyect.controllers.planController {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace controllers {
+        class uce.proyect.controllers.usuarioController {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace exceptions {
+        class uce.proyect.exceptions.CarnetException {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace exceptions {
+        class uce.proyect.exceptions.NoEncontradorException {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace exceptions {
+        class uce.proyect.exceptions.PlanException {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace exceptions {
+        namespace handleException {
+          class uce.proyect.exceptions.handleException.ControllerAdviceSG {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace models {
+        class uce.proyect.models.Administrador {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace models {
+        class uce.proyect.models.Carnet {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace models {
+        class uce.proyect.models.Estudiante {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace models {
+        class uce.proyect.models.Facultad {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace models {
+        class uce.proyect.models.Persona {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace models {
+        class uce.proyect.models.Plan {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace models {
+        class uce.proyect.models.User {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace repositories {
+        interface uce.proyect.repositories.AdministradorRepository {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace repositories {
+        interface uce.proyect.repositories.CarnetRepository {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace repositories {
+        interface uce.proyect.repositories.EstudianteRepository {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace repositories {
+        interface uce.proyect.repositories.FacultadRepository {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace repositories {
+        interface uce.proyect.repositories.PlanRepository {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace repositories {
+        interface uce.proyect.repositories.UserRepository {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace security {
+        class uce.proyect.security.AuthenticationEntryPointConfig {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace security {
+        class uce.proyect.security.CustomerAuthorizationFilter {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace security {
+        class uce.proyect.security.Jasypt {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace security {
+        class uce.proyect.security.JwtAuthenticationFilter {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace security {
+        class uce.proyect.security.SecurityConfig {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.AdministradorService {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.CarnetService {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.CoreService {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.EmailService {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.EstudianteService {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.FacultadService {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.PlanService {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.UserService {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        namespace mp {
+          class uce.proyect.service.agreementImp.AdministradorServiceImp {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        namespace mp {
+          class uce.proyect.service.agreementImp.CarnetServiceImp {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        namespace mp {
+          class uce.proyect.service.agreementImp.EmailServiceImp {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        namespace mp {
+          class uce.proyect.service.agreementImp.EstudianteServiceImp {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        namespace mp {
+          class uce.proyect.service.agreementImp.FacultadServiceImp {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        namespace mp {
+          class uce.proyect.service.agreementImp.PlanServiceImp {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        namespace mp {
+          class uce.proyect.service.agreementImp.UserDetailServiceImp {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace service.agreement {
+        namespace mp {
+          class uce.proyect.service.agreementImp.UserServiceImp {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace util {
+        class uce.proyect.util.ConservarRoles {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace util {
+        class uce.proyect.util.FabricaCredenciales {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace util {
+        class uce.proyect.util.LocalDateAdapter {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace ce.proyect {
+      namespace util {
+        class uce.proyect.util.ValidarFechas {
+        }
+      }
+    }
+  }
+  
+
+  uce.proyect.SgVacunasSiApplication .up.|> org.springframework.boot.CommandLineRunner
+  uce.proyect.controllers.administradorController o-- uce.proyect.service.agreement.AdministradorService : administradorService
+  uce.proyect.controllers.administradorController o-- uce.proyect.service.agreement.EmailService : emailService
+  uce.proyect.controllers.carnetController o-- uce.proyect.service.agreement.CarnetService : carnetService
+  uce.proyect.controllers.carnetController o-- uce.proyect.service.agreement.EmailService : emailService
+  uce.proyect.controllers.estudianteController o-- uce.proyect.service.agreement.EmailService : emailService
+  uce.proyect.controllers.estudianteController o-- uce.proyect.service.agreement.EstudianteService : estudianteService
+  uce.proyect.controllers.facultadController o-- uce.proyect.service.agreement.FacultadService : facultadService
+  uce.proyect.controllers.planController o-- uce.proyect.service.agreement.PlanService : planService
+  uce.proyect.controllers.usuarioController o-- uce.proyect.service.agreement.UserService : userService
+  uce.proyect.models.Administrador -up-|> uce.proyect.models.Persona
+  uce.proyect.models.Estudiante -up-|> uce.proyect.models.Persona
+  uce.proyect.security.AuthenticationEntryPointConfig -up-|> org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
+  uce.proyect.security.CustomerAuthorizationFilter -up-|> org.springframework.web.filter.OncePerRequestFilter
+  uce.proyect.security.JwtAuthenticationFilter -up-|> org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+  uce.proyect.security.SecurityConfig -up-|> org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+  uce.proyect.service.agreementImp.AdministradorServiceImp .up.|> uce.proyect.service.agreement.AdministradorService
+  uce.proyect.service.agreementImp.AdministradorServiceImp o-- uce.proyect.repositories.AdministradorRepository : administradorRepository
+  uce.proyect.service.agreementImp.AdministradorServiceImp o-- uce.proyect.repositories.UserRepository : userRepository
+  uce.proyect.service.agreementImp.CarnetServiceImp .up.|> uce.proyect.service.agreement.CarnetService
+  uce.proyect.service.agreementImp.CarnetServiceImp o-- uce.proyect.repositories.CarnetRepository : carnetRepository
+  uce.proyect.service.agreementImp.CarnetServiceImp o-- uce.proyect.repositories.EstudianteRepository : estudianteRepository
+  uce.proyect.service.agreementImp.CarnetServiceImp o-- uce.proyect.service.agreement.EstudianteService : estudianteService
+  uce.proyect.service.agreementImp.CarnetServiceImp o-- uce.proyect.repositories.PlanRepository : planRepository
+  uce.proyect.service.agreementImp.EmailServiceImp .up.|> uce.proyect.service.agreement.EmailService
+  uce.proyect.service.agreementImp.EstudianteServiceImp .up.|> uce.proyect.service.agreement.EstudianteService
+  uce.proyect.service.agreementImp.EstudianteServiceImp o-- uce.proyect.repositories.CarnetRepository : carnetRepository
+  uce.proyect.service.agreementImp.EstudianteServiceImp o-- uce.proyect.repositories.EstudianteRepository : estudianteRespository
+  uce.proyect.service.agreementImp.EstudianteServiceImp o-- uce.proyect.repositories.UserRepository : userRepository
+  uce.proyect.service.agreementImp.FacultadServiceImp .up.|> uce.proyect.service.agreement.FacultadService
+  uce.proyect.service.agreementImp.FacultadServiceImp o-- uce.proyect.repositories.FacultadRepository : facultadRepository
+  uce.proyect.service.agreementImp.PlanServiceImp .up.|> uce.proyect.service.agreement.PlanService
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.repositories.CarnetRepository : carnetRepository
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.service.agreement.EmailService : emailService
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.repositories.EstudianteRepository : estudianteRepository
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.repositories.FacultadRepository : facultadRepository
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.repositories.PlanRepository : planRepository
+  uce.proyect.service.agreementImp.UserDetailServiceImp .up.|> org.springframework.security.core.userdetails.UserDetailsService
+  uce.proyect.service.agreementImp.UserDetailServiceImp o-- uce.proyect.repositories.UserRepository : userRepository
+  uce.proyect.service.agreementImp.UserServiceImp .up.|> uce.proyect.service.agreement.UserService
+  uce.proyect.service.agreementImp.UserServiceImp o-- uce.proyect.service.agreement.AdministradorService : administradorService
+  uce.proyect.service.agreementImp.UserServiceImp o-- uce.proyect.service.agreement.EstudianteService : estudianteService
+  uce.proyect.service.agreementImp.UserServiceImp o-- uce.proyect.repositories.UserRepository : userRepository
+  uce.proyect.util.LocalDateAdapter .up.|> com.google.gson.JsonSerializer
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

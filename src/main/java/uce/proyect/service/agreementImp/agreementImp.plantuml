@@ -1,0 +1,263 @@
+@startuml
+
+title __AGREEMENTIMP's Class Diagram__\n
+
+    namespace uce.proyect {
+      namespace service.agreement {
+          class uce.proyect.service.agreementImp.AdministradorServiceImp {
+              - passwordEncoder : PasswordEncoder
+              + AdministradorServiceImp()
+              + agregar()
+              + agregarOActualizar()
+              + buscarPorId()
+              + eliminar()
+              + listar()
+    }
+  }
+  }
+  
+
+    namespace uce.proyect {
+      namespace service.agreement {
+          class uce.proyect.service.agreementImp.CarnetServiceImp {
+              {static} - log : Logger
+              + CarnetServiceImp()
+              + actualizarCarnetVacunado()
+              + agregarOActualizar()
+              + buscarCarnetPorEstudiante()
+              + buscarPorId()
+              + eliminar()
+              + generarPdfEnBytes()
+              + listar()
+      }
+  }
+  }
+
+
+    namespace uce.proyect {
+      namespace service.agreement {
+          class uce.proyect.service.agreementImp.EmailServiceImp {
+              - javaMailSender : JavaMailSender
+              + EmailServiceImp()
+              + enviarComprobante()
+              + enviarEmail()
+              + enviarEmailCredenciales()
+              + enviarEmailPlan()
+        }
+    }
+  }
+  
+
+    namespace uce.proyect {
+      namespace service.agreement {
+          class uce.proyect.service.agreementImp.EstudianteServiceImp {
+              {static} - log : Logger
+              - passwordEncoder : PasswordEncoder
+              + EstudianteServiceImp()
+              + agregar()
+              + agregarOActualizar()
+              + buscarEstudiantesPorFacultadYCarrera()
+              + buscarEstudiantesPorFacultadYCarreraYSemestre()
+              + buscarPorId()
+              + eliminar()
+              + listar()
+              + nombres()
+        }
+    }
+  }
+  
+
+    namespace uce.proyect {
+      namespace service.agreement {
+          class uce.proyect.service.agreementImp.FacultadServiceImp {
+              + FacultadServiceImp()
+              + agregarCarrera()
+              + agregarOActualizar()
+              + buscarPorId()
+              + eliminar()
+              + listar()
+        }
+    }
+  }
+  
+
+    namespace uce.proyect {
+      namespace service.agreement {
+          class uce.proyect.service.agreementImp.PlanServiceImp {
+              {static} - log : Logger
+              + PlanServiceImp()
+              + agregarOActualizar()
+              + buscarPorFecha()
+              + buscarPorId()
+              + eliminar()
+              + enviarNotificacionSegundaDosis()
+              + establecerPlanes()
+              + generarNotificacionVacuncacion()
+              + listar()
+              + obtenerEstudiantesAInocular()
+              + porcentajeInoculados()
+              - actualizarCarnetEstudiantes()
+              - cargarMensaje()
+              - validarEstudiantesEnFacultadYCarrera()
+              - validarNuevoPlan()
+        }
+    }
+  }
+  
+
+    namespace uce.proyect {
+      namespace service.agreement {
+          class uce.proyect.service.agreementImp.UserDetailServiceImp {
+              + loadUserByUsername()
+        }
+      }
+  }
+  
+
+    namespace uce.proyect {
+      namespace service.agreement {
+          class uce.proyect.service.agreementImp.UserServiceImp {
+              - passwordEncoder : PasswordEncoder
+              + UserServiceImp()
+              + agregarOActualizar()
+              + buscarPorId()
+              + eliminar()
+              + listar()
+      }
+    }
+  }
+
+
+    namespace uce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.AdministradorService {
+            {abstract} + agregar()
+      }
+    }
+  }
+
+
+    namespace uce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.CarnetService {
+            {abstract} + actualizarCarnetVacunado()
+            {abstract} + buscarCarnetPorEstudiante()
+            {abstract} + generarPdfEnBytes()
+        }
+    }
+  }
+
+
+    namespace uce.proyect {
+      namespace service.agreementI {
+        interface uce.proyect.service.agreementI.CoreService {
+            {abstract} + agregarOActualizar()
+            {abstract} + buscarPorId()
+            {abstract} + eliminar()
+            {abstract} + listar()
+        }
+      }
+  }
+
+
+    namespace uce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.EmailService {
+            {abstract} + enviarComprobante()
+            {abstract} + enviarEmail()
+            {abstract} + enviarEmailCredenciales()
+            {abstract} + enviarEmailPlan()
+      }
+    }
+  }
+
+
+    namespace uce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.EstudianteService {
+            {abstract} + agregar()
+            {abstract} + buscarEstudiantesPorFacultadYCarrera()
+            {abstract} + buscarEstudiantesPorFacultadYCarreraYSemestre()
+            {abstract} + nombres()
+      }
+    }
+  }
+
+
+    namespace uce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.FacultadService {
+            {abstract} + agregarCarrera()
+      }
+    }
+  }
+
+
+    namespace uce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.PlanService {
+            {abstract} + buscarPorFecha()
+            {abstract} + establecerPlanes()
+            {abstract} + generarNotificacionVacuncacion()
+            {abstract} + obtenerEstudiantesAInocular()
+            {abstract} + porcentajeInoculados()
+      }
+    }
+  }
+
+
+    namespace uce.proyect {
+      namespace service.agreement {
+        interface uce.proyect.service.agreement.UserService {
+        }
+    }
+  }
+
+  package uce.proyect.repositories <<Database>> {
+  }
+  
+
+  uce.proyect.service.agreementImp.AdministradorServiceImp .up.|> uce.proyect.service.agreement.AdministradorService
+  uce.proyect.service.agreementImp.AdministradorServiceImp o-- uce.proyect.repositories.AdministradorRepository : administradorRepository
+  uce.proyect.service.agreementImp.AdministradorServiceImp o-- uce.proyect.repositories.UserRepository : userRepository
+  uce.proyect.service.agreementImp.CarnetServiceImp .up.|> uce.proyect.service.agreement.CarnetService
+  uce.proyect.service.agreementImp.CarnetServiceImp o-- uce.proyect.repositories.CarnetRepository : carnetRepository
+  uce.proyect.service.agreementImp.CarnetServiceImp o-- uce.proyect.repositories.EstudianteRepository : estudianteRepository
+  uce.proyect.service.agreementImp.CarnetServiceImp o-- uce.proyect.service.agreement.EstudianteService : estudianteService
+  uce.proyect.service.agreementImp.CarnetServiceImp o-- uce.proyect.repositories.PlanRepository : planRepository
+  uce.proyect.service.agreementImp.EmailServiceImp .up.|> uce.proyect.service.agreement.EmailService
+  uce.proyect.service.agreementImp.EstudianteServiceImp .up.|> uce.proyect.service.agreement.EstudianteService
+  uce.proyect.service.agreementImp.EstudianteServiceImp o-- uce.proyect.repositories.CarnetRepository : carnetRepository
+  uce.proyect.service.agreementImp.EstudianteServiceImp o-- uce.proyect.repositories.EstudianteRepository : estudianteRespository
+  uce.proyect.service.agreementImp.EstudianteServiceImp o-- uce.proyect.repositories.UserRepository : userRepository
+  uce.proyect.service.agreementImp.FacultadServiceImp .up.|> uce.proyect.service.agreement.FacultadService
+  uce.proyect.service.agreementImp.FacultadServiceImp o-- uce.proyect.repositories.FacultadRepository : facultadRepository
+  uce.proyect.service.agreementImp.PlanServiceImp .up.|> uce.proyect.service.agreement.PlanService
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.repositories.CarnetRepository : carnetRepository
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.service.agreement.EmailService : emailService
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.repositories.EstudianteRepository : estudianteRepository
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.repositories.FacultadRepository : facultadRepository
+  uce.proyect.service.agreementImp.PlanServiceImp o-- uce.proyect.repositories.PlanRepository : planRepository
+  uce.proyect.service.agreementImp.UserDetailServiceImp .up.|> org.springframework.security.core.userdetails.UserDetailsService
+  uce.proyect.service.agreementImp.UserDetailServiceImp o-- uce.proyect.repositories.UserRepository : userRepository
+  uce.proyect.service.agreementImp.UserServiceImp .up.|> uce.proyect.service.agreement.UserService
+  uce.proyect.service.agreementImp.UserServiceImp o-- uce.proyect.service.agreement.AdministradorService : administradorService
+  uce.proyect.service.agreementImp.UserServiceImp o-- uce.proyect.service.agreement.EstudianteService : estudianteService
+  uce.proyect.service.agreementImp.UserServiceImp o-- uce.proyect.repositories.UserRepository : userRepository
+
+  uce.proyect.service.agreement.AdministradorService -up-|> uce.proyect.service.agreementI.CoreService
+  uce.proyect.service.agreement.UserService -up-|> uce.proyect.service.agreementI.CoreService
+  uce.proyect.service.agreement.EstudianteService -up-|> uce.proyect.service.agreementI.CoreService
+  uce.proyect.service.agreement.CarnetService -up-|> uce.proyect.service.agreementI.CoreService
+  uce.proyect.service.agreement.EmailService -up-|> uce.proyect.service.agreementI.CoreService
+  uce.proyect.service.agreement.PlanService -up-|> uce.proyect.service.agreementI.CoreService
+  uce.proyect.service.agreement.FacultadService -up-|> uce.proyect.service.agreementI.CoreService
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

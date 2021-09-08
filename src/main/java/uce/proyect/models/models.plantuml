@@ -1,0 +1,233 @@
+@startuml
+
+title __MODELS's Class Diagram__\n
+
+  namespace  uce.proyect {
+      namespace models {
+        class uce.proyect.models.Administrador {
+            - identificadorAdmin : String
+            + Administrador()
+            + equals()
+            + getIdentificadorAdmin()
+            + hashCode()
+            + setIdentificadorAdmin()
+            + toString()
+            # canEqual()
+        }
+      }
+  }
+
+
+  namespace  uce.proyect {
+      namespace models {
+        class uce.proyect.models.Carnet {
+            - _id : String
+            - centroVacunacion : String
+            - estudiante : String
+            - fechaPrimeraDosis : LocalDate
+            - fechaSegundasDosis : LocalDate
+            - inoculacionVoluntaria : boolean
+            - loteDosisDos : String
+            - loteDosisUno : String
+            - nombreVacuna : String
+            - primeraDosis : boolean
+            - segundaDosis : boolean
+            - vacunadorPrimeraDosis : String
+            - vacunadorSegundaDosis : String
+            + Carnet()
+            + equals()
+            + getCentroVacunacion()
+            + getEstudiante()
+            + getFechaPrimeraDosis()
+            + getFechaSegundasDosis()
+            + getLoteDosisDos()
+            + getLoteDosisUno()
+            + getNombreVacuna()
+            + getVacunadorPrimeraDosis()
+            + getVacunadorSegundaDosis()
+            + get_id()
+            + hashCode()
+            + isInoculacionVoluntaria()
+            + isPrimeraDosis()
+            + isSegundaDosis()
+            + setCentroVacunacion()
+            + setEstudiante()
+            + setFechaPrimeraDosis()
+            + setFechaSegundasDosis()
+            + setInoculacionVoluntaria()
+            + setLoteDosisDos()
+            + setLoteDosisUno()
+            + setNombreVacuna()
+            + setPrimeraDosis()
+            + setSegundaDosis()
+            + setVacunadorPrimeraDosis()
+            + setVacunadorSegundaDosis()
+            + set_id()
+            + toString()
+            # canEqual()
+        }
+    }
+  }
+
+
+  namespace uce.proyect {
+      namespace models {
+        class uce.proyect.models.Estudiante {
+            - carrera : String
+            - semestre : int
+            + Estudiante()
+            + equals()
+            + getCarrera()
+            + getSemestre()
+            + hashCode()
+            + setCarrera()
+            + setSemestre()
+            + toString()
+            # canEqual()
+        }
+    }
+  }
+
+
+  namespace  uce.proyect {
+      namespace models {
+        class uce.proyect.models.Facultad {
+            - _id : String
+            - carreras : List<String>
+            - nombre : String
+            + Facultad()
+            + equals()
+            + getCarreras()
+            + getNombre()
+            + get_id()
+            + hashCode()
+            + setCarreras()
+            + setNombre()
+            + set_id()
+            + toString()
+            # canEqual()
+        }
+    }
+  }
+
+
+  namespace uce.proyect {
+      namespace models {
+        class uce.proyect.models.Persona {
+            - _id : String
+            - apellidos : String
+            - cedula : String
+            - correo : String
+            - esControlador : boolean
+            - fechaNacimiento : LocalDate
+            - genero : String
+            - nombres : String
+            - telefono : String
+            - usuario : String
+            + Persona()
+            + equals()
+            + getApellidos()
+            + getCedula()
+            + getCorreo()
+            + getFechaNacimiento()
+            + getGenero()
+            + getNombres()
+            + getTelefono()
+            + getUsuario()
+            + get_id()
+            + hashCode()
+            + isEsControlador()
+            + setApellidos()
+            + setCedula()
+            + setCorreo()
+            + setEsControlador()
+            + setFechaNacimiento()
+            + setGenero()
+            + setNombres()
+            + setTelefono()
+            + setUsuario()
+            + set_id()
+            + toString()
+            # canEqual()
+        }
+    }
+  }
+
+
+  namespace uce.proyect {
+      namespace models {
+        class uce.proyect.models.Plan {
+            - _id : String
+            - centroVacunacion : String
+            - completo : boolean
+            - facultad : String
+            - fase : String
+            - fechaFin : LocalDate
+            - fechaInicio : LocalDate
+            - personasVacunadas : int
+            + Plan()
+            + equals()
+            + getCentroVacunacion()
+            + getFacultad()
+            + getFase()
+            + getFechaFin()
+            + getFechaInicio()
+            + getPersonasVacunadas()
+            + get_id()
+            + hashCode()
+            + isCompleto()
+            + setCentroVacunacion()
+            + setCompleto()
+            + setFacultad()
+            + setFase()
+            + setFechaFin()
+            + setFechaInicio()
+            + setPersonasVacunadas()
+            + set_id()
+            + toString()
+            # canEqual()
+        }
+    }
+  }
+
+
+  namespace uce.proyect {
+      namespace models {
+        class uce.proyect.models.User {
+            - _id : String
+            - contrasena : String
+            - nombreUsuario : String
+            - roles : List<String>
+            + User()
+            + equals()
+            + getContrasena()
+            + getNombreUsuario()
+            + getRoles()
+            + get_id()
+            + hashCode()
+            + setContrasena()
+            + setNombreUsuario()
+            + setRoles()
+            + set_id()
+            + toString()
+            # canEqual()
+        }
+    }
+  }
+
+
+
+  uce.proyect.models.Estudiante -up-|> uce.proyect.models.Persona
+  uce.proyect.models.Administrador -up-|> uce.proyect.models.Persona
+  uce.proyect.models.Persona "1" *-- "1" uce.proyect.models.User
+  uce.proyect.models.Facultad "1..*" o-- "0..*" uce.proyect.models.Estudiante
+  uce.proyect.models.Estudiante "1" *-- "1" uce.proyect.models.Carnet
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
