@@ -233,12 +233,12 @@
                                                     Contraseña: <a href="#">${password}</a> <br><br>
                                                     <a href="https://sgvuce.herokuapp.com/login">Accede a la plataforma
                                                         desde aquí.</a><br/><br/>
-                                                    <span class="header">Preguntas?</span><br>
-                                                    Contactate con nosotros! <a href="mailto:sgvuce@gmail.com">en
+                                                    <span class="header">¿Preguntas?</span><br>
+                                                    ¡Contáctate con nosotros! <a href="mailto:sgvuce@gmail.com">en
                                                         cualquier momento.</a><br><br>
 
                                                     Saludos,<br>
-                                                    Team Java
+                                                    Grupo de Tecnología y Sistemas
                                                 </td>
                                             </tr>
                                         </table>

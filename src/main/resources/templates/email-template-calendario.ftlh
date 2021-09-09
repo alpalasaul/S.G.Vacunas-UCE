@@ -253,7 +253,7 @@
                                     <td style="padding: 0 30px; padding-bottom: 30px;">
                                         Toma las debidas precauciones. Respeta el distanciamiento.<br><br>
                                         Saludos,<br>
-                                        Team Java
+                                        Grupo de Tecnología y Sistemas
                                     </td>
                                 </tr>
                             </table>
