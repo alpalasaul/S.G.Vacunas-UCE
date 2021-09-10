@@ -174,11 +174,11 @@
                                         <table cellspacing="0" cellpadding="0" class="force-full-width">
                                             <tr>
                                                 <td>
-                                                    <span class="header">Preguntas?</span><br>
-                                                    Contactate con nosotros! <a href="mailto:sgvuce@gmail.com">
+                                                    <span class="header">¿Preguntas?</span><br>
+                                                    ¡Contáctate con nosotros! <a href="mailto:sgvuce@gmail.com">
                                                         En cualquier momento.</a><br/><br/>
                                                     Saludos,<br/>
-                                                    Team Java.
+                                                    Grupo de Tecnología y Sistemas
                                                 </td>
                                             </tr>
                                         </table>
