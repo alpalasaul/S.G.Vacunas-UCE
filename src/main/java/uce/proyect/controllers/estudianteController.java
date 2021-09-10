@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uce.proyect.models.Estudiante;
+import uce.proyect.repositories.EstudianteRepository;
 import uce.proyect.service.agreement.EmailService;
 import uce.proyect.service.agreement.EstudianteService;
 
@@ -21,6 +22,8 @@ public class estudianteController {
 
     private EstudianteService estudianteService;
 
+    private EstudianteRepository estudianteRepository;
+
     private EmailService emailService;
 
     @GetMapping
@@ -28,6 +31,17 @@ public class estudianteController {
     public ResponseEntity<?> getEstudiantes() {
         var listar = this.estudianteService.listar();
         return new ResponseEntity<>(listar, OK);
+    }
+
+    @GetMapping("buscar/{cedula}")
+    @PreAuthorize("hasRole('ROLE_HC')")
+    public ResponseEntity<?> verificarExistenciaCedula(@PathVariable("cedula") String cedula) {
+        boolean respuesta = false;
+        var existe = estudianteRepository.findByCedula(cedula);
+        if (existe.isPresent()) {
+            respuesta = true;
+        }
+        return new ResponseEntity<>(respuesta, OK);
     }
 
     @GetMapping("filtrarfc/{nombreCarrera}")
