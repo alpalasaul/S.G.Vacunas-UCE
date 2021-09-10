@@ -282,7 +282,7 @@ public class PlanServiceImp implements PlanService {
     public void actualizarEstadosCompletos() {
         var planes = this.planRepository.findAll();
         planes.forEach(plan -> {
-            if (plan.getFechaFin().isBefore(LocalDate.now())) {
+            if (plan.getFechaFin().plusDays(1).isBefore(LocalDate.now())) {
                 plan.setCompleto(true);
                 this.planRepository.save(plan);
                 log.info("Todo nice");
