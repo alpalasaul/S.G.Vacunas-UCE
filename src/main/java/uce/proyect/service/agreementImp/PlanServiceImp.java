@@ -264,6 +264,7 @@ public class PlanServiceImp implements PlanService {
 
     @Override
     public JSONObject establecerPlanes() {
+        actualizarEstadosCompletos();
         var respuestaJson = new JSONObject();
         log.info("INICIANDO BUSQUEDA DE NUEVOS PLANES PARA ".concat(LocalDate.now().toString()));
         var planesActuales = this.planRepository.findByFaseAndCompletoAndFechaInicioLessThanEqual("PRIMERA", false, LocalDate.now());
@@ -276,6 +277,17 @@ public class PlanServiceImp implements PlanService {
             respuestaJson.put("planes_actuales", planesActuales);
         }
         return respuestaJson;
+    }
+
+    public void actualizarEstadosCompletos() {
+        var planes = this.planRepository.findAll();
+        planes.forEach(plan -> {
+            if (plan.getFechaFin().isBefore(LocalDate.now())) {
+                plan.setCompleto(true);
+                this.planRepository.save(plan);
+                log.info("Todo nice");
+            }
+        });
     }
 
     @Override
